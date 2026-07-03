@@ -729,18 +729,19 @@ async function attemptAdminLogin(username, password) {
     if (useSupabase && supabaseClientInstance) {
         try {
             console.log("Checking admin role in Supabase tr_users table...");
-            // Query Supabase for patter matching username, password and role 관리자
+            // Query Supabase for matching username, password and role 관리자
             const { data, error } = await supabaseClientInstance
                 .from('tr_users')
                 .select('*')
                 .eq('id', username)
                 .eq('password', password)
                 .eq('role', '관리자')
-                .single();
+                .maybeSingle();
 
             if (error) {
-                // If query fails (auth failed), throw custom error to enter catch block
-                throw new Error("비밀번호 또는 사용자 계정이 일치하지 않습니다.");
+                console.error("Database query error:", error);
+                showToast(`로그인 오류: 데이터베이스를 확인할 수 없습니다. 입력한 패스워드: [${password}]`);
+                return;
             }
 
             if (data) {
@@ -748,28 +749,14 @@ async function attemptAdminLogin(username, password) {
                 showToast("로그인 성공! 관리자 콘솔이 실행됩니다.");
                 openSyncConsole();
             } else {
-                showToast(`로그인 실패: 아이디 또는 패스워드가 틀렸습니다. 입력한 패스워드: [${password}]. 로컬 패스워드('patter123!')를 입력해야 합니다.`);
+                showToast(`로그인 실패: 아이디 또는 패스워드가 일치하지 않습니다. 입력한 패스워드: [${password}]. tr_users 테이블에 있는 올바른 관리자 패스워드를 입력하셔야 합니다.`);
             }
         } catch (e) {
             console.error("Supabase Admin Check Failed:", e);
-            // Fallback for user ease: if offline local password is correct, let them login
-            if (username === 'patter' && password === 'patter123!') {
-                isAdmin = true;
-                showToast("로컬 우회 모드로 관리자 로그인 성공!");
-                openSyncConsole();
-            } else {
-                showToast(`로그인 실패: 비밀번호가 일치하지 않습니다. 입력한 패스워드: [${password}]. 로컬 패스워드('patter123!')를 입력해야 합니다.`);
-            }
+            showToast(`로그인 검증 과정에서 에러가 발생했습니다. 입력한 패스워드: [${password}]`);
         }
     } else {
-        // Fallback Offline admin bypass
-        if (username === 'patter' && password === 'patter123!') {
-            isAdmin = true;
-            showToast("오프라인 모드로 로그인 성공! (Supabase 미연동)");
-            openSyncConsole();
-        } else {
-            showToast(`로그인 실패: 비밀번호가 일치하지 않습니다. 입력한 패스워드: [${password}]. 로컬 패스워드('patter123!')를 입력해야 합니다.`);
-        }
+        showToast(`로그인 실패 (Supabase 미연동): 입력한 패스워드: [${password}]. Supabase가 올바르게 연동되어 있고 tr_users 테이블에 등록된 패스워드를 사용해야 로그인할 수 있습니다.`);
     }
 }
 
