@@ -209,6 +209,24 @@ let isAdmin = false;
 // Initializer & Data Loader
 // ==========================================
 async function init() {
+    // 0. Fetch config from serverless API (if hosted on Vercel)
+    try {
+        console.log("Checking Vercel serverless environment variables...");
+        const res = await fetch('/api/config');
+        if (res.ok) {
+            const config = await res.json();
+            if (config.supabaseUrl && config.supabaseUrl !== 'YOUR_SUPABASE_URL' &&
+                config.supabaseKey && config.supabaseKey !== 'YOUR_SUPABASE_ANON_KEY') {
+                SUPABASE_URL = config.supabaseUrl;
+                SUPABASE_ANON_KEY = config.supabaseKey;
+                initSupabase();
+                console.log("Successfully loaded credentials from Vercel Serverless environment.");
+            }
+        }
+    } catch (e) {
+        console.log("Not running in Vercel backend environment or serverless API config not available:", e.message);
+    }
+
     // 1. Setup Initial Browser History State
     history.replaceState({ view: 'home' }, '');
     
