@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Youn's Shop - 스마트 쇼핑 랭킹 aggregator</title>
+    <!-- Google Fonts: Inter and Outfit for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation (PC only) -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <span class="logo-emoji">🛍️</span>
+                <span class="logo-text">Youns Shop</span>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <div class="menu-label">카테고리</div>
+                <ul class="category-list" id="pc-category-list">
+                    <!-- Categories will be dynamically rendered here -->
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="refresh-indicator">
+                    <span class="pulse-dot"></span>
+                    <span id="refresh-status">실시간 데이터 갱신 중</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="main-layout">
+            <!-- Header -->
+            <header class="app-header">
+                <!-- Mobile Logo & Menu Toggle -->
+                <div class="mobile-header-left">
+                    <span class="logo-emoji">🛍️</span>
+                    <h1 class="mobile-logo-text">Youns Shop</h1>
+                </div>
+                
+                <!-- Search Bar -->
+                <div class="search-wrapper">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="search-input" class="search-input" placeholder="관심 상품을 검색해 보세요..." autocomplete="off">
+                    <button id="search-clear-btn" class="search-clear-btn" style="display: none;">&times;</button>
+                </div>
+                
+                <!-- Theme Toggle & Status -->
+                <div class="header-actions">
+                    <div class="site-filters">
+                        <button class="filter-chip active" data-site="all">전체</button>
+                        <button class="filter-chip" data-site="coupang">쿠팡</button>
+                        <button class="filter-chip" data-site="naver">네이버</button>
+                        <button class="filter-chip" data-site="cjmall">CJ Mall</button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Scrollable Categories for Mobile -->
+            <div class="mobile-categories-wrapper">
+                <div class="mobile-categories" id="mobile-category-list">
+                    <!-- Mobile categories rendered dynamically -->
+                </div>
+            </div>
+
+            <!-- Content Body -->
+            <main class="content-body">
+                <!-- Banner / Announcement -->
+                <section class="banner-section">
+                    <div class="banner-content">
+                        <span class="banner-badge">HOT TREND</span>
+                        <h2>실시간 인지도 및 판매량 기반 인기 상품</h2>
+                        <p>쿠팡, 네이버 스마트스토어, CJ Mall의 판매 실적과 소비자 선호도를 실시간으로 취합하여 30분 주기로 자동 업데이트합니다.</p>
+                    </div>
+                    <div class="banner-stats">
+                        <div class="stat-box">
+                            <span class="stat-num" id="total-items-count">0</span>
+                            <span class="stat-label">분석 상품 수</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-num" id="update-timer">30:00</span>
+                            <span class="stat-label">다음 갱신</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sorting and View Controls -->
+                <div class="controls-row">
+                    <div class="active-category-title">
+                        <span id="current-category-name">전체 상품</span>
+                        <span class="items-count-badge" id="category-items-count">0개</span>
+                    </div>
+                    <div class="sort-selector">
+                        <button class="sort-btn active" data-sort="rank">인기순 (랭킹)</button>
+                        <button class="sort-btn" data-sort="sales">판매량순</button>
+                        <button class="sort-btn" data-sort="discount">할인율순</button>
+                    </div>
+                </div>
+
+                <!-- Products Grid -->
+                <section class="products-grid-wrapper">
+                    <div class="products-grid" id="products-grid">
+                        <!-- Products will be dynamically generated by app.js -->
+                        <div class="loading-state">
+                            <div class="spinner"></div>
+                            <p>실시간 트렌드를 분석하고 있습니다...</p>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Product Detail Modal -->
+    <div class="modal-overlay" id="product-detail-modal">
+        <div class="modal-card">
+            <button class="modal-close-btn" id="modal-close-btn">&times;</button>
+            <div class="modal-body" id="modal-body-content">
+                <!-- Populated dynamically by app.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Purchase Redirect Simulator Modal -->
+    <div class="redirect-overlay" id="redirect-overlay">
+        <div class="redirect-box">
+            <div class="redirect-animation">
+                <div class="pulse-ring"></div>
+                <div class="shopping-cart-icon">🛒</div>
+            </div>
+            <h3>쇼핑 사이트로 연결하고 있습니다</h3>
+            <p>안전하고 빠르게 구매 사이트로 이동합니다. 잠시만 기다려 주세요...</p>
+            <div class="redirect-progress">
+                <div class="progress-bar-fill" id="redirect-progress-bar"></div>
+            </div>
+            <div class="redirect-target-info">
+                <span class="redirect-site-badge" id="redirect-site-badge">쿠팡</span>
+                <span class="redirect-product-name" id="redirect-product-name">상품명</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
