@@ -1,167 +1,363 @@
-// --- Mock Database ---
+// --- Product Categories ---
 const CATEGORIES = [
-    { id: 'all', name: '전체 상품', icon: '✨' },
-    { id: 'fashion', name: '패션의류/잡화', icon: '👕' },
-    { id: 'beauty', name: '뷰티/화장품', icon: '✨' },
-    { id: 'baby', name: '출산/유아동', icon: '🍼' },
-    { id: 'food', name: '신선/가공식품', icon: '🍎' },
-    { id: 'kitchen', name: '주방용품', icon: '🍳' },
-    { id: 'living', name: '생활용품', icon: '🧼' },
-    { id: 'digital', name: '가전디지털', icon: '💻' },
-    { id: 'sports', name: '스포츠/레저', icon: '🚴' }
+    { id: 'fashion', name: '패션', icon: 'apparel' },
+    { id: 'digital', name: '가전', icon: 'devices' },
+    { id: 'food', name: '식품', icon: 'restaurant' },
+    { id: 'beauty', name: '뷰티', icon: 'content_cut' },
+    { id: 'home', name: '홈데코', icon: 'chair' },
+    { id: 'sports', name: '스포츠', icon: 'directions_run' }
 ];
 
+const TRENDING_KEYWORDS = [
+    '#미니멀리즘',
+    '#홈카페인테리어',
+    '#가을신상',
+    '#프리미엄가전',
+    '#친환경소재',
+    '#Y2K패션'
+];
+
+// --- Product Database ---
 const PRODUCTS = [
-    // Fashion
-    { id: 1, name: '오버핏 쿨에어 반팔 티셔츠 3팩', brand: '에센셜프로', price: 29800, originalPrice: 49000, discountRate: 39, site: 'coupang', rating: 4.8, reviews: 2453, salesCount: 8420, category: 'fashion', rank: 1, link: 'https://coupang.com' },
-    { id: 2, name: '초경량 스트레치 컴포트 카고 슬랙스', brand: '아웃핏랩', price: 34900, originalPrice: 59000, discountRate: 40, site: 'naver', rating: 4.6, reviews: 1120, salesCount: 5120, category: 'fashion', rank: 2, link: 'https://shopping.naver.com' },
-    { id: 3, name: '이탈리안 레더 클래식 스니커즈', brand: '벨루티노', price: 89000, originalPrice: 159000, discountRate: 44, site: 'cjmall', rating: 4.7, reviews: 489, salesCount: 2310, category: 'fashion', rank: 3, link: 'https://cjmall.co.kr' },
-    { id: 4, name: '데일리 리넨 와이드 밴딩 팬츠', brand: '에센셜프로', price: 19800, originalPrice: 29000, discountRate: 31, site: 'coupang', rating: 4.5, reviews: 3120, salesCount: 6420, category: 'fashion', rank: 4, link: 'https://coupang.com' },
-    { id: 5, name: '프리미엄 하프 프레임 편광 선글라스', brand: '아이웨어X', price: 42000, originalPrice: 85000, discountRate: 50, site: 'naver', rating: 4.9, reviews: 752, salesCount: 3920, category: 'fashion', rank: 5, link: 'https://shopping.naver.com' },
-
-    // Beauty
-    { id: 6, name: '시카 릴리프 수분 진정 크림 80ml', brand: '닥터덤', price: 18500, originalPrice: 28000, discountRate: 33, site: 'naver', rating: 4.9, reviews: 4230, salesCount: 12500, category: 'beauty', rank: 1, link: 'https://shopping.naver.com' },
-    { id: 7, name: '히알루론산 딥 수분 앰플 50ml 더블기획', brand: '워터글로우', price: 24900, originalPrice: 42000, discountRate: 40, site: 'coupang', rating: 4.7, reviews: 5210, salesCount: 9850, category: 'beauty', rank: 2, link: 'https://coupang.com' },
-    { id: 8, name: '콜라겐 펩타이드 멀티밤 스틱', brand: '골드에이지', price: 19800, originalPrice: 35000, discountRate: 43, site: 'cjmall', rating: 4.5, reviews: 1890, salesCount: 4560, category: 'beauty', rank: 3, link: 'https://cjmall.co.kr' },
-    { id: 9, name: '무기자차 마일드 톤업 선크림 SPF50+', brand: '닥터덤', price: 15800, originalPrice: 24000, discountRate: 34, site: 'coupang', rating: 4.6, reviews: 2980, salesCount: 7120, category: 'beauty', rank: 4, link: 'https://coupang.com' },
-    { id: 10, name: '티트리 아크네 약산성 클렌징 폼 200ml', brand: '그린테라피', price: 12900, originalPrice: 19000, discountRate: 32, site: 'naver', rating: 4.8, reviews: 3670, salesCount: 8840, category: 'beauty', rank: 5, link: 'https://shopping.naver.com' },
-
-    // Baby
-    { id: 11, name: '1등급 유기농 순면 아기 물티슈 70매 10팩', brand: '베베앙', price: 16900, originalPrice: 25000, discountRate: 32, site: 'coupang', rating: 4.9, reviews: 12450, salesCount: 23100, category: 'baby', rank: 1, link: 'https://coupang.com' },
-    { id: 12, name: '부드러운 에어핏 소프트 기저귀 대형 4팩', brand: '맘스프렌드', price: 48900, originalPrice: 65000, discountRate: 24, site: 'coupang', rating: 4.8, reviews: 8900, salesCount: 14500, category: 'baby', rank: 2, link: 'https://coupang.com' },
-    { id: 13, name: '무독성 실리콘 안심 흡착 이유식 식기 세트', brand: '토이맘', price: 29800, originalPrice: 45000, discountRate: 33, site: 'naver', rating: 4.7, reviews: 1205, salesCount: 3120, category: 'baby', rank: 3, link: 'https://shopping.naver.com' },
-    { id: 14, name: '자연유래 유아 안심 젖병정제 세제 리필형 3개', brand: '베베앙', price: 14900, originalPrice: 22000, discountRate: 32, site: 'cjmall', rating: 4.8, reviews: 2430, salesCount: 5410, category: 'baby', rank: 4, link: 'https://cjmall.co.kr' },
-
-    // Food
-    { id: 15, name: '당도보장 고당도 프리미엄 성주참외 3kg', brand: '산지직송', price: 21900, originalPrice: 32900, discountRate: 33, site: 'naver', rating: 4.8, reviews: 5430, salesCount: 14200, category: 'food', rank: 1, link: 'https://shopping.naver.com' },
-    { id: 16, name: '무항생제 신선한 특란 30구', brand: '프레시팜', price: 7980, originalPrice: 9900, discountRate: 19, site: 'coupang', rating: 4.7, reviews: 34100, salesCount: 58000, category: 'food', rank: 2, link: 'https://coupang.com' },
-    { id: 17, name: '저염 숙성 부드러운 훈제닭가슴살 100g 10팩', brand: '헬시밀', price: 18900, originalPrice: 29000, discountRate: 34, site: 'coupang', rating: 4.6, reviews: 15430, salesCount: 32900, category: 'food', rank: 3, link: 'https://coupang.com' },
-    { id: 18, name: '프리미엄 1++등급 한우 꽃등심 400g 냉장', brand: '횡성축협', price: 59000, originalPrice: 89000, discountRate: 33, site: 'cjmall', rating: 4.9, reviews: 852, salesCount: 1840, category: 'food', rank: 4, link: 'https://cjmall.co.kr' },
-
-    // Kitchen
-    { id: 19, name: 'IH 인덕션 세라믹 쿡웨어 프라이팬 3종 세트', brand: '키친마스터', price: 54900, originalPrice: 89000, discountRate: 38, site: 'coupang', rating: 4.8, reviews: 2310, salesCount: 4890, category: 'kitchen', rank: 1, link: 'https://coupang.com' },
-    { id: 20, name: '초미세 항균 안심 롤 수세미 60매 2롤', brand: '클린탭', price: 9900, originalPrice: 15000, discountRate: 34, site: 'naver', rating: 4.7, reviews: 5120, salesCount: 11200, category: 'kitchen', rank: 2, link: 'https://shopping.naver.com' },
-    { id: 21, name: '내열 강화 유리 밀폐용기 8개 풀세트', brand: '글라스락스', price: 29800, originalPrice: 49000, discountRate: 39, site: 'cjmall', rating: 4.7, reviews: 1450, salesCount: 3420, category: 'kitchen', rank: 3, link: 'https://cjmall.co.kr' },
-
-    // Living
-    { id: 22, name: '고농축 고체 드럼세탁기 세제 캡슐 90개입', brand: '클린스마트', price: 22900, originalPrice: 39000, discountRate: 41, site: 'coupang', rating: 4.8, reviews: 7560, salesCount: 16500, category: 'living', rank: 1, link: 'https://coupang.com' },
-    { id: 23, name: '호텔식 고중량 프리미엄 타올 400g 10장', brand: '코튼데이', price: 28900, originalPrice: 45000, discountRate: 35, site: 'naver', rating: 4.9, reviews: 3420, salesCount: 9120, category: 'living', rank: 2, link: 'https://shopping.naver.com' },
-    { id: 24, name: '항균 탈취 편백수 피톤치드 스프레이 500ml', brand: '포레스트', price: 14800, originalPrice: 24000, discountRate: 38, site: 'cjmall', rating: 4.6, reviews: 2120, salesCount: 5210, category: 'living', rank: 3, link: 'https://cjmall.co.kr' },
-
-    // Digital
-    { id: 25, name: '스마트 블루투스 액티브 노이즈캔슬링 헤드폰', brand: '사운드맥스', price: 129000, originalPrice: 229000, discountRate: 43, site: 'coupang', rating: 4.8, reviews: 3120, salesCount: 5410, category: 'digital', rank: 1, link: 'https://coupang.com' },
-    { id: 26, name: '27인치 보더리스 IPS 75Hz 오피스 모니터', brand: '뷰소닉스', price: 149000, originalPrice: 199000, discountRate: 25, site: 'naver', rating: 4.7, reviews: 1540, salesCount: 3120, category: 'digital', rank: 2, link: 'https://shopping.naver.com' },
-    { id: 27, name: '초고속 무선 마그네틱 3-in-1 거치 충전기', brand: '테크차지', price: 39800, originalPrice: 59000, discountRate: 32, site: 'cjmall', rating: 4.6, reviews: 950, salesCount: 2850, category: 'digital', rank: 3, link: 'https://cjmall.co.kr' },
-    { id: 28, name: '음파 진동 마이크로 전동 칫솔 더블세트', brand: '덴탈케어', price: 79000, originalPrice: 129000, discountRate: 38, site: 'coupang', rating: 4.8, reviews: 1850, salesCount: 4210, category: 'digital', rank: 4, link: 'https://coupang.com' },
-
-    // Sports
-    { id: 29, name: '초정밀 아웃도어 스포츠 스마트 스마트워치', brand: '핏트래커', price: 69000, originalPrice: 129000, discountRate: 46, site: 'naver', rating: 4.7, reviews: 1204, salesCount: 3120, category: 'sports', rank: 1, link: 'https://shopping.naver.com' },
-    { id: 30, name: '방수 아웃도어 트레킹 백팩 40L', brand: '마운틴기어', price: 39000, originalPrice: 59000, discountRate: 33, site: 'coupang', rating: 4.8, reviews: 2310, salesCount: 4560, category: 'sports', rank: 2, link: 'https://coupang.com' },
-    { id: 31, name: '고밀도 와이드 논슬립 피트니스 요가매트 15mm', brand: '홈핏', price: 18900, originalPrice: 29000, discountRate: 34, site: 'cjmall', rating: 4.5, reviews: 1980, salesCount: 3890, category: 'sports', rank: 3, link: 'https://cjmall.co.kr' }
+    {
+        id: 1,
+        name: 'Aether Pro Wireless Noise Cancelling Headphones',
+        brand: 'Tech Core',
+        price: 349000,
+        originalPrice: 410000,
+        discountRate: 15,
+        site: 'coupang',
+        rating: 4.9,
+        reviews: 1240,
+        salesCount: 8940,
+        category: 'digital',
+        rank: 1,
+        isCurated: true,
+        tag: '베스트셀러',
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAyClXPV3HhZIcAnrVNtY_SvyLX9fvaZEbVSuwRqCEAxUCbWPN3gQrvgsjyG4ucr--AC9KNs_5c4oQWKaEiJxUCeAv2UxZFLXdxMa0RlPz21li_YELKFZcEDU7m1xfrn9etOcHXimNL0kQnEVckMvRFlsj1Va7GpPdQOuGrOzroOFJwdUreZ8zm2Sj-keHy6ou9reNDMm76_RcVA4puS2rGivX4cS_xN3RZ2WQ_oTKPv6gzNkqdgPoJ',
+        link: 'https://coupang.com'
+    },
+    {
+        id: 2,
+        name: 'Lumina Tab X12 Ultra OLED',
+        brand: 'Naver Shop',
+        price: 1120000,
+        originalPrice: 1120000,
+        discountRate: 0,
+        site: 'naver',
+        rating: 4.8,
+        reviews: 850,
+        salesCount: 3120,
+        category: 'digital',
+        rank: 2,
+        isCurated: false,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD3mrcRKxNc2IIgZ2QdFZBXxmTcfYh8xctf_H1QIimzkaIJNTNBDpIMRyEnBHj41PK_RLydkQ-m-kMF8oYgxLRIp40ikgggVB1ZenGLDhCjzL_0CvrJqf-VL2VuJBVCatrEoWJoxCleG72DpGyas4w84BUFP-637zbgs3LRgVu4KO2iPah3P25RnDmUUGfDFqIP7KI-UjhN0yAa_a6IcwGNIgCwHzFR0VB3i1D3CpzVVQvZesGwkPEb',
+        link: 'https://shopping.naver.com'
+    },
+    {
+        id: 3,
+        name: 'KeyFlow TKL Mechanical - Amethyst Edition',
+        brand: 'CJ OnStyle',
+        price: 189000,
+        originalPrice: 189000,
+        discountRate: 0,
+        site: 'cjmall',
+        rating: 4.7,
+        reviews: 420,
+        salesCount: 2150,
+        category: 'digital',
+        rank: 3,
+        isCurated: true,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAsP4qLDefzedDC_shc7NEjXqtB3VvlSLe788o2uxexku_mkFA4_ZKSYTPWpLB-2_zJCIS8FPoVzmJGmX09MqdVPgZfbJXqPr091aloPZa0NgryUtWCXAEPtC02zu6J68vZQH6aaVNbkIU-ESOlp7kJhLCmiyIHiuk6s8oigpuYGf8UR7llULh6lJ0cyaC2xhBZFa1HuCSrKKolJXewcGeeKf83buNhEu4E3VVyYjSSiw0YXSXPcpBg',
+        link: 'https://cjmall.co.kr'
+    },
+    {
+        id: 4,
+        name: 'NeoCapture ZV Mirrorless Vlogging Kit',
+        brand: 'Coupang',
+        price: 980000,
+        originalPrice: 980000,
+        discountRate: 0,
+        site: 'coupang',
+        rating: 4.6,
+        reviews: 310,
+        salesCount: 1450,
+        category: 'digital',
+        rank: 4,
+        isCurated: false,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAz-aAPctq9yfObf9x67cd4-DlpuiqgxvhC2Wk8OgOAV_RS0F2anoQu6Q250fw1fb_6XecXJmSHbFS3lvdRD38n6ZZttGjhxgEe2TnC0Dnj8fBUN7l2oqibj56dSK5sIl2aaJMwv7uJ6qboqYu6AXK3yn8g3QbSUHOZIf6mcGwXdqnI5HvZG1OddNBp2DFRqUsJWjPs-Zr3ybPDDifogWM6cVJDflTv9eB8TgyZmSbXbKTj4CqDB01h',
+        link: 'https://coupang.com'
+    },
+    {
+        id: 5,
+        name: '미니멀리스트 퍼플 글라스 테이블 램프',
+        brand: 'Antigravity Home',
+        price: 89000,
+        originalPrice: 120000,
+        discountRate: 25,
+        site: 'coupang',
+        rating: 4.8,
+        reviews: 124,
+        salesCount: 1890,
+        category: 'home',
+        rank: 1,
+        isCurated: true,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBDsqCBJjcAx_Cs5bZNvnUhrr7k8Y2AHUVMbeIPE_Evlb7Bv4WKfFchldby78qq7INv7LId6utydpC8F1xxOHdx_aFfz3Zos1kRn1LZWLafxnmqDRDzY1rmygVLRvq5vPIIWEGrRv8tUKJj6wxYWbOktv4Oz2ty3etOZQQRLjlROhrgifHKH_sdNGl8xbQEBrTuCL5rG73PD4-DZrqdm9Pzq23t-lBomS1XrIkSaBnA3tHxFc0B3swq',
+        link: 'https://coupang.com'
+    },
+    {
+        id: 6,
+        name: '클래식 레더 토트백 (딥 퍼플 에디션)',
+        brand: 'Maison Seoul',
+        price: 245000,
+        originalPrice: 245000,
+        discountRate: 0,
+        site: 'naver',
+        rating: 4.9,
+        reviews: 82,
+        salesCount: 950,
+        category: 'fashion',
+        rank: 1,
+        isCurated: true,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBNjYdz8gcZxFx9M11ol2Eu8g4v57QoJ9OkuOOPfyJlw2WarohBPyhU0aaQwR75U5L52kK0Ikdw5HsFIEcFFQYCgII2LM-elSb94BiHw_UbPcMBjRsc4AH4vUZrxCkTkqA7JAQXJaeQuLCeX89XMAqU6fLTGJJ4KtAAvNnDGFvlZQeXvK_Qy4oyVOdgytmjfDE9ILJ-rvUAG_hYixL2qlLGA60tooQlv3DkFla4Y8Osqv8oF-P3mGRO',
+        link: 'https://shopping.naver.com'
+    },
+    {
+        id: 7,
+        name: '노이즈 캔슬링 무선 헤드폰 PRO 2',
+        brand: 'Tech Core',
+        price: 319000,
+        originalPrice: 350000,
+        discountRate: 9,
+        site: 'cjmall',
+        rating: 5.0,
+        reviews: 256,
+        salesCount: 3840,
+        category: 'digital',
+        rank: 5,
+        isCurated: true,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCZDRi0XyFYNXzvYCieNWA1VRpyYDjVU1QXLNaZFN-0hl2AOIaQwQWPd6hrG1Q1nZFvU425AkowrmsAMqca6d_yT1rMqdOdrieysNqWgPg7bqj1jOjbZX0MNfKgYLu6Cgp4cSVTGDXiI3mrdA7NiMLngoM02R3--VI8xWPzMqTJsecjhPDWF4r6xPw0ql-No7F0p67PmevpmETnCUrJpCBBHGEB32aaJjCCTPsPDT7Ml0Do53GMu4k7',
+        link: 'https://cjmall.co.kr'
+    },
+    {
+        id: 8,
+        name: '오가닉 라벤더 세럼 & 크림 기프트 세트',
+        brand: 'Aura Beauty',
+        price: 64000,
+        originalPrice: 64000,
+        discountRate: 0,
+        site: 'naver',
+        rating: 4.7,
+        reviews: 45,
+        salesCount: 1200,
+        category: 'beauty',
+        rank: 1,
+        isCurated: true,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA3yYKp5YutcDtbMASJt3ackqK9nECVuwFjtyRSi5I-u5flYkwxjsM2yPV2v6Cb-hafF_xUGuy2WPS-toR5KnBrz3ES0xOf4pWukVTcmDh3DK6UU1BNXMsQRXTBmVZADX20AV60ovNhJ4skUod5vsJSJgwh6qUjp8RAida08Iwa1vtWr8I86-Qsdx3SImqiugUEq0aagHjvyA-zusIErZQhkElEX34436khr66vtVxnJ2uMo7W8Z3Bt',
+        link: 'https://shopping.naver.com'
+    },
+    {
+        id: 9,
+        name: '제니스 인체공학 오피스 체어 시리즈',
+        brand: '홈 오피스',
+        price: 299000,
+        originalPrice: 399000,
+        discountRate: 25,
+        site: 'coupang',
+        rating: 4.9,
+        reviews: 380,
+        salesCount: 4500,
+        category: 'home',
+        rank: 2,
+        isCurated: false,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBxsqxq38aRVGibSwxhW9cEGeSRxLLLRuyUFQmVYHf4te99eqMiI3zFQV8M4Nv_CgmeXXfVKUlizFtq4ZAlHf6Eu_1ADlWKUT4Nvk1GJE-wcze0lgvU6usEfYCIKmTR3zO3EfzV79Rts62RdwMUOeiq6sFYeLLZuB8cr9UUcisJuZAxux4MYZJ92WRb0V_cU7OV_wvC_AlLCjvEW7q6YJ8eC0eaPxltiB6WeD0XHOUJ1Xcts4-R49KY',
+        link: 'https://coupang.com'
+    },
+    {
+        id: 10,
+        name: '글로우 에센스 리커버리 세럼 50ml',
+        brand: 'Aura Beauty',
+        price: 45000,
+        originalPrice: 59000,
+        discountRate: 24,
+        site: 'naver',
+        rating: 4.8,
+        reviews: 1120,
+        salesCount: 8400,
+        category: 'beauty',
+        rank: 2,
+        isCurated: false,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA9af5zRNIxnhIgxaxOL6CUqQfQcEXDtlMAXGSYLEi3K5RYyydmfokzf1vWbK9W2Oeth9gTdWR_ml2f6Op_s3Dxt_7BKNckYD6hjMuNLOZaY20Lt4MpS4iH_lqMw3d6k-JJl2GlPdz4O-vYdLe060Nw1FEWx9ogLODN2QnAH-DePlVDhc-Q9RKOX4KnfshzCQNxE1XSxmMGUpn6Kh8TR8hVRUogjTRI_pVL9uFrTRQvTG4WyufB-9vG',
+        link: 'https://shopping.naver.com'
+    },
+    {
+        id: 11,
+        name: '퓨어사운드 무선 헤드폰 클래식 에디션',
+        brand: 'Tech Core',
+        price: 189000,
+        originalPrice: 220000,
+        discountRate: 14,
+        site: 'naver',
+        rating: 4.8,
+        reviews: 950,
+        salesCount: 3950,
+        category: 'digital',
+        rank: 6,
+        isCurated: false,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCuSelfYUXgSXHbRJcnuRgBKQermfXJg2Z5b-Itct1M373OoxBjhVTD0skBhV0fKeA4MD3c0lhwCssRJmycooWFhMf8qgbzAxXWo8nEPA-asUh2qqH6H42mnEwVzHKuk6vmrylZkGgQeQCNLP91oFQ9aWTMcByRs4ak5nCkJrIEGRxXcKXJzhV_S5jnAoPo8yu7Cg4_JmpqLoLP_K3bRphgnxYoP8_ox5jq6qzS-5nKQ5jvjdgzdINz',
+        link: 'https://shopping.naver.com'
+    },
+    {
+        id: 12,
+        name: '노바 크로노 클래식 메탈 워치',
+        brand: 'Maison Seoul',
+        price: 220000,
+        originalPrice: 220000,
+        discountRate: 0,
+        site: 'cjmall',
+        rating: 4.7,
+        reviews: 310,
+        salesCount: 1210,
+        category: 'fashion',
+        rank: 2,
+        isCurated: false,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAemnj4nziNXQNGY9ADP5gSbYpffsq--lIzkYWYrj4PrZu-1x4-dBfSnx59fb0W-CJp5qlxjlqtWOnnBmZQ3FNqJoK52aWoV3BYV1Z8RnUXNn5-43aYny3AFwF0TKPrnI1uBBddFnH5QNstY8MWSsHElJkn7Sr6NRDoLVgpodjqnFoSBPvRHFJhUAn0wmNFq1XkFPlRPFpMrnGIBlBT7_TVpMJ6M58KBtR5EWwz-bucbvXKHURcCtk4',
+        link: 'https://cjmall.co.kr'
+    },
+    {
+        id: 13,
+        name: '유기농 세라믹 머그 4인조 홈세트',
+        brand: 'Antigravity Home',
+        price: 32000,
+        originalPrice: 48000,
+        discountRate: 33,
+        site: 'cjmall',
+        rating: 4.9,
+        reviews: 580,
+        salesCount: 2950,
+        category: 'home',
+        rank: 3,
+        isCurated: false,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRZSEvrW7AAMmXFQRso1hB0mPCdk0NPqxzfNXX5Mva2DHjuBVxCUkbvPxHhQQ9StLJN6HfBzPPtbsalbkoaWMuO7vFuZE6B5ZfUf1BaKxwbgK0749mgU6o_NQzTXAvTkXFEQLkE3785FEg7gYQwEEt9eAaMv21Ya2voPpVZb98tkKdrAXrymQmjd151aFtDh0jfe8JeiTzsEj9X3npbu8lajAJMpJM14hwo7tfBefg_FZotiC7jVeL',
+        link: 'https://cjmall.co.kr'
+    },
+    {
+        id: 14,
+        name: '어드밴스드 세라마이드 리커버리 세럼 (50ml)',
+        brand: 'LUMINA ESSENTIALS',
+        price: 48500,
+        originalPrice: 62000,
+        discountRate: 22,
+        site: 'naver',
+        rating: 4.8,
+        reviews: 1284,
+        salesCount: 9480,
+        category: 'beauty',
+        rank: 3,
+        isCurated: true,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDbfHitV9msXhDQ5H3nVRZcGhS6asdSC3naLwseVvCJixWCqzrkyaM1FFvYt3d4sop7SiJNT8vLWhSirGYJK7S8HcO0_axBO1j80ekTKHUsukDP2D8T5VMCLcC63x7o8ChtRUy4LKYlImUMIPMTBFxFZuEvzm4RvhWUdSYwFLHnPGge_hVfyEcO8HBT3LLFEhLT1c6J-3z_Fqw3RGUum-pckixCN6ilY-CVJ_lFxDlwm-mOjAbXgZMx',
+        link: 'https://shopping.naver.com'
+    }
 ];
 
 // --- State Management ---
-let currentCategory = 'all';
-let currentSite = 'all';
-let currentSort = 'rank';
+let currentCategory = 'all'; // 'all', 'fashion', 'digital', etc.
+let currentSite = 'all';     // 'all', 'coupang', 'naver', 'cjmall'
+let currentSort = 'rank';    // 'rank', 'sales', 'discount'
 let searchQuery = '';
-let countdownTimer = 1800; // 30 mins in seconds
+let currentView = 'home';    // 'home' or 'list'
 
-// --- SVG Gradient Mock Image Generator ---
-// We generate highly stylized, modern abstract gradients based on the category of the item.
-const getSVGImageSrc = (category, name) => {
-    // Generate a deterministically distinct gradient based on name hash
-    let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-        hash = name.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const hue1 = Math.abs(hash % 360);
-    const hue2 = (hue1 + 60) % 360;
-    
-    // Choose icon representation
-    const catObj = CATEGORIES.find(c => c.id === category) || CATEGORIES[0];
-    const emoji = catObj.icon;
-    
-    const svg = `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
-        <defs>
-            <linearGradient id="grad-${Math.abs(hash)}" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="hsl(${hue1}, 65%, 25%)" />
-                <stop offset="100%" stop-color="hsl(${hue2}, 70%, 12%)" />
-            </linearGradient>
-            <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="white" stop-opacity="0.15"/>
-                <stop offset="100%" stop-color="white" stop-opacity="0"/>
-            </radialGradient>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#grad-${Math.abs(hash)})" />
-        <circle cx="200" cy="200" r="160" fill="url(#glow)" />
-        <circle cx="200" cy="200" r="80" fill="white" fill-opacity="0.03" stroke="white" stroke-opacity="0.1" stroke-width="2" />
-        
-        <!-- Large Floating Emoji representing product type -->
-        <text x="50%" y="54%" font-family="system-ui, sans-serif" font-size="72" text-anchor="middle" dominant-baseline="middle" opacity="0.85">${emoji}</text>
-        
-        <!-- Decorative Grid Lines for high-tech premium feel -->
-        <path d="M 0 100 L 400 100 M 0 200 L 400 200 M 0 300 L 400 300 M 100 0 L 100 400 M 200 0 L 200 400 M 300 0 L 300 400" 
-              stroke="white" stroke-opacity="0.03" stroke-width="1" />
-    </svg>
-    `;
-    
-    // Encodes SVG into base64 data URI
-    return `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`;
-};
-
-// --- DOM References ---
-const pcCategoryList = document.getElementById('pc-category-list');
-const mobileCategoryList = document.getElementById('mobile-category-list');
-const productsGrid = document.getElementById('products-grid');
-const searchInput = document.getElementById('search-input');
-const searchClearBtn = document.getElementById('search-clear-btn');
-const totalItemsCount = document.getElementById('total-items-count');
-const categoryItemsCount = document.getElementById('category-items-count');
-const currentCategoryName = document.getElementById('current-category-name');
-const sortButtons = document.querySelectorAll('.sort-btn');
-const filterChips = document.querySelectorAll('.filter-chip');
-const detailModal = document.getElementById('product-detail-modal');
-const modalCloseBtn = document.getElementById('modal-close-btn');
-const modalContent = document.getElementById('modal-body-content');
-const redirectOverlay = document.getElementById('redirect-overlay');
-const redirectProgressBar = document.getElementById('redirect-progress-bar');
-const redirectSiteBadge = document.getElementById('redirect-site-badge');
-const redirectProductName = document.getElementById('redirect-product-name');
-const timerDisplay = document.getElementById('update-timer');
-
-// --- Initialization ---
+// --- Initialize App ---
 function init() {
-    renderCategoryMenus();
-    renderProducts();
+    renderHomeView();
     setupEventListeners();
-    startCountdown();
-    simulateLiveActivity();
-    totalItemsCount.textContent = PRODUCTS.length;
 }
 
-// --- Render Categories ---
-function renderCategoryMenus() {
-    // Render PC Sidebar
-    pcCategoryList.innerHTML = CATEGORIES.map(cat => `
-        <li class="category-item ${cat.id === currentCategory ? 'active' : ''}" data-id="${cat.id}">
-            <span class="category-icon">${cat.icon}</span>
-            <span>${cat.name}</span>
-        </li>
+// --- Render Home View ---
+function renderHomeView() {
+    // 1. Render Desktop Trending Keywords
+    const desktopTrending = document.getElementById('desktop-trending-chips');
+    const mobileTrending = document.getElementById('mobile-trending-chips');
+    
+    const trendingHTML = TRENDING_KEYWORDS.map(kw => `
+        <span class="px-4 py-2 bg-white border border-border-light rounded-full text-label-lg text-primary hover:border-primary-container hover:bg-surface-subtle cursor-pointer transition-all trending-chip">${kw}</span>
     `).join('');
-
-    // Render Mobile List
-    mobileCategoryList.innerHTML = CATEGORIES.map(cat => `
-        <div class="mobile-cat-item ${cat.id === currentCategory ? 'active' : ''}" data-id="${cat.id}">
-            ${cat.icon} ${cat.name}
+    
+    if (desktopTrending) desktopTrending.innerHTML = trendingHTML;
+    
+    // Render Mobile Trending Keywords
+    const mobileTrendingHTML = TRENDING_KEYWORDS.map((kw, index) => `
+        <div class="trend-chip flex items-center gap-2 bg-white border border-border-light px-4 py-2 rounded-xl whitespace-nowrap shadow-sm trending-chip">
+            <span class="text-primary font-bold">${index + 1}</span>
+            <span class="font-body-md">${kw.replace('#', '')}</span>
+            <span class="material-symbols-outlined text-error text-[16px]">trending_up</span>
         </div>
     `).join('');
+    if (mobileTrending) mobileTrending.innerHTML = mobileTrendingHTML;
+
+    // 2. Render Desktop Curated Picks (4 items)
+    const desktopCurated = document.getElementById('desktop-curated-picks');
+    const curatedItems = PRODUCTS.filter(p => p.isCurated).slice(0, 4);
+    
+    if (desktopCurated) {
+        desktopCurated.innerHTML = curatedItems.map(prod => `
+            <div class="group bg-white rounded-2xl border border-border-light hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col h-full product-card-click cursor-pointer" data-id="${prod.id}">
+                <div class="relative aspect-[4/5] overflow-hidden">
+                    <div class="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-700" style="background-image: url('${prod.image}')"></div>
+                    <button class="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-outline hover:text-error transition-colors btn-favorite">
+                        <span class="material-symbols-outlined">favorite</span>
+                    </button>
+                    <div class="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-white/80 backdrop-blur-md">
+                        <button class="w-full bg-primary text-white py-3 rounded-xl font-label-lg flex items-center justify-center gap-2 active:scale-95 transition-all btn-add-cart">
+                            <span class="material-symbols-outlined text-lg">shopping_cart</span> 장바구니 담기
+                        </button>
+                    </div>
+                </div>
+                <div class="p-5 flex-grow flex flex-col">
+                    <p class="text-label-sm text-outline mb-1 uppercase tracking-wider">${prod.brand}</p>
+                    <h3 class="font-body-lg text-body-lg text-on-surface mb-2 line-clamp-2">${prod.name}</h3>
+                    <div class="mt-auto flex items-baseline gap-2">
+                        <span class="font-headline-md text-headline-md text-primary">${prod.price.toLocaleString()}원</span>
+                        ${prod.discountRate > 0 ? `<span class="text-label-sm text-outline line-through">${prod.originalPrice.toLocaleString()}원</span>` : ''}
+                    </div>
+                    <div class="flex items-center gap-1 mt-3">
+                        <span class="material-symbols-outlined text-yellow-400 text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="text-label-sm font-label-sm text-on-surface">${prod.rating}</span>
+                        <span class="text-label-sm text-outline">(${prod.reviews})</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // 3. Render Mobile Curated Picks (2 items)
+    const mobileCurated = document.getElementById('mobile-curated-picks');
+    if (mobileCurated) {
+        mobileCurated.innerHTML = curatedItems.slice(0, 4).map(prod => `
+            <div class="group bg-white rounded-2xl border border-border-light overflow-hidden shadow-sm flex flex-col h-full product-card-click cursor-pointer" data-id="${prod.id}">
+                <div class="h-40 relative overflow-hidden">
+                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="${prod.image}"/>
+                    <div class="absolute top-2 right-2 h-8 w-8 bg-white/85 rounded-full flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined text-sm">favorite</span>
+                    </div>
+                </div>
+                <div class="p-4 flex-grow flex flex-col justify-between">
+                    <div>
+                        <p class="text-secondary text-[10px] uppercase mb-1">${prod.brand}</p>
+                        <h4 class="font-body-md text-body-md font-bold truncate">${prod.name}</h4>
+                    </div>
+                    <div class="flex items-baseline gap-1 mt-2">
+                        <span class="text-primary font-bold text-body-md">${prod.price.toLocaleString()}원</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
 }
 
-// --- Filter and Sort Products ---
-function getFilteredProducts() {
-    return PRODUCTS.filter(prod => {
+// --- Render List View ---
+function renderListView() {
+    const filtered = PRODUCTS.filter(prod => {
         // Category filter
         if (currentCategory !== 'all' && prod.category !== currentCategory) return false;
         
@@ -171,172 +367,241 @@ function getFilteredProducts() {
         // Search query filter
         if (searchQuery) {
             const query = searchQuery.toLowerCase();
-            const matchesName = prod.name.toLowerCase().includes(query);
-            const matchesBrand = prod.brand.toLowerCase().includes(query);
-            if (!matchesName && !matchesBrand) return false;
+            return prod.name.toLowerCase().includes(query) || prod.brand.toLowerCase().includes(query);
         }
         
         return true;
     }).sort((a, b) => {
-        // Sort order
-        if (currentSort === 'rank') {
-            // Smaller rank values are better
-            return a.rank - b.rank;
-        } else if (currentSort === 'sales') {
-            // More sales are better
-            return b.salesCount - a.salesCount;
-        } else if (currentSort === 'discount') {
-            // More discount is better
-            return b.discountRate - a.discountRate;
-        }
+        if (currentSort === 'rank') return a.rank - b.rank;
+        if (currentSort === 'sales') return b.salesCount - a.salesCount;
+        if (currentSort === 'discount') return b.discountRate - a.discountRate;
         return 0;
     });
-}
 
-// --- Render Products ---
-function renderProducts() {
-    productsGrid.innerHTML = '';
-    const filtered = getFilteredProducts();
-    categoryItemsCount.textContent = `${filtered.length}개`;
-    
-    const catObj = CATEGORIES.find(c => c.id === currentCategory);
-    currentCategoryName.textContent = catObj ? catObj.name : '전체 상품';
+    const categoryObj = CATEGORIES.find(c => c.id === currentCategory) || { name: '전체 상품' };
+    const titleText = searchQuery ? `'${searchQuery}' 검색 결과` : categoryObj.name;
 
-    if (filtered.length === 0) {
-        productsGrid.innerHTML = `
-            <div class="empty-state">
-                <span>⚠️</span>
-                <p>일치하는 상품이 없습니다. 다른 키워드로 검색해 보세요.</p>
-            </div>
-        `;
-        return;
+    // Desktop List UI
+    const desktopTitle = document.getElementById('desktop-list-title');
+    const desktopCount = document.getElementById('desktop-list-count');
+    const desktopGrid = document.getElementById('desktop-products-grid');
+
+    if (desktopTitle) desktopTitle.textContent = titleText;
+    if (desktopCount) desktopCount.textContent = `${filtered.length}개 상품`;
+
+    if (desktopGrid) {
+        if (filtered.length === 0) {
+            desktopGrid.innerHTML = `
+                <div class="py-16 text-center text-text-secondary">
+                    <span class="material-symbols-outlined text-5xl">inventory_2</span>
+                    <p class="mt-4">일치하는 큐레이션 상품이 없습니다.</p>
+                </div>
+            `;
+        } else {
+            desktopGrid.innerHTML = filtered.map((prod, index) => `
+                <div class="group relative flex bg-white rounded-2xl overflow-hidden border border-border-light hover:shadow-lg transition-all duration-300 p-6 gap-6 product-card-click cursor-pointer" data-id="${prod.id}">
+                    <div class="relative w-40 h-40 flex-shrink-0 overflow-hidden rounded-xl">
+                        <img class="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-500" src="${prod.image}"/>
+                        <div class="absolute top-0 left-0 bg-primary text-white w-8 h-8 flex items-center justify-center font-bold text-lg rounded-br-lg shadow-md">${index + 1}</div>
+                    </div>
+                    <div class="flex flex-col justify-between flex-grow">
+                        <div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="px-2 py-0.5 bg-secondary-container text-primary text-[10px] font-bold rounded-full uppercase">${prod.site.toUpperCase()}</span>
+                                ${prod.tag ? `<span class="px-2 py-0.5 bg-tertiary-fixed text-tertiary text-[10px] font-bold rounded-full uppercase">${prod.tag}</span>` : ''}
+                            </div>
+                            <h3 class="font-headline-md text-headline-md text-on-background line-clamp-2">${prod.name}</h3>
+                            <div class="flex items-center gap-1 mt-1 text-primary">
+                                <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+                                <span class="text-label-lg font-label-lg">${prod.rating}</span>
+                                <span class="text-text-secondary text-label-sm">(${prod.reviews} 리뷰)</span>
+                            </div>
+                        </div>
+                        <div class="flex items-end justify-between mt-4">
+                            <div class="flex flex-col">
+                                ${prod.discountRate > 0 ? `<span class="text-error text-label-sm font-bold">${prod.discountRate}% 할인</span>` : ''}
+                                <span class="text-headline-md font-bold text-primary">${prod.price.toLocaleString()}원</span>
+                            </div>
+                            <button class="bg-primary hover:bg-primary-container text-white px-5 py-2.5 rounded-full flex items-center gap-2 transition-transform active:scale-95 btn-buy-now" data-id="${prod.id}">
+                                <span class="material-symbols-outlined text-[18px]">shopping_cart</span>
+                                <span class="font-label-lg">구매하기</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
     }
 
-    filtered.forEach((prod, index) => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.setAttribute('data-id', prod.id);
-        
-        // We display top ranking numbers 1, 2, 3 differently
-        const rankDisplay = currentSort === 'rank' ? prod.rank : (index + 1);
-        const imageSrc = getSVGImageSrc(prod.category, prod.name);
-        
-        const siteLabel = prod.site === 'coupang' ? '쿠팡' : prod.site === 'naver' ? '네이버' : 'CJ Mall';
-        
-        card.innerHTML = `
-            <div class="product-rank">${rankDisplay}</div>
-            <div class="product-image-container">
-                <img class="product-image" src="${imageSrc}" alt="${prod.name}" loading="lazy">
-                <div class="product-badges">
-                    <span class="site-badge ${prod.site}">${siteLabel}</span>
+    // Mobile List UI
+    const mobileTitle = document.getElementById('mobile-list-title');
+    const mobileCount = document.getElementById('mobile-list-count');
+    const mobileGrid = document.getElementById('mobile-products-grid');
+
+    if (mobileTitle) mobileTitle.textContent = titleText;
+    if (mobileCount) mobileCount.textContent = `${filtered.length}개`;
+
+    if (mobileGrid) {
+        if (filtered.length === 0) {
+            mobileGrid.innerHTML = `
+                <div class="py-16 text-center text-text-secondary">
+                    <span class="material-symbols-outlined text-4xl">inventory_2</span>
+                    <p class="mt-4">일치하는 큐레이션 상품이 없습니다.</p>
                 </div>
-            </div>
-            <div class="product-info">
-                <div class="product-brand">${prod.brand}</div>
-                <h3 class="product-title">${prod.name}</h3>
-                <div class="product-price-row">
-                    <span class="product-discount">${prod.discountRate}%</span>
-                    <span class="product-price">${prod.price.toLocaleString()}원</span>
-                    <span class="product-original-price">${prod.originalPrice.toLocaleString()}원</span>
+            `;
+        } else {
+            mobileGrid.innerHTML = filtered.map((prod, index) => `
+                <div class="group relative flex bg-white rounded-xl overflow-hidden border border-border-light p-3 gap-3 product-card-click cursor-pointer" data-id="${prod.id}">
+                    <div class="relative w-28 h-28 flex-shrink-0">
+                        <img class="w-full h-full object-cover rounded-lg" src="${prod.image}"/>
+                        <div class="absolute top-0 left-0 bg-primary text-white w-6 h-6 flex items-center justify-center font-bold text-sm rounded-br-lg shadow-sm">${index + 1}</div>
+                    </div>
+                    <div class="flex flex-col justify-between flex-grow">
+                        <div>
+                            <div class="flex items-center gap-1.5 mb-1">
+                                <span class="px-1.5 py-0.5 bg-secondary-container text-primary text-[8px] font-bold rounded-full uppercase">${prod.site.toUpperCase()}</span>
+                            </div>
+                            <h4 class="font-body-md text-body-md text-on-background line-clamp-2 leading-snug">${prod.name}</h4>
+                            <div class="flex items-center gap-0.5 mt-0.5 text-primary">
+                                <span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+                                <span class="text-[12px] font-bold">${prod.rating}</span>
+                                <span class="text-text-secondary text-[10px]">(${prod.reviews})</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between mt-2">
+                            <div class="flex flex-col">
+                                ${prod.discountRate > 0 ? `<span class="text-error text-[10px] font-bold">${prod.discountRate}%</span>` : ''}
+                                <span class="text-body-md font-bold text-primary">${prod.price.toLocaleString()}원</span>
+                            </div>
+                            <button class="bg-primary text-white p-1.5 rounded-full active:scale-95 btn-buy-now" data-id="${prod.id}">
+                                <span class="material-symbols-outlined text-[16px]">shopping_cart</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="product-stats">
-                    <div class="stat-item">
-                        <span class="rating-star">★</span>
-                        <span>${prod.rating}</span>
-                    </div>
-                    <div class="stat-item">
-                        <span>리뷰</span>
-                        <span>${prod.reviews.toLocaleString()}</span>
-                    </div>
-                    <div class="stat-item">
-                        <span>판매</span>
-                        <span>${prod.salesCount.toLocaleString()}</span>
-                    </div>
-                </div>
-            </div>
-        `;
+            `).join('');
+        }
+    }
+}
+
+// --- Route Switch ---
+function switchView(viewName) {
+    currentView = viewName;
+    if (viewName === 'home') {
+        document.getElementById('desktop-home-view').classList.remove('hidden');
+        document.getElementById('desktop-list-view').classList.add('hidden');
+        document.getElementById('mobile-home-view').classList.remove('hidden');
+        document.getElementById('mobile-list-view').classList.add('hidden');
         
-        card.addEventListener('click', () => openDetailModal(prod));
-        productsGrid.appendChild(card);
-    });
+        // Active Navigation items
+        document.querySelectorAll('.header-logo-btn').forEach(btn => btn.classList.add('text-primary'));
+        document.querySelectorAll('.mobile-nav-home').forEach(btn => btn.classList.add('text-primary', 'font-bold'));
+        document.querySelectorAll('.mobile-nav-search').forEach(btn => btn.classList.remove('text-primary', 'font-bold'));
+    } else {
+        document.getElementById('desktop-home-view').classList.add('hidden');
+        document.getElementById('desktop-list-view').classList.remove('hidden');
+        document.getElementById('mobile-home-view').classList.add('hidden');
+        document.getElementById('mobile-list-view').classList.remove('hidden');
+        
+        // Active Navigation items
+        document.querySelectorAll('.header-logo-btn').forEach(btn => btn.classList.remove('text-primary'));
+    }
 }
 
 // --- Detail Modal Open ---
 function openDetailModal(prod) {
-    const imageSrc = getSVGImageSrc(prod.category, prod.name);
-    const siteLabel = prod.site === 'coupang' ? '쿠팡' : prod.site === 'naver' ? '네이버' : 'CJ Mall';
+    const detailBody = document.getElementById('detail-modal-body');
+    const siteLabel = prod.site === 'coupang' ? '쿠팡' : prod.site === 'naver' ? '네이버 쇼핑' : 'CJ 몰';
+    const siteBtnColor = prod.site === 'coupang' ? '#E52528' : prod.site === 'naver' ? '#03C75A' : '#FF5F00';
     
-    modalContent.innerHTML = `
-        <div class="detail-layout">
-            <div class="detail-image-box">
-                <img src="${imageSrc}" alt="${prod.name}">
-            </div>
-            <div class="detail-info-box">
-                <div class="detail-header">
-                    <div class="detail-brand">${prod.brand}</div>
-                    <h2 class="detail-title">${prod.name}</h2>
+    detailBody.innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-stack-lg lg:gap-16">
+            <!-- Product Gallery Section -->
+            <section class="relative md:rounded-xl overflow-hidden pt-12 md:pt-0">
+                <div class="aspect-[4/5] relative bg-surface-container overflow-hidden rounded-2xl border border-border-light">
+                    <img class="w-full h-full object-cover" src="${prod.image}" alt="${prod.name}"/>
                 </div>
-                
-                <div class="detail-site-row">
-                    <span class="site-badge ${prod.site}">${siteLabel}</span>
-                    <span class="items-count-badge">실시간 선호도 1위</span>
+            </section>
+            
+            <!-- Product Info Section -->
+            <section class="flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-label-sm font-label-sm text-outline uppercase tracking-widest">${prod.brand}</span>
+                        <button class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary">
+                            <span class="material-symbols-outlined">share</span>
+                        </button>
+                    </div>
+                    <h2 class="font-headline-lg text-headline-lg text-on-surface mb-4 leading-snug">${prod.name}</h2>
+                    <div class="flex items-center gap-4 mt-2 mb-6 border-b border-border-light pb-4">
+                        <div class="flex items-center gap-1 text-primary">
+                            <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+                            <span class="font-bold text-body-lg">${prod.rating}</span>
+                            <span class="text-text-secondary text-label-sm">(${prod.reviews} 리뷰)</span>
+                        </div>
+                        <span class="px-3 py-1 bg-secondary-container text-primary text-label-sm rounded-full">구매 선호도 94% 긍정</span>
+                    </div>
+
+                    <!-- Pricing Info -->
+                    <div class="bg-surface-subtle p-6 rounded-2xl border border-border-light space-y-2 mb-8">
+                        ${prod.discountRate > 0 ? `
+                            <div class="text-label-sm text-outline line-through">정상가 ${prod.originalPrice.toLocaleString()}원</div>
+                            <div class="flex items-baseline gap-3">
+                                <span class="text-error font-bold text-2xl">${prod.discountRate}%</span>
+                                <span class="font-bold text-3xl text-primary">${prod.price.toLocaleString()}원</span>
+                            </div>
+                        ` : `
+                            <div class="flex items-baseline gap-3">
+                                <span class="font-bold text-3xl text-primary">${prod.price.toLocaleString()}원</span>
+                            </div>
+                        `}
+                        <div class="text-label-sm text-text-secondary mt-2 flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">local_mall</span>
+                            최저가 판매처: <strong style="color: ${siteBtnColor}">${siteLabel}</strong>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="detail-stats-row">
-                    <div class="detail-stat">
-                        <span class="detail-stat-val">★ ${prod.rating}</span>
-                        <span class="detail-stat-label">평점 (만점 5.0)</span>
-                    </div>
-                    <div class="detail-stat">
-                        <span class="detail-stat-val">${prod.reviews.toLocaleString()}개</span>
-                        <span class="detail-stat-label">누적 리뷰 수</span>
-                    </div>
-                    <div class="detail-stat">
-                        <span class="detail-stat-val">${prod.salesCount.toLocaleString()}개</span>
-                        <span class="detail-stat-label">이번주 판매량</span>
-                    </div>
-                </div>
-                
-                <div class="detail-price-box">
-                    <div class="original-row">정상가 ${prod.originalPrice.toLocaleString()}원</div>
-                    <div class="price-row">
-                        <span class="product-discount" style="font-size: 24px;">${prod.discountRate}%</span>
-                        <span class="product-price" style="font-size: 28px;">${prod.price.toLocaleString()}원</span>
-                    </div>
-                </div>
-                
-                <div class="buy-action-box">
-                    <button class="buy-btn" id="modal-buy-btn">
-                        <span>구매 사이트로 이동하기</span>
-                        <span>➔</span>
+
+                <!-- Purchase Trigger Button -->
+                <div class="space-y-4">
+                    <button class="w-full bg-primary hover:bg-primary-container text-white py-4 px-6 rounded-xl font-headline-md text-body-lg shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2" id="detail-buy-btn">
+                        <span class="material-symbols-outlined text-lg">shopping_cart</span>
+                        <span>${siteLabel}에서 구매하러 가기</span>
                     </button>
                 </div>
-            </div>
+            </section>
         </div>
     `;
+
+    const detailModal = document.getElementById('detail-modal');
+    detailModal.classList.remove('opacity-0', 'pointer-events-none');
     
-    detailModal.classList.add('active');
-    
-    // Add event listener to buying button
-    document.getElementById('modal-buy-btn').addEventListener('click', () => {
-        detailModal.classList.remove('active');
+    // Add buy click listener
+    document.getElementById('detail-buy-btn').addEventListener('click', () => {
+        detailModal.classList.add('opacity-0', 'pointer-events-none');
         triggerRedirect(prod);
     });
 }
 
-// --- Purchase Redirect Simulator ---
+// --- Trigger Redirecting Transition Overlay ---
 function triggerRedirect(prod) {
-    const siteLabel = prod.site === 'coupang' ? '쿠팡' : prod.site === 'naver' ? '네이버' : 'CJ Mall';
+    const redirectOverlay = document.getElementById('redirect-overlay');
+    const redirectTitle = document.getElementById('redirect-title');
+    const redirectBrandIcon = document.getElementById('redirect-brand-icon');
+    const redirectProgressBar = document.getElementById('redirect-progress-fill');
     
-    redirectSiteBadge.className = `redirect-site-badge ${prod.site}`;
-    redirectSiteBadge.textContent = siteLabel;
-    redirectProductName.textContent = prod.name;
-    
-    redirectOverlay.classList.add('active');
-    
-    let progress = 0;
+    const siteLabel = prod.site === 'coupang' ? '쿠팡' : prod.site === 'naver' ? '네이버 쇼핑' : 'CJ OnStyle';
+    const siteColor = prod.site === 'coupang' ? '#E52528' : prod.site === 'naver' ? '#03C75A' : '#FF5F00';
+    const charIcon = prod.site === 'coupang' ? 'C' : prod.site === 'naver' ? 'N' : 'CJ';
+
+    redirectTitle.textContent = `${siteLabel}으로 이동 중입니다...`;
+    redirectBrandIcon.textContent = charIcon;
+    redirectBrandIcon.style.backgroundColor = siteColor;
     redirectProgressBar.style.width = '0%';
     
+    redirectOverlay.classList.remove('opacity-0', 'pointer-events-none');
+
+    let progress = 0;
     const interval = setInterval(() => {
         progress += 4;
         redirectProgressBar.style.width = `${progress}%`;
@@ -344,170 +609,205 @@ function triggerRedirect(prod) {
         if (progress >= 100) {
             clearInterval(interval);
             setTimeout(() => {
-                redirectOverlay.classList.remove('active');
-                // Redirect user to store
+                redirectOverlay.classList.add('opacity-0', 'pointer-events-none');
                 window.open(prod.link, '_blank');
             }, 300);
         }
-    }, 50); // Takes ~1.2 seconds
+    }, 50); // Takes ~1.2s
+
+    // Set up continue & cancel handlers
+    document.getElementById('redirect-continue-btn').onclick = () => {
+        clearInterval(interval);
+        redirectOverlay.classList.add('opacity-0', 'pointer-events-none');
+        window.open(prod.link, '_blank');
+    };
+    
+    document.getElementById('redirect-cancel-btn').onclick = () => {
+        clearInterval(interval);
+        redirectOverlay.classList.add('opacity-0', 'pointer-events-none');
+    };
 }
 
-// --- Set up Event Listeners ---
+// --- Event Listeners Setup ---
 function setupEventListeners() {
-    // Sidebar Categories
-    pcCategoryList.addEventListener('click', (e) => {
-        const item = e.target.closest('.category-item');
-        if (!item) return;
-        currentCategory = item.getAttribute('data-id');
-        renderCategoryMenus();
-        renderProducts();
-    });
-
-    // Mobile Categories
-    mobileCategoryList.addEventListener('click', (e) => {
-        const item = e.target.closest('.mobile-cat-item');
-        if (!item) return;
-        currentCategory = item.getAttribute('data-id');
-        renderCategoryMenus();
-        renderProducts();
-    });
-
-    // Site filter chips
-    document.querySelectorAll('.filter-chip').forEach(chip => {
-        chip.addEventListener('click', () => {
-            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
-            currentSite = chip.getAttribute('data-site');
-            renderProducts();
+    // Navigation logo/home button triggers
+    document.querySelectorAll('.header-logo-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            switchView('home');
         });
     });
 
-    // Sorting buttons
-    document.querySelectorAll('.sort-btn').forEach(btn => {
+    // Mobile nav home
+    document.querySelectorAll('.mobile-nav-home').forEach(btn => {
         btn.addEventListener('click', () => {
-            document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            currentSort = btn.getAttribute('data-sort');
-            renderProducts();
+            switchView('home');
         });
     });
 
-    // Search bar
-    searchInput.addEventListener('input', (e) => {
+    // Mobile nav search focus
+    document.querySelectorAll('.mobile-nav-search').forEach(btn => {
+        btn.addEventListener('click', () => {
+            switchView('home');
+            document.getElementById('mobile-search-input').focus();
+            document.querySelectorAll('.mobile-nav-home').forEach(b => b.classList.remove('text-primary', 'font-bold'));
+            btn.classList.add('text-primary', 'font-bold');
+        });
+    });
+
+    // Category Buttons Click (Bento on desktop / icons on mobile)
+    document.querySelectorAll('.bento-category-btn, .mobile-category-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            currentCategory = btn.getAttribute('data-category');
+            switchView('list');
+            
+            // Sync filter buttons
+            document.querySelectorAll('#desktop-mall-filters button, #mobile-mall-filters button').forEach(b => {
+                b.classList.remove('bg-primary', 'text-white');
+                b.classList.add('bg-white', 'border-border-light', 'text-on-surface');
+            });
+            document.querySelectorAll('#desktop-mall-filters button[data-site="all"], #mobile-mall-filters button[data-site="all"]').forEach(b => {
+                b.classList.remove('bg-white', 'border-border-light', 'text-on-surface');
+                b.classList.add('bg-primary', 'text-white');
+            });
+            
+            currentSite = 'all';
+            renderListView();
+        });
+    });
+
+    // Search input (Desktop)
+    document.getElementById('desktop-search-input').addEventListener('input', (e) => {
         searchQuery = e.target.value;
         if (searchQuery.trim()) {
-            searchClearBtn.style.display = 'block';
+            currentCategory = 'all';
+            switchView('list');
+            renderListView();
         } else {
-            searchClearBtn.style.display = 'none';
-        }
-        renderProducts();
-    });
-
-    // Clear search
-    searchClearBtn.addEventListener('click', () => {
-        searchInput.value = '';
-        searchQuery = '';
-        searchClearBtn.style.display = 'none';
-        renderProducts();
-    });
-
-    // Close modal
-    modalCloseBtn.addEventListener('click', () => {
-        detailModal.classList.remove('active');
-    });
-
-    detailModal.addEventListener('click', (e) => {
-        if (e.target === detailModal) {
-            detailModal.classList.remove('active');
+            switchView('home');
         }
     });
-}
 
-// --- Countdown Timer for Updates ---
-function startCountdown() {
-    setInterval(() => {
-        countdownTimer--;
-        if (countdownTimer <= 0) {
-            countdownTimer = 1800; // reset to 30 mins
-            triggerFullUpdateAnimation();
+    // Search input (Mobile)
+    document.getElementById('mobile-search-input').addEventListener('input', (e) => {
+        searchQuery = e.target.value;
+        if (searchQuery.trim()) {
+            currentCategory = 'all';
+            switchView('list');
+            renderListView();
+        } else {
+            switchView('home');
         }
-        
-        const mins = Math.floor(countdownTimer / 60);
-        const secs = countdownTimer % 60;
-        timerDisplay.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }, 1000);
-}
+    });
 
-// --- Simulates Periodic Live Activity ---
-// Every 8-15 seconds, we modify some data (e.g. increase sales, slightly alter reviews/ratings, or trigger rank shifts)
-// and show a visual flashing effect on the altered card.
-function simulateLiveActivity() {
-    const statusText = document.getElementById('refresh-status');
-    
-    setInterval(() => {
-        if (PRODUCTS.length === 0) return;
-        
-        // Randomly pick a product
-        const randomIndex = Math.floor(Math.random() * PRODUCTS.length);
-        const prod = PRODUCTS[randomIndex];
-        
-        // Simulates a new sale!
-        const salesAdd = Math.floor(Math.random() * 5) + 1;
-        prod.salesCount += salesAdd;
-        prod.reviews += Math.random() > 0.7 ? 1 : 0;
-        
-        // Randomly swap ranks sometimes!
-        if (Math.random() > 0.6) {
-            // Find another product in the same category
-            const siblings = PRODUCTS.filter(p => p.category === prod.category && p.id !== prod.id);
-            if (siblings.length > 0) {
-                const partner = siblings[Math.floor(Math.random() * siblings.length)];
-                // Swap ranks
-                const tempRank = prod.rank;
-                prod.rank = partner.rank;
-                partner.rank = tempRank;
+    // Platform Mall filters (Desktop & Mobile)
+    const setupMallFilters = (containerId) => {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        container.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                container.querySelectorAll('button').forEach(b => {
+                    b.classList.remove('bg-primary', 'text-white');
+                    b.classList.add('bg-white', 'border-border-light', 'text-on-surface');
+                });
+                btn.classList.remove('bg-white', 'border-border-light', 'text-on-surface');
+                btn.classList.add('bg-primary', 'text-white');
+                currentSite = btn.getAttribute('data-site');
+                renderListView();
+            });
+        });
+    };
+    setupMallFilters('desktop-mall-filters');
+    setupMallFilters('mobile-mall-filters');
+
+    // Sorting options (Desktop & Mobile)
+    const setupSortOptions = (containerId) => {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        container.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                container.querySelectorAll('button').forEach(b => {
+                    b.classList.remove('text-primary', 'border-b-2', 'border-primary', 'font-bold');
+                    b.classList.add('text-text-secondary');
+                });
+                btn.classList.remove('text-text-secondary');
+                btn.classList.add('text-primary', 'border-b-2', 'border-primary', 'font-bold');
+                currentSort = btn.getAttribute('data-sort');
+                renderListView();
+            });
+        });
+    };
+    setupSortOptions('desktop-sort-options');
+    setupSortOptions('mobile-sort-options');
+
+    // Global Product Cards Click Delegations
+    document.addEventListener('click', (e) => {
+        const card = e.target.closest('.product-card-click');
+        if (card) {
+            const id = parseInt(card.getAttribute('data-id'));
+            const prod = PRODUCTS.find(p => p.id === id);
+            if (prod) {
+                // If they clicked add to cart or favorite button specifically, don't open details modal
+                if (e.target.closest('.btn-favorite') || e.target.closest('.btn-add-cart')) return;
+                openDetailModal(prod);
             }
         }
         
-        // Update header indicator text
-        statusText.textContent = `${prod.brand} 상품 판매량 증가 갱신됨`;
-        statusText.style.color = '#38bdf8';
-        
-        // Reset indicator color after 3s
-        setTimeout(() => {
-            statusText.textContent = '실시간 데이터 갱신 중';
-            statusText.style.color = 'var(--text-muted)';
-        }, 3000);
-        
-        // Render updated products
-        renderProducts();
-        
-        // Highlight the changed card if it is in the DOM
-        const changedCard = document.querySelector(`.product-card[data-id="${prod.id}"]`);
-        if (changedCard) {
-            changedCard.style.transition = 'none';
-            changedCard.style.boxShadow = '0 0 15px rgba(56, 189, 248, 0.4)';
-            changedCard.style.borderColor = '#38bdf8';
-            setTimeout(() => {
-                changedCard.style.transition = 'all var(--transition-normal)';
-                changedCard.style.boxShadow = '';
-                changedCard.style.borderColor = '';
-            }, 1000);
+        // Buy now button clicks inside listings
+        const buyBtn = e.target.closest('.btn-buy-now');
+        if (buyBtn) {
+            e.stopPropagation();
+            const id = parseInt(buyBtn.getAttribute('data-id'));
+            const prod = PRODUCTS.find(p => p.id === id);
+            if (prod) {
+                triggerRedirect(prod);
+            }
         }
-    }, 12000); // Trigger every 12 seconds
-}
+    });
 
-function triggerFullUpdateAnimation() {
-    const statusText = document.getElementById('refresh-status');
-    statusText.textContent = '전체 마켓 데이터 동기화 중...';
-    statusText.style.color = '#eab308';
-    
-    // Simulates api sync latency
-    setTimeout(() => {
-        statusText.textContent = '실시간 데이터 갱신 중';
-        statusText.style.color = 'var(--text-muted)';
-        renderProducts();
-    }, 2000);
+    // Close detail modal events
+    const detailModal = document.getElementById('detail-modal');
+    document.getElementById('detail-modal-close-btn').onclick = () => {
+        detailModal.classList.add('opacity-0', 'pointer-events-none');
+    };
+    document.getElementById('detail-modal-back-btn').onclick = () => {
+        detailModal.classList.add('opacity-0', 'pointer-events-none');
+    };
+    detailModal.onclick = (e) => {
+        if (e.target === detailModal) {
+            detailModal.classList.add('opacity-0', 'pointer-events-none');
+        }
+    };
+
+    // Hero Shop Now
+    document.querySelectorAll('.hero-shop-now-btn').forEach(btn => {
+        btn.onclick = () => {
+            currentCategory = 'digital';
+            switchView('list');
+            renderListView();
+        };
+    });
+
+    // Toast triggers on cart additions
+    document.addEventListener('click', (e) => {
+        const cartBtn = e.target.closest('.btn-add-cart');
+        if (cartBtn) {
+            e.stopPropagation();
+            const toast = document.createElement('div');
+            toast.className = 'bg-primary text-white px-6 py-3 rounded-full font-label-lg shadow-xl translate-y-10 opacity-0 transition-all duration-500 flex items-center gap-2 pointer-events-auto mt-2';
+            toast.innerHTML = '<span class="material-symbols-outlined">check_circle</span> 장바구니에 상품을 담았습니다.';
+            document.getElementById('toast-container').appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.remove('translate-y-10', 'opacity-0');
+            }, 100);
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => toast.remove(), 500);
+            }, 2500);
+        }
+    });
 }
 
 // Run init

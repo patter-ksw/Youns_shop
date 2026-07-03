@@ -1,150 +1,712 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html class="light" lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Youn's Shop - 스마트 쇼핑 랭킹 aggregator</title>
-    <!-- Google Fonts: Inter and Outfit for premium typography -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="index.css">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Youns Shop | Anti-gravity Curation</title>
+    <!-- Tailwind CSS with plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Google Fonts Hanken Grotesk and Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 4px;
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #E9DFF1;
+            border-radius: 10px;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 180px);
+            gap: 1rem;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .float-anim {
+            animation: float 2.5s ease-in-out infinite;
+        }
+        /* Page views transition styles */
+        .view-panel {
+            transition: opacity 0.25s ease-in-out;
+        }
+    </style>
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed-dim": "#d1c972",
+                        "secondary-container": "#e9dff1",
+                        "background": "#fbf9f8",
+                        "primary": "#53437b",
+                        "inverse-on-surface": "#f3f0f0",
+                        "surface-variant": "#e4e2e1",
+                        "surface-subtle": "#F8F7FA",
+                        "white": "#FFFFFF",
+                        "tertiary-fixed": "#eee68b",
+                        "on-secondary-fixed-variant": "#4a4452",
+                        "primary-container": "#6b5b95",
+                        "outline-variant": "#cac4d0",
+                        "surface-dim": "#dcd9d9",
+                        "on-background": "#1b1c1c",
+                        "outline": "#7a7580",
+                        "inverse-surface": "#303030",
+                        "primary-fixed-dim": "#cfbdfe",
+                        "on-surface": "#1b1c1c",
+                        "on-secondary-container": "#686271",
+                        "on-primary-container": "#e8dcff",
+                        "on-secondary-fixed": "#1e1926",
+                        "secondary-fixed": "#e9dff1",
+                        "surface-tint": "#65558f",
+                        "surface": "#fbf9f8",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#4d4800",
+                        "on-tertiary-container": "#454100",
+                        "secondary-fixed-dim": "#ccc3d4",
+                        "on-tertiary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-container-low": "#f6f3f2",
+                        "surface-container-high": "#eae8e7",
+                        "on-surface-variant": "#49454f",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#b5ae5a",
+                        "surface-container": "#f0eded",
+                        "inverse-primary": "#cfbdfe",
+                        "surface-container-highest": "#e4e2e1",
+                        "secondary": "#625c6b",
+                        "surface-bright": "#fbf9f8",
+                        "on-primary-fixed-variant": "#4d3d75",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed": "#201047",
+                        "primary-fixed": "#e9ddff",
+                        "error": "#ba1a1a",
+                        "tertiary": "#666013",
+                        "border-light": "#EEEEEE",
+                        "text-secondary": "#666666",
+                        "on-tertiary-fixed": "#1f1c00",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "2.5rem",
+                        "gutter": "1rem",
+                        "stack-sm": "0.5rem",
+                        "stack-lg": "2rem",
+                        "margin-mobile": "1.25rem",
+                        "stack-md": "1rem"
+                    },
+                    "fontFamily": {
+                        "label-lg": ["Inter"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "label-sm": ["Inter"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "label-lg": ["13px", {"lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-sm": ["11px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
 </head>
-<body>
-    <div class="app-container">
-        <!-- Sidebar Navigation (PC only) -->
-        <aside class="sidebar">
-            <div class="sidebar-logo">
-                <span class="logo-emoji">🛍️</span>
-                <span class="logo-text">Youns Shop</span>
-            </div>
-            
-            <nav class="sidebar-menu">
-                <div class="menu-label">카테고리</div>
-                <ul class="category-list" id="pc-category-list">
-                    <!-- Categories will be dynamically rendered here -->
-                </ul>
-            </nav>
-            
-            <div class="sidebar-footer">
-                <div class="refresh-indicator">
-                    <span class="pulse-dot"></span>
-                    <span id="refresh-status">실시간 데이터 갱신 중</span>
-                </div>
-            </div>
-        </aside>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden">
 
-        <!-- Main Content Area -->
-        <div class="main-layout">
-            <!-- Header -->
-            <header class="app-header">
-                <!-- Mobile Logo & Menu Toggle -->
-                <div class="mobile-header-left">
-                    <span class="logo-emoji">🛍️</span>
-                    <h1 class="mobile-logo-text">Youns Shop</h1>
-                </div>
-                
+    <!-- ========================================== -->
+    <!-- DESKTOP APP LAYOUT (md:block hidden)      -->
+    <!-- ========================================== -->
+    <div id="desktop-root" class="hidden md:block">
+        <!-- TopAppBar -->
+        <header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md flex justify-between items-center h-16 px-margin-desktop border-b border-border-light">
+            <div class="flex items-center gap-8">
+                <div class="font-headline-lg text-headline-lg font-bold tracking-tighter text-primary dark:text-primary-fixed-dim cursor-pointer header-logo-btn">CURATED</div>
+                <nav class="flex items-center gap-6">
+                    <a class="font-label-lg text-label-lg text-primary hover:text-primary-container transition-colors header-logo-btn" href="#">Home</a>
+                    <a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors nav-discover-btn" href="#">Discover</a>
+                    <a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors nav-collections-btn" href="#">Collections</a>
+                    <a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors nav-trends-btn" href="#">Trends</a>
+                </nav>
+            </div>
+            <div class="flex items-center gap-6">
                 <!-- Search Bar -->
-                <div class="search-wrapper">
-                    <span class="search-icon">🔍</span>
-                    <input type="text" id="search-input" class="search-input" placeholder="관심 상품을 검색해 보세요..." autocomplete="off">
-                    <button id="search-clear-btn" class="search-clear-btn" style="display: none;">&times;</button>
+                <div class="relative group w-64">
+                    <input id="desktop-search-input" class="bg-surface-container-low border-none rounded-full px-5 py-2 w-full focus:ring-2 focus:ring-primary-container transition-all text-body-md placeholder:text-outline" placeholder="브랜드, 상품 검색..." type="text"/>
+                    <span class="material-symbols-outlined absolute right-3 top-2.5 text-outline text-[18px]">search</span>
                 </div>
-                
-                <!-- Theme Toggle & Status -->
-                <div class="header-actions">
-                    <div class="site-filters">
-                        <button class="filter-chip active" data-site="all">전체</button>
-                        <button class="filter-chip" data-site="coupang">쿠팡</button>
-                        <button class="filter-chip" data-site="naver">네이버</button>
-                        <button class="filter-chip" data-site="cjmall">CJ Mall</button>
-                    </div>
-                </div>
-            </header>
-
-            <!-- Scrollable Categories for Mobile -->
-            <div class="mobile-categories-wrapper">
-                <div class="mobile-categories" id="mobile-category-list">
-                    <!-- Mobile categories rendered dynamically -->
+                <div class="flex items-center gap-4">
+                    <button class="flex items-center gap-1 text-label-sm font-label-sm px-2 py-1 rounded-md bg-secondary-container text-primary">
+                        <span>KO</span>
+                        <span class="text-outline">|</span>
+                        <span class="opacity-50">EN</span>
+                    </button>
+                    <span class="material-symbols-outlined text-primary cursor-pointer hover:bg-surface-container-low p-2 rounded-full transition-all">shopping_bag</span>
+                    <span class="material-symbols-outlined text-primary cursor-pointer hover:bg-surface-container-low p-2 rounded-full transition-all">person</span>
                 </div>
             </div>
+        </header>
 
-            <!-- Content Body -->
-            <main class="content-body">
-                <!-- Banner / Announcement -->
-                <section class="banner-section">
-                    <div class="banner-content">
-                        <span class="banner-badge">HOT TREND</span>
-                        <h2>실시간 인지도 및 판매량 기반 인기 상품</h2>
-                        <p>쿠팡, 네이버 스마트스토어, CJ Mall의 판매 실적과 소비자 선호도를 실시간으로 취합하여 30분 주기로 자동 업데이트합니다.</p>
+        <!-- Desktop Main Panels -->
+        <main class="pt-16 max-w-[1440px] mx-auto px-margin-desktop space-y-stack-lg pb-stack-lg">
+            
+            <!-- Desktop Home View -->
+            <div id="desktop-home-view" class="view-panel space-y-stack-lg">
+                <!-- Hero Section: Today's Best Deals -->
+                <section class="mt-8 relative h-[450px] rounded-3xl overflow-hidden group">
+                    <div class="absolute inset-0 z-0">
+                        <div class="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBRIGfxvkxSaUqlVcSLD0SvjUUyQ3OvuDbkmoBK5HlepshO5AXbYifwuHDbLcju3PTj6IvoDbLjODI4l76ewPdBlIfZdidbhHpBz3iCJ65LZBylHFTk6vM2EqqnuoNzur4cTZXfbJg-cPNmQqrWthzrnr_cZ-s_7EH9CFC5woYOsrK60ZjMB9IcdgqST-Jk8jFMuHELUDL1jpCqhNWcLanoVnVX8W3VRVESRfc2-8-TVlo156gjYG0U')"></div>
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary/40 to-transparent"></div>
                     </div>
-                    <div class="banner-stats">
-                        <div class="stat-box">
-                            <span class="stat-num" id="total-items-count">0</span>
-                            <span class="stat-label">분석 상품 수</span>
+                    <div class="relative z-10 h-full flex flex-col justify-center px-12 text-white">
+                        <span class="inline-block px-4 py-1 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full text-label-lg font-label-lg mb-4 w-fit">TODAY'S SPECIAL</span>
+                        <h1 class="font-display-lg text-display-lg max-w-lg mb-6 leading-tight">
+                            감각적인 큐레이션,<br/>오늘의 베스트 딜을 만나보세요
+                        </h1>
+                        <p class="font-body-lg text-body-lg max-w-md opacity-90 mb-8">
+                            Youns Shop이 엄선한 고퀄리티 아이템들. 오직 오늘만 제공되는 특별한 혜택으로 당신의 라이프스타일을 완성하세요.
+                        </p>
+                        <div class="flex gap-4">
+                            <button class="px-8 py-3 bg-white text-primary rounded-full font-label-lg text-label-lg shadow-lg hover:shadow-xl transition-all active:scale-95 hero-shop-now-btn">쇼핑하기</button>
+                            <button class="px-8 py-3 bg-primary/20 backdrop-blur-md border border-white/30 text-white rounded-full font-label-lg text-label-lg hover:bg-primary/40 transition-all">자세히 보기</button>
                         </div>
-                        <div class="stat-box">
-                            <span class="stat-num" id="update-timer">30:00</span>
-                            <span class="stat-label">다음 갱신</span>
+                    </div>
+                    <!-- Page Indicators -->
+                    <div class="absolute bottom-8 right-12 flex gap-2">
+                        <div class="w-8 h-1 bg-white rounded-full"></div>
+                        <div class="w-2 h-1 bg-white/40 rounded-full"></div>
+                        <div class="w-2 h-1 bg-white/40 rounded-full"></div>
+                    </div>
+                </section>
+
+                <!-- Trending Keywords -->
+                <section class="flex flex-col gap-4">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+                        <h2 class="font-headline-md text-headline-md text-on-surface">실시간 인기 키워드</h2>
+                    </div>
+                    <div class="flex flex-wrap gap-2" id="desktop-trending-chips">
+                        <!-- Filled by JS -->
+                    </div>
+                </section>
+
+                <!-- Category Bento Grid -->
+                <section class="space-y-stack-md">
+                    <h2 class="font-headline-md text-headline-md">카테고리 쇼핑</h2>
+                    <div class="bento-grid">
+                        <!-- Fashion -->
+                        <div class="col-span-2 row-span-1 bg-secondary-container rounded-2xl relative overflow-hidden group cursor-pointer bento-category-btn" data-category="fashion">
+                            <div class="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-500" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuArxqtDl5gOesoScPSA2qBTVXdB4JeNy4JjVVMmhy4K7m0R3q1hFDAQa6g-u762RKVN7A5BxJDTf715OQoj-eL3D1YzqrohK2lBPk0lTKABpat0WtfmINTyG-Am0PC_3C3uiSSyQ50fiiw6gxKVXD8_o5fgXJkT_kXa-5TH1L01vLItLf5MXIjSDyXMmBtUU33W64322mhltav3BLW27A4vMiD2VemzdtpFzZ5jwBf4NNlpeNeNwEvE')"></div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <p class="font-headline-lg text-headline-lg">Fashion</p>
+                                <p class="text-label-sm opacity-80">의류 및 잡화</p>
+                            </div>
+                        </div>
+                        <!-- Electronics -->
+                        <div class="col-span-1 row-span-1 bg-surface-container-high rounded-2xl relative overflow-hidden group cursor-pointer bento-category-btn" data-category="digital">
+                            <div class="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-500" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAic1wtLOzI99u6h5ZmJcbpYvs6p2fu9AFUOrJWpBixocRs5TnmwdfmoTkjy077zxlvLhQ95CIMqfymUKBCpn6tqCKvuBZbzllH977P4Qcb521qUx1jHrZiqExl0oTIKOM5c6FuUVb87Ck_Ln-CkxEQRM5KgA1eCQnoFCIDTBdLU180swnyyBw8V7AJ9H-Qmf0JjTGtM2b5DXM7c3acmW2rqchF0roqCwMojabrGzqbiShR2eCtoUba')"></div>
+                            <div class="absolute inset-0 bg-black/10"></div>
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <p class="font-label-lg text-label-lg">Electronics</p>
+                                <p class="text-label-sm opacity-80">가전·디지털</p>
+                            </div>
+                        </div>
+                        <!-- Food -->
+                        <div class="col-span-1 row-span-1 bg-tertiary-fixed-dim rounded-2xl relative overflow-hidden group cursor-pointer bento-category-btn" data-category="food">
+                            <div class="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-500" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDt9_vb8PCR9N5g3UvKP3BCjqnjaFo73cN04CJ4SWUslYjfOvhWEfhjOVyEfLObOcg59vDZdWj6P3dQ7AxZpyjygK-eg99sqUlAY5g5cMufMSx_pwP16SVXrg0SnKArSZlK5nLj4faEG9uyD1bg1t80cNvSIyr9F0ukt3qF-W-YPhJMgV-ewLZYv82pLby85F2Q1LIBXbG5dcYH1kY7Y6h4GTO1mDDimgpJ2BQ8-SWlQDjKF_EndPNr')"></div>
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <p class="font-label-lg text-label-lg">Food</p>
+                                <p class="text-label-sm opacity-80">신선·가공식품</p>
+                            </div>
+                        </div>
+                        <!-- Beauty -->
+                        <div class="col-span-1 row-span-1 bg-secondary-fixed rounded-2xl relative overflow-hidden group cursor-pointer bento-category-btn" data-category="beauty">
+                            <div class="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-500" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBil3lJVeQX9r8hiGhM7vX_n_9vfaaf6MWe9fYtUjI7rrLRxSS98LBR49gsf-KlmW_ZhiAH0jiCMTPFoiNw1oprMbqk3TMmsCz0wi2zBIHKheawLIJKXDwOAqwUW_9hd_dKL3oeRpuOijn76QDh8SYH6YiENm9xoW2ZAuaQi3dbgscjx1DUWkyGtXMzJX4yYqax-rWhSNg5kgoVrE-hFXt_SjCNIaPTHbaKdA5BWv41odIo36rVCVO7')"></div>
+                            <div class="absolute bottom-4 left-4 text-primary">
+                                <p class="font-label-lg text-label-lg">Beauty</p>
+                                <p class="text-label-sm opacity-80">뷰티·화장품</p>
+                            </div>
+                        </div>
+                        <!-- Home -->
+                        <div class="col-span-1 row-span-1 bg-surface-container rounded-2xl relative overflow-hidden group cursor-pointer bento-category-btn" data-category="home">
+                            <div class="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-500" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC-AvqjRDx9vu8uTDEfsr1URBFca8IUt-tWFhx4p_e8TtcB40YLuxnOyW5AM7CvELhZlScx75tjcCCtepK5fueLAoy-w9AH3I8d1xn4SfYFandRcaAu-ORWf5Rw31X7EFMLIO0wh4Y09uQB7KMU9N9BhDkqh3bZShXrEsYOLcw3JGs1m1D03dIWFOaMzilK4raMfyMAaLLI4FxbtmF9_e0Zsvz9OrYU-TbI9hAdJc6i88JKOXLvWauo')"></div>
+                            <div class="absolute bottom-4 left-4 text-on-surface">
+                                <p class="font-label-lg text-label-lg">Home Decor</p>
+                                <p class="text-label-sm opacity-80">홈데코·인테리어</p>
+                            </div>
+                        </div>
+                        <!-- Luxury -->
+                        <div class="col-span-2 row-span-1 bg-primary text-white rounded-2xl relative overflow-hidden group cursor-pointer bento-category-btn" data-category="luxury">
+                            <div class="absolute inset-0 opacity-40">
+                                <div class="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-500" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDfhVasuV3Dt4Nd3KMU-GMU9V7iMRfAeyyHvTjyZTx9rW4m8jNuI4qxUM1mm8vA3eNnrB-D4GfyAkWw4LbNC84wthkGzRVgsj8_R5rp7npkXLtzOG91zRF0GR0FVHfXoceB_T9zCc9draTmrCWs63nvvzS46LKw943oyjKFZIUtc9a1MgLuFdphxJLs6I3PT1nfdfe88A1LOlvope0WbXf5EU6gRYyyfiKbguowsrUb1JtKV-KcQeMW')"></div>
+                            </div>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-center">
+                                    <p class="font-display-lg text-display-lg tracking-widest uppercase">Luxury</p>
+                                    <div class="w-12 h-[2px] bg-white mx-auto mt-2"></div>
+                                    <p class="font-label-sm mt-4 tracking-tighter">PREMIUM COLLECTION</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- Sorting and View Controls -->
-                <div class="controls-row">
-                    <div class="active-category-title">
-                        <span id="current-category-name">전체 상품</span>
-                        <span class="items-count-badge" id="category-items-count">0개</span>
+                <!-- Curated Picks Section -->
+                <section class="space-y-stack-md pt-8">
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <h2 class="font-headline-md text-headline-md">Curated Picks</h2>
+                            <p class="text-on-surface-variant font-body-md">Youns Shop이 엄선한 최고의 쇼핑몰 인기 아이템</p>
+                        </div>
+                        <button class="flex items-center text-primary font-label-lg hover:underline transition-all hero-shop-now-btn">
+                            전체보기 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+                        </button>
                     </div>
-                    <div class="sort-selector">
-                        <button class="sort-btn active" data-sort="rank">인기순 (랭킹)</button>
-                        <button class="sort-btn" data-sort="sales">판매량순</button>
-                        <button class="sort-btn" data-sort="discount">할인율순</button>
+                    <div class="grid grid-cols-4 gap-6" id="desktop-curated-picks">
+                        <!-- Populated by JS -->
+                    </div>
+                </section>
+
+                <!-- Newsletter / Editorial Banner -->
+                <section class="bg-primary rounded-3xl p-12 text-white flex items-center justify-between overflow-hidden relative">
+                    <div class="relative z-10 space-y-4">
+                        <h2 class="font-display-lg text-display-lg">Youns Shop Letter</h2>
+                        <p class="font-body-lg text-body-lg max-w-lg opacity-80">매주 엄선된 최신 트렌드 리포트와 쇼핑몰 쿠폰 혜택을 메일로 받아보세요.</p>
+                        <div class="flex gap-2 max-w-md pt-4">
+                            <input class="flex-grow rounded-xl px-5 py-3 text-on-surface focus:ring-2 focus:ring-primary-fixed-dim outline-none" placeholder="이메일 주소를 입력하세요" type="email"/>
+                            <button class="bg-white text-primary px-6 py-3 rounded-xl font-label-lg whitespace-nowrap hover:bg-primary-fixed transition-colors">구독하기</button>
+                        </div>
+                    </div>
+                    <div class="absolute right-0 top-0 h-full w-1/3 opacity-20 pointer-events-none">
+                        <div class="w-full h-full bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCz_aKomUNIGUYABPV8le--1twMGzCYqcH8pgrb4SrCkecbDB-KhaWI_za_RuEoVoq_8vk4OSNN2NbmWik2C6SgmQjuCTrYCF_Y2nTFRnvHq1jQ388miR6JgMF61zEE4AwcGh0ZSYscfxkIYvg3d9BXTQ4YQV1SZfnsnfEZI83oKPnwlYnJcDedwtIbBZwgKEAm2UFpOyyXwNetYvI9fX4GSonXSHaxqurq8M-wDgMW_GOlEmvuBUy7')"></div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Desktop List / Curation View -->
+            <div id="desktop-list-view" class="view-panel hidden space-y-stack-md">
+                <div class="flex flex-col gap-stack-sm pt-8">
+                    <span class="text-label-sm font-label-sm text-primary uppercase tracking-widest">CURATION RANKINGS</span>
+                    <div class="flex items-center gap-4">
+                        <h2 class="font-headline-lg text-headline-lg font-bold" id="desktop-list-title">카테고리</h2>
+                        <span class="px-3 py-1 bg-secondary-container text-primary text-label-sm rounded-full" id="desktop-list-count">0개 상품</span>
                     </div>
                 </div>
 
-                <!-- Products Grid -->
-                <section class="products-grid-wrapper">
-                    <div class="products-grid" id="products-grid">
-                        <!-- Products will be dynamically generated by app.js -->
-                        <div class="loading-state">
-                            <div class="spinner"></div>
-                            <p>실시간 트렌드를 분석하고 있습니다...</p>
+                <!-- Mall / Search filters -->
+                <div class="flex items-center justify-between border-b border-border-light pb-4">
+                    <div class="flex gap-2" id="desktop-mall-filters">
+                        <button class="px-5 py-2.5 rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-all bg-primary text-white" data-site="all">전체</button>
+                        <button class="px-5 py-2.5 rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-all bg-white border border-border-light text-on-surface hover:bg-surface-container-low" data-site="coupang">쿠팡</button>
+                        <button class="px-5 py-2.5 rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-all bg-white border border-border-light text-on-surface hover:bg-surface-container-low" data-site="naver">네이버 스토어</button>
+                        <button class="px-5 py-2.5 rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-all bg-white border border-border-light text-on-surface hover:bg-surface-container-low" data-site="cjmall">CJ 몰</button>
+                    </div>
+
+                    <div class="flex gap-6" id="desktop-sort-options">
+                        <button class="text-label-lg font-label-lg text-primary border-b-2 border-primary pb-1" data-sort="rank">인기순 (랭킹)</button>
+                        <button class="text-label-lg font-label-lg text-text-secondary hover:text-primary pb-1" data-sort="sales">판매량순</button>
+                        <button class="text-label-lg font-label-lg text-text-secondary hover:text-primary pb-1" data-sort="discount">할인율순</button>
+                    </div>
+                </div>
+
+                <!-- Product Grid (Responsive grid) -->
+                <section class="grid grid-cols-1 gap-6" id="desktop-products-grid">
+                    <!-- Populated dynamically by JS -->
+                </section>
+            </div>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-white border-t border-border-light pt-16 pb-12 px-margin-desktop">
+            <div class="max-w-[1440px] mx-auto grid grid-cols-5 gap-12">
+                <div class="col-span-2 space-y-6">
+                    <div class="font-headline-lg text-headline-lg font-bold tracking-tighter text-primary">CURATED</div>
+                    <p class="text-on-surface-variant font-body-md max-w-sm">
+                        Youns Shop by Anti-gravity는 당신의 라이프스타일을 더 가치 있게 만드는 최고의 제품들만을 선별하여 제안합니다.
+                    </p>
+                    <div class="flex gap-4">
+                        <span class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary cursor-pointer hover:bg-primary-container hover:text-white transition-all">
+                            <span class="material-symbols-outlined text-lg">public</span>
+                        </span>
+                        <span class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary cursor-pointer hover:bg-primary-container hover:text-white transition-all">
+                            <span class="material-symbols-outlined text-lg">share</span>
+                        </span>
+                        <span class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary cursor-pointer hover:bg-primary-container hover:text-white transition-all">
+                            <span class="material-symbols-outlined text-lg">mail</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <h4 class="font-label-lg text-label-lg text-on-surface">Shopping</h4>
+                    <ul class="space-y-2 text-on-surface-variant font-body-md">
+                        <li class="hover:text-primary cursor-pointer transition-colors header-logo-btn">인기 상품</li>
+                        <li class="hover:text-primary cursor-pointer transition-colors nav-discover-btn">신규 입고</li>
+                        <li class="hover:text-primary cursor-pointer transition-colors">세일</li>
+                        <li class="hover:text-primary cursor-pointer transition-colors">멤버십 혜택</li>
+                    </ul>
+                </div>
+                <div class="space-y-4">
+                    <h4 class="font-label-lg text-label-lg text-on-surface">Customer</h4>
+                    <ul class="space-y-2 text-on-surface-variant font-body-md">
+                        <li class="hover:text-primary cursor-pointer transition-colors">고객센터</li>
+                        <li class="hover:text-primary cursor-pointer transition-colors">배송 조회</li>
+                        <li class="hover:text-primary cursor-pointer transition-colors">취소/환불 안내</li>
+                        <li class="hover:text-primary cursor-pointer transition-colors">자주 묻는 질문</li>
+                    </ul>
+                </div>
+                <div class="space-y-4">
+                    <h4 class="font-label-lg text-label-lg text-on-surface">About</h4>
+                    <ul class="space-y-2 text-on-surface-variant font-body-md">
+                        <li class="hover:text-primary cursor-pointer transition-colors">회사 소개</li>
+                        <li class="hover:text-primary cursor-pointer transition-colors">이용 약관</li>
+                        <li class="hover:text-primary cursor-pointer transition-colors">개인정보처리방침</li>
+                        <li class="hover:text-primary cursor-pointer transition-colors">공지사항</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="max-w-[1440px] mx-auto mt-16 pt-8 border-t border-border-light flex justify-between items-center text-label-sm text-outline">
+                <p>© 2026 Youns Shop by Anti-gravity. All rights reserved.</p>
+                <div class="flex gap-6">
+                    <span>Seoul, Republic of Korea</span>
+                    <span>Contact: hello@younsshop.kr</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- MOBILE APP LAYOUT (block md:hidden)        -->
+    <!-- ========================================== -->
+    <div id="mobile-root" class="block md:hidden pb-20">
+        <!-- Top Navigation -->
+        <header class="fixed top-0 w-full z-50 bg-white dark:bg-background border-b border-border-light h-16 flex items-center justify-between px-margin-mobile">
+            <div class="flex items-center gap-3">
+                <button class="material-symbols-outlined text-primary active:scale-95 transition-transform duration-200" id="mobile-menu-btn">menu</button>
+                <h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary header-logo-btn">ShopCurate</h1>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="flex bg-surface-container-low p-1 rounded-full text-label-sm mr-1">
+                    <button class="px-2 py-0.5 rounded-full bg-primary text-white">KO</button>
+                    <button class="px-2 py-0.5 rounded-full text-secondary">EN</button>
+                </div>
+                <button class="text-primary hover:bg-surface-container-low p-2 rounded-full active:scale-95 transition-all">
+                    <span class="material-symbols-outlined text-[22px]">shopping_bag</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Mobile Main Panels -->
+        <main class="mt-16 w-full">
+            
+            <!-- Mobile Home View -->
+            <div id="mobile-home-view" class="view-panel space-y-6">
+                <!-- Search & Platform Filters -->
+                <section class="px-margin-mobile pt-4 space-y-4">
+                    <div class="relative group">
+                        <input id="mobile-search-input" class="w-full h-11 bg-surface-subtle border-border-light rounded-xl px-12 py-2 text-body-md focus:border-primary focus:ring-0 transition-all outline-none" placeholder="브랜드, 상품 검색..." type="text"/>
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-secondary text-[20px]">search</span>
+                        <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-secondary text-[20px]">mic</span>
+                    </div>
+                    <!-- Mall Filters -->
+                    <div class="flex gap-2 overflow-x-auto no-scrollbar py-1" id="mobile-mall-filters">
+                        <button class="px-5 py-2.5 rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-all bg-primary text-white" data-site="all">전체</button>
+                        <button class="px-5 py-2.5 rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-all bg-white border border-border-light text-on-surface hover:bg-surface-container-low" data-site="coupang">쿠팡</button>
+                        <button class="px-5 py-2.5 rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-all bg-white border border-border-light text-on-surface hover:bg-surface-container-low" data-site="naver">네이버 스토어</button>
+                        <button class="px-5 py-2.5 rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-all bg-white border border-border-light text-on-surface hover:bg-surface-container-low" data-site="cjmall">CJ 몰</button>
+                    </div>
+                </section>
+
+                <!-- Hero Banner -->
+                <section class="px-margin-mobile">
+                    <div class="relative h-44 w-full overflow-hidden rounded-[1.5rem] bg-primary-container text-white p-6 flex flex-col justify-center hero-shop-now-btn">
+                        <div class="relative z-10 max-w-[70%]">
+                            <span class="bg-secondary-container text-primary px-3 py-0.5 rounded-full font-label-sm text-label-sm uppercase tracking-wider mb-2 inline-block">반짝 할인</span>
+                            <h2 class="font-headline-lg text-headline-lg-mobile mb-1">오늘의 베스트 딜</h2>
+                            <p class="text-[12px] opacity-90 leading-tight">엄선된 프리미엄 아이템 최대 70% 할인</p>
+                        </div>
+                        <div class="absolute right-0 top-0 h-full w-[45%]">
+                            <img class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsYBzu1c7-58zySPT43sEQO1Q-1JRrCrY-OFMYH3IHduJoL5IszmodxokQE5ciDFotv8iVlw-LC8jiO8FpzZueA3o35bU9BWigIKbD5GL-TdmXFKGGugBwoCY4Hey2AV9krrSjrCVRr8SXk6wf7h2NSmqjTY21z6_FrLrzRtZ6h7zZBbQa0ulMbx0Cl4b8MgHOnGCQUztYLTMqFfHma7n7bRPxOh8-f7GML4eULn2xAJkSN3nQdIql"/>
                         </div>
                     </div>
                 </section>
-            </main>
+
+                <!-- Real-time Trending Keywords -->
+                <section class="space-y-3">
+                    <div class="px-margin-mobile flex items-center justify-between">
+                        <h3 class="font-headline-md text-headline-md flex items-center gap-2">
+                            인기 검색어
+                            <span class="flex h-2 w-2 rounded-full bg-error animate-pulse"></span>
+                        </h3>
+                    </div>
+                    <div class="flex gap-3 overflow-x-auto no-scrollbar px-margin-mobile py-1" id="mobile-trending-chips">
+                        <!-- Filled by JS -->
+                    </div>
+                </section>
+
+                <!-- Categories Grid -->
+                <section class="px-margin-mobile space-y-3">
+                    <h3 class="font-headline-md text-headline-md">카테고리</h3>
+                    <div class="grid grid-cols-4 gap-4">
+                        <!-- Fashion -->
+                        <div class="flex flex-col items-center gap-2 group cursor-pointer mobile-category-btn" data-category="fashion">
+                            <div class="w-full aspect-square bg-white border border-border-light rounded-2xl flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
+                                <span class="material-symbols-outlined text-[28px]">apparel</span>
+                            </div>
+                            <span class="font-label-sm text-[12px] text-center">패션</span>
+                        </div>
+                        <!-- Electronics -->
+                        <div class="flex flex-col items-center gap-2 group cursor-pointer mobile-category-btn" data-category="digital">
+                            <div class="w-full aspect-square bg-white border border-border-light rounded-2xl flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
+                                <span class="material-symbols-outlined text-[28px]">devices</span>
+                            </div>
+                            <span class="font-label-sm text-[12px] text-center">가전</span>
+                        </div>
+                        <!-- Food -->
+                        <div class="flex flex-col items-center gap-2 group cursor-pointer mobile-category-btn" data-category="food">
+                            <div class="w-full aspect-square bg-white border border-border-light rounded-2xl flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
+                                <span class="material-symbols-outlined text-[28px]">restaurant</span>
+                            </div>
+                            <span class="font-label-sm text-[12px] text-center">식품</span>
+                        </div>
+                        <!-- Beauty -->
+                        <div class="flex flex-col items-center gap-2 group cursor-pointer mobile-category-btn" data-category="beauty">
+                            <div class="w-full aspect-square bg-white border border-border-light rounded-2xl flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
+                                <span class="material-symbols-outlined text-[28px]">content_cut</span>
+                            </div>
+                            <span class="font-label-sm text-[12px] text-center">뷰티</span>
+                        </div>
+                        <!-- Home -->
+                        <div class="flex flex-col items-center gap-2 group cursor-pointer mobile-category-btn" data-category="home">
+                            <div class="w-full aspect-square bg-white border border-border-light rounded-2xl flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
+                                <span class="material-symbols-outlined text-[28px]">chair</span>
+                            </div>
+                            <span class="font-label-sm text-[12px] text-center">홈데코</span>
+                        </div>
+                        <!-- Sports -->
+                        <div class="flex flex-col items-center gap-2 group cursor-pointer mobile-category-btn" data-category="sports">
+                            <div class="w-full aspect-square bg-white border border-border-light rounded-2xl flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
+                                <span class="material-symbols-outlined text-[28px]">directions_run</span>
+                            </div>
+                            <span class="font-label-sm text-[12px] text-center">스포츠</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Mobile Curated Picks -->
+                <section class="px-margin-mobile space-y-4 pt-4">
+                    <h3 class="font-headline-md text-headline-md">실시간 인기 상품</h3>
+                    <div class="grid grid-cols-2 gap-4" id="mobile-curated-picks">
+                        <!-- Filled by JS -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- Mobile List / Curation View -->
+            <div id="mobile-list-view" class="view-panel hidden px-margin-mobile space-y-4">
+                <div class="flex flex-col gap-1 pt-4">
+                    <span class="text-label-sm font-label-sm text-primary uppercase tracking-widest">CURATION RANKINGS</span>
+                    <div class="flex items-center justify-between">
+                        <h2 class="font-headline-lg text-headline-lg font-bold" id="mobile-list-title">카테고리</h2>
+                        <span class="px-2.5 py-0.5 bg-secondary-container text-primary text-[12px] rounded-full" id="mobile-list-count">0개</span>
+                    </div>
+                </div>
+
+                <!-- Sort options & filters -->
+                <div class="flex items-center justify-between border-b border-border-light pb-2" id="mobile-sort-options">
+                    <div class="flex gap-4">
+                        <button class="pb-1 text-label-lg font-label-lg text-primary border-b-2 border-primary" data-sort="rank">인기순</button>
+                        <button class="pb-1 text-label-lg font-label-lg text-text-secondary" data-sort="sales">판매량순</button>
+                        <button class="pb-1 text-label-lg font-label-lg text-text-secondary" data-sort="discount">할인율순</button>
+                    </div>
+                    <div class="flex items-center text-label-sm text-text-secondary">
+                        <span class="material-symbols-outlined text-[18px] mr-1">tune</span> 필터
+                    </div>
+                </div>
+
+                <!-- Product ranking list -->
+                <section class="grid grid-cols-1 gap-4" id="mobile-products-grid">
+                    <!-- Populated dynamically by JS -->
+                </section>
+            </div>
+
+        </main>
+
+        <!-- Bottom Navigation Bar -->
+        <nav class="fixed bottom-0 left-0 right-0 w-full flex justify-around items-center h-16 px-4 bg-white dark:bg-background border-t border-border-light shadow-[0_-4px_20px_rgba(107,91,149,0.06)] z-50">
+            <!-- Home -->
+            <button class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim font-bold after:content-[''] after:w-1 after:h-1 after:bg-primary after:rounded-full after:mt-1 active:scale-90 transition-all duration-150 mobile-nav-home">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+                <span class="font-label-sm text-[11px]">홈</span>
+            </button>
+            <!-- Search -->
+            <button class="flex flex-col items-center justify-center text-secondary hover:text-primary-container active:scale-90 transition-all duration-150 mobile-nav-search">
+                <span class="material-symbols-outlined">search</span>
+                <span class="font-label-sm text-[11px]">검색</span>
+            </button>
+            <!-- Likes -->
+            <button class="flex flex-col items-center justify-center text-secondary hover:text-primary-container active:scale-90 transition-all duration-150">
+                <span class="material-symbols-outlined">favorite</span>
+                <span class="font-label-sm text-[11px]">찜</span>
+            </button>
+            <!-- My -->
+            <button class="flex flex-col items-center justify-center text-secondary hover:text-primary-container active:scale-90 transition-all duration-150">
+                <span class="material-symbols-outlined">person</span>
+                <span class="font-label-sm text-[11px]">마이</span>
+            </button>
+        </nav>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- PRODUCT DETAIL MODAL                      -->
+    <!-- ========================================== -->
+    <div class="modal-overlay fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300" id="detail-modal">
+        <div class="bg-background text-on-surface rounded-3xl w-full max-w-lg md:max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl relative border border-border-light transform scale-95 transition-transform duration-300" id="detail-modal-card">
+            <!-- Modal Navigation (Mobile Back Button) -->
+            <div class="absolute top-4 left-4 z-10 md:hidden">
+                <button class="w-10 h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center border border-border-light shadow-sm" id="detail-modal-back-btn">
+                    <span class="material-symbols-outlined text-primary">arrow_back</span>
+                </button>
+            </div>
+            
+            <!-- Desktop Close Button -->
+            <button class="absolute top-6 right-6 z-10 hidden md:block text-outline hover:text-on-surface" id="detail-modal-close-btn">
+                <span class="material-symbols-outlined text-3xl">close</span>
+            </button>
+
+            <div class="p-6 md:p-12" id="detail-modal-body">
+                <!-- Filled dynamically by app.js -->
+            </div>
         </div>
     </div>
 
-    <!-- Product Detail Modal -->
-    <div class="modal-overlay" id="product-detail-modal">
-        <div class="modal-card">
-            <button class="modal-close-btn" id="modal-close-btn">&times;</button>
-            <div class="modal-body" id="modal-body-content">
-                <!-- Populated dynamically by app.js -->
+
+    <!-- ========================================== -->
+    <!-- REDIRECT OVERLAY (Image 17.html Layout)    -->
+    <!-- ========================================== -->
+    <div class="redirect-overlay fixed inset-0 z-50 bg-background/95 backdrop-blur-md flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300" id="redirect-overlay">
+        <main class="w-full max-w-md px-margin-mobile text-center flex flex-col items-center justify-center">
+            <!-- Transition graphic box -->
+            <div class="relative w-full max-w-md bg-white rounded-3xl p-8 flex flex-col items-center shadow-[0_20px_50px_rgba(107,91,149,0.06)] border border-border-light">
+                <!-- Subtle Atmosphere -->
+                <div class="absolute -top-24 -right-24 w-48 h-48 bg-secondary-fixed opacity-20 rounded-full blur-3xl"></div>
+                <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-primary-fixed opacity-20 rounded-full blur-3xl"></div>
+
+                <div class="relative w-48 h-48 mb-8 flex items-center justify-center">
+                    <!-- ShopCurate Icon -->
+                    <div class="absolute left-0 top-1/2 -translate-y-1/2 w-14 h-14 bg-primary rounded-2xl flex items-center justify-center text-white z-10 shadow-lg">
+                        <span class="material-symbols-outlined text-2xl">local_mall</span>
+                    </div>
+                    <!-- Progress Path -->
+                    <div class="w-full flex items-center justify-center px-4">
+                        <div class="h-1 w-full bg-surface-container rounded-full overflow-hidden relative">
+                            <div class="absolute h-full bg-primary-container progress-bar" id="redirect-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="absolute left-1/2 -translate-x-1/2 bg-white rounded-full p-2 border border-border-light shadow-sm float-anim">
+                            <span class="material-symbols-outlined text-primary-container animate-pulse" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
+                        </div>
+                    </div>
+                    <!-- Brand Icon Placeholder -->
+                    <div class="absolute right-0 top-1/2 -translate-y-1/2 w-14 h-14 bg-white border-2 border-primary rounded-2xl flex items-center justify-center z-10 shadow-lg">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-black text-xl italic" id="redirect-brand-icon" style="background-color: #E52528">C</div>
+                    </div>
+                </div>
+
+                <!-- Text info -->
+                <div class="space-y-2 mb-8 text-center">
+                    <h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface" id="redirect-title">쇼핑몰로 이동 중입니다...</h1>
+                    <p class="text-text-secondary font-body-md text-body-md">해당 쇼핑몰의 상세 페이지로 안전하게 연결해 드립니다. 잠시만 기다려 주세요.</p>
+                </div>
+
+                <!-- Benefits info -->
+                <div class="w-full space-y-3 mb-8 text-left">
+                    <div class="flex items-center gap-3 p-4 bg-surface-subtle rounded-xl border border-border-light">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-lg bg-secondary-fixed flex items-center justify-center text-primary">
+                            <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">confirmation_number</span>
+                        </div>
+                        <div>
+                            <p class="text-label-lg font-label-lg text-on-surface">추가 할인 혜택 적용 가능</p>
+                            <p class="text-[11px] text-text-secondary leading-tight">선택하신 쇼핑몰의 자동 할인 혜택이 연동됩니다</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-4 bg-surface-subtle rounded-xl border border-border-light">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-lg bg-secondary-fixed flex items-center justify-center text-primary">
+                            <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+                        </div>
+                        <div>
+                            <p class="text-label-lg font-label-lg text-on-surface">쇼핑몰 회원 무료 배송 혜택</p>
+                            <p class="text-[11px] text-text-secondary leading-tight">회원 등급 및 조건에 따른 무료 배송 연동 가능</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manual Button -->
+                <div class="w-full space-y-3">
+                    <button class="w-full bg-primary-container hover:bg-primary text-white py-3 px-6 rounded-xl font-headline-md text-body-lg shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2" id="redirect-continue-btn">
+                        <span>사이트로 계속하기</span>
+                        <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                    </button>
+                    <button class="w-full bg-transparent hover:bg-surface-container-low text-primary py-2 px-6 rounded-xl font-label-lg text-label-lg transition-colors flex items-center justify-center gap-1" id="redirect-cancel-btn">
+                        <span class="material-symbols-outlined text-sm">arrow_back</span>
+                        <span>샵큐레이트로 돌아가기</span>
+                    </button>
+                </div>
             </div>
-        </div>
+            
+            <div class="mt-8 flex items-center gap-2 text-text-secondary opacity-60">
+                <span class="material-symbols-outlined text-sm">verified_user</span>
+                <span class="text-label-sm font-label-sm uppercase tracking-widest text-[10px]">안전하고 투명한 쇼핑 연결을 지향합니다</span>
+            </div>
+        </main>
     </div>
 
-    <!-- Purchase Redirect Simulator Modal -->
-    <div class="redirect-overlay" id="redirect-overlay">
-        <div class="redirect-box">
-            <div class="redirect-animation">
-                <div class="pulse-ring"></div>
-                <div class="shopping-cart-icon">🛒</div>
-            </div>
-            <h3>쇼핑 사이트로 연결하고 있습니다</h3>
-            <p>안전하고 빠르게 구매 사이트로 이동합니다. 잠시만 기다려 주세요...</p>
-            <div class="redirect-progress">
-                <div class="progress-bar-fill" id="redirect-progress-bar"></div>
-            </div>
-            <div class="redirect-target-info">
-                <span class="redirect-site-badge" id="redirect-site-badge">쿠팡</span>
-                <span class="redirect-product-name" id="redirect-product-name">상품명</span>
-            </div>
-        </div>
-    </div>
+    <!-- Floating Toast Container -->
+    <div class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] pointer-events-none" id="toast-container"></div>
 
     <script src="app.js"></script>
 </body>
