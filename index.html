@@ -10,6 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <style>
         .material-symbols-outlined {
@@ -177,6 +179,9 @@
                     <input id="desktop-search-input" class="bg-surface-container-low border-none rounded-full px-5 py-2 w-full focus:ring-2 focus:ring-primary-container transition-all text-body-md placeholder:text-outline" placeholder="브랜드, 상품 검색..." type="text"/>
                     <span class="material-symbols-outlined absolute right-3 top-2.5 text-outline text-[18px]">search</span>
                 </div>
+                <button class="text-primary hover:bg-surface-container-low p-2 rounded-full active:scale-95 transition-all" id="desktop-sync-btn" title="관리자 동기화">
+                    <span class="material-symbols-outlined text-[22px]">sync</span>
+                </button>
             </div>
         </header>
 
@@ -329,11 +334,13 @@
 
                 <!-- Mall / Search filters -->
                 <div class="flex items-center justify-between border-b border-border-light pb-4">
-                    <div class="flex gap-2" id="desktop-mall-filters">
+                    <div class="flex gap-2 overflow-x-auto no-scrollbar" id="desktop-mall-filters">
                         <button class="px-5 py-2.5 rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-all bg-primary text-white" data-site="all">전체</button>
                         <button class="px-5 py-2.5 rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-all bg-white border border-border-light text-on-surface hover:bg-surface-container-low" data-site="coupang">쿠팡</button>
-                        <button class="px-5 py-2.5 rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-all bg-white border border-border-light text-on-surface hover:bg-surface-container-low" data-site="naver">네이버 스토어</button>
-                        <button class="px-5 py-2.5 rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-all bg-white border border-border-light text-on-surface hover:bg-surface-container-low" data-site="cjmall">CJ 몰</button>
+                        <button class="px-5 py-2.5 rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-all bg-white border border-border-light text-on-surface hover:bg-surface-container-low" data-site="naver">네이버</button>
+                        <button class="px-5 py-2.5 rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-all bg-white border border-border-light text-on-surface hover:bg-surface-container-low" data-site="11st">11번가</button>
+                        <button class="px-5 py-2.5 rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-all bg-white border border-border-light text-on-surface hover:bg-surface-container-low" data-site="gmarket">G마켓</button>
+                        <button class="px-5 py-2.5 rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-all bg-white border border-border-light text-on-surface hover:bg-surface-container-low" data-site="musinsa">무신사</button>
                     </div>
 
                     <div class="flex gap-6" id="desktop-sort-options">
@@ -393,6 +400,9 @@
                 <button class="material-symbols-outlined text-primary active:scale-95 transition-transform duration-200" id="mobile-menu-btn">menu</button>
                 <h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary header-logo-btn">Youn's Shop</h1>
             </div>
+            <button class="text-primary hover:bg-surface-container-low p-2 rounded-full active:scale-95 transition-all" id="mobile-sync-btn" title="관리자 동기화">
+                <span class="material-symbols-outlined text-[22px]">sync</span>
+            </button>
         </header>
 
         <!-- Mobile Main Panels -->
@@ -411,8 +421,10 @@
                     <div class="flex gap-2 overflow-x-auto no-scrollbar py-1" id="mobile-mall-filters">
                         <button class="px-5 py-2.5 rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-all bg-primary text-white" data-site="all">전체</button>
                         <button class="px-5 py-2.5 rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-all bg-white border border-border-light text-on-surface hover:bg-surface-container-low" data-site="coupang">쿠팡</button>
-                        <button class="px-5 py-2.5 rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-all bg-white border border-border-light text-on-surface hover:bg-surface-container-low" data-site="naver">네이버 스토어</button>
-                        <button class="px-5 py-2.5 rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-all bg-white border border-border-light text-on-surface hover:bg-surface-container-low" data-site="cjmall">CJ 몰</button>
+                        <button class="px-5 py-2.5 rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-all bg-white border border-border-light text-on-surface hover:bg-surface-container-low" data-site="naver">네이버</button>
+                        <button class="px-5 py-2.5 rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-all bg-white border border-border-light text-on-surface hover:bg-surface-container-low" data-site="11st">11번가</button>
+                        <button class="px-5 py-2.5 rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-all bg-white border border-border-light text-on-surface hover:bg-surface-container-low" data-site="gmarket">G마켓</button>
+                        <button class="px-5 py-2.5 rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-all bg-white border border-border-light text-on-surface hover:bg-surface-container-low" data-site="musinsa">무신사</button>
                     </div>
                 </section>
 
@@ -648,6 +660,62 @@
                 <span class="text-label-sm font-label-sm uppercase tracking-widest text-[10px]">안전하고 투명한 쇼핑 연결을 지향합니다</span>
             </div>
         </main>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div class="modal-overlay fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300" id="admin-login-modal">
+        <div class="bg-background text-on-surface rounded-3xl w-full max-w-md p-8 shadow-2xl relative border border-border-light transform scale-95 transition-transform duration-300" id="admin-login-card">
+            <button class="absolute top-6 right-6 text-outline hover:text-on-surface" id="admin-login-close-btn">
+                <span class="material-symbols-outlined text-2xl">close</span>
+            </button>
+            <h2 class="font-headline-lg text-headline-lg font-bold text-primary mb-6 text-center">관리자 로그인</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-label-lg text-on-surface mb-2 font-semibold" for="admin-username">아이디</label>
+                    <input class="w-full rounded-xl border border-border-light px-4 py-3 focus:border-primary focus:ring-0 outline-none text-body-md" id="admin-username" placeholder="아이디 입력 (patter)" value="patter" type="text"/>
+                </div>
+                <div>
+                    <label class="block text-label-lg text-on-surface mb-2 font-semibold" for="admin-password">비밀번호</label>
+                    <input class="w-full rounded-xl border border-border-light px-4 py-3 focus:border-primary focus:ring-0 outline-none text-body-md" id="admin-password" placeholder="비밀번호 입력" type="password"/>
+                </div>
+                <div class="pt-4">
+                    <button class="w-full bg-primary hover:bg-primary-container text-white py-3 rounded-xl font-headline-md text-body-lg shadow-md transition-all active:scale-[0.98]" id="admin-login-submit-btn">로그인</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Sync Console Modal -->
+    <div class="modal-overlay fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300" id="admin-sync-modal">
+        <div class="bg-background text-on-surface rounded-3xl w-full max-w-lg p-8 shadow-2xl relative border border-border-light transform scale-95 transition-transform duration-300" id="admin-sync-card">
+            <button class="absolute top-6 right-6 text-outline hover:text-on-surface" id="admin-sync-close-btn">
+                <span class="material-symbols-outlined text-2xl">close</span>
+            </button>
+            <h2 class="font-headline-lg text-headline-lg font-bold text-primary mb-4 text-center">Supabase 동기화 콘솔</h2>
+            <p class="text-text-secondary text-body-md text-center mb-6">Supabase 데이터베이스의 상품 리스트를 최신 정보로 동기화합니다.</p>
+            
+            <div class="bg-surface-subtle p-6 rounded-2xl border border-border-light space-y-3 mb-6" id="sync-console-log">
+                <div class="flex justify-between text-body-md">
+                    <span>데이터베이스 상태:</span>
+                    <span class="font-bold text-green-600" id="db-status-text">연동 대기 중</span>
+                </div>
+                <div class="flex justify-between text-body-md">
+                    <span>최종 동기화 상품 수:</span>
+                    <span class="font-bold" id="db-products-count">0개</span>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <button class="w-full bg-primary hover:bg-primary-container text-white py-4 px-6 rounded-xl font-headline-md text-body-lg shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2" id="sync-start-btn">
+                    <span class="material-symbols-outlined text-lg">sync</span>
+                    <span>동기화 시작 (Supabase에 갱신)</span>
+                </button>
+                <div class="flex gap-2">
+                    <button class="w-1/2 bg-transparent hover:bg-surface-container-low text-primary py-2 px-6 rounded-xl font-label-lg text-label-lg transition-colors" id="admin-logout-btn">로그아웃</button>
+                    <button class="w-1/2 bg-transparent hover:bg-surface-container-low text-on-surface-variant py-2 px-6 rounded-xl font-label-lg text-label-lg transition-colors" id="admin-sync-close-action-btn">닫기</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Floating Toast Container -->
