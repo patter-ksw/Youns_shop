@@ -4,14 +4,19 @@
 const SUPABASE_URL = 'YOUR_SUPABASE_URL';
 const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
-let supabase = null;
+let supabaseClientInstance = null;
 let useSupabase = false;
 
+// Initialize Supabase correctly from window.supabase loaded via CDN
 if (SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY') {
     try {
-        supabase = supabaseClient.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        useSupabase = true;
-        console.log("Supabase Client Initialized Successfully.");
+        if (window.supabase) {
+            supabaseClientInstance = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            useSupabase = true;
+            console.log("Supabase Client Initialized Successfully.");
+        } else {
+            console.warn("Supabase library not found on window object.");
+        }
     } catch (e) {
         console.error("Supabase Initialization Error:", e);
     }
@@ -351,6 +356,68 @@ const LOCAL_FALLBACK_PRODUCTS = [
         price: 22900, originalPrice: 29000, discountRate: 21, site: 'musinsa', rating: 4.7, reviews: 95, salesCount: 890,
         category: 'fashion', rank: 10, isCurated: false,
         image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuArxqtDl5gOesoScPSA2qBTVXdB4JeNy4JjVVMmhy4K7m0R3q1hFDAQa6g-u762RKVN7A5BxJDTf715OQoj-eL3D1YzqrohK2lBPk0lTKABpat0WtfmINTyG-Am0PC_3C3uiSSyQ50fiiw6gxKVXD8_o5fgXJkT_kXa-5TH1L01vLItLf5MXIjSDyXMmBtUU33W64322mhltav3BLW27A4vMiD2VemzdtpFzZ5jwBf4NNlpeNeNwEvE', link: 'https://musinsa.com'
+    },
+
+    // --- CJ Mall (10 items) ---
+    {
+        id: 51, name: 'CJ제일제당 비비고 왕교자 만두 세트 (대용량 패키지)', brand: '비비고',
+        price: 28900, originalPrice: 35000, discountRate: 17, site: 'cjmall', rating: 4.9, reviews: 2450, salesCount: 15400,
+        category: 'food', rank: 1, isCurated: true, tag: '베스트',
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRZSEvrW7AAMmXFQRso1hB0mPCdk0NPqxzfNXX5Mva2DHjuBVxCUkbvPxHhQQ9StLJN6HfBzPPtbsalbkoaWMuO7vFuZE6B5ZfUf1BaKxwbgK0749mgU6o_NQzTXAvTkXFEQLkE3785FEg7gYQwEEt9eAaMv21Ya2voPpVZb98tkKdrAXrymQmjd151aFtDh0jfe8JeiTzsEj9X3npbu8lajAJMpJM14hwo7tfBefg_FZotiC7jVeL', link: 'https://display.cjonstyle.com'
+    },
+    {
+        id: 52, name: 'CJ제일제당 햇반 백미 즉석밥 210g x 24공기 번들', brand: '햇반',
+        price: 23500, originalPrice: 28000, discountRate: 16, site: 'cjmall', rating: 4.9, reviews: 3820, salesCount: 22000,
+        category: 'food', rank: 2, isCurated: false,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBDCZunIY5_JgeNY93_F-Ix9x00SU2dG43vMkW5--HEU20B8s09j3yAcIzjb6vsj41ly6aGyE6DX4T0Pq_lA0ZqTJ1rCCreRlPAfnBmy_I-x-h9wcDVvxEVa9Rvxmq-BIv3NzNXnZvEakgdp1cL7qFCmDJmHe7GwyH8fH-yfzvisSP9c0tOpm_TVhYz_mCYlabX5ZoRFlDYNL08Lqb3XQMfUb9ak91N-ITgzVQXCjmRQ99eMdYsNN1R', link: 'https://display.cjonstyle.com'
+    },
+    {
+        id: 53, name: 'CJ 온스타일 에디션 캐시미어 울 블렌드 카디건', brand: '온스타일 패션',
+        price: 79000, originalPrice: 99000, discountRate: 20, site: 'cjmall', rating: 4.7, reviews: 120, salesCount: 1450,
+        category: 'fashion', rank: 3, isCurated: true,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuArxqtDl5gOesoScPSA2qBTVXdB4JeNy4JjVVMmhy4K7m0R3q1hFDAQa6g-u762RKVN7A5BxJDTf715OQoj-eL3D1YzqrohK2lBPk0lTKABpat0WtfmINTyG-Am0PC_3C3uiSSyQ50fiiw6gxKVXD8_o5fgXJkT_kXa-5TH1L01vLItLf5MXIjSDyXMmBtUU33W64322mhltav3BLW27A4vMiD2VemzdtpFzZ5jwBf4NNlpeNeNwEvE', link: 'https://display.cjonstyle.com'
+    },
+    {
+        id: 54, name: 'CJ제일제당 비비고 소고기미역국 500g x 5개 세트', brand: '비비고',
+        price: 18900, originalPrice: 22000, discountRate: 14, site: 'cjmall', rating: 4.8, reviews: 920, salesCount: 8900,
+        category: 'food', rank: 4, isCurated: false,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRZSEvrW7AAMmXFQRso1hB0mPCdk0NPqxzfNXX5Mva2DHjuBVxCUkbvPxHhQQ9StLJN6HfBzPPtbsalbkoaWMuO7vFuZE6B5ZfUf1BaKxwbgK0749mgU6o_NQzTXAvTkXFEQLkE3785FEg7gYQwEEt9eAaMv21Ya2voPpVZb98tkKdrAXrymQmjd151aFtDh0jfe8JeiTzsEj9X3npbu8lajAJMpJM14hwo7tfBefg_FZotiC7jVeL', link: 'https://display.cjonstyle.com'
+    },
+    {
+        id: 55, name: 'CJ 온스타일 스탠다드 메모리폼 경추베개 더블팩', brand: '온스타일 홈',
+        price: 49000, originalPrice: 65000, discountRate: 24, site: 'cjmall', rating: 4.6, reviews: 310, salesCount: 2200,
+        category: 'home', rank: 5, isCurated: false,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBDsqCBJjcAx_Cs5bZNvnUhrr7k8Y2AHUVMbeIPE_Evlb7Bv4WKfFchldby78qq7INv7LId6utydpC8F1xxOHdx_aFfz3Zos1kRn1LZWLafxnmqDRDzY1rmygVLRvq5vPIIWEGrRv8tUKJj6wxYWbOktv4Oz2ty3etOZQQRLjlROhrgifHKH_sdNGl8xbQEBrTuCL5rG73PD4-DZrqdm9Pzq23t-lBomS1XrIkSaBnA3tHxFc0B3swq', link: 'https://display.cjonstyle.com'
+    },
+    {
+        id: 56, name: 'CJ제일제당 비비고 포기배추김치 5kg', brand: '비비고',
+        price: 34900, originalPrice: 34900, discountRate: 0, site: 'cjmall', rating: 4.8, reviews: 1100, salesCount: 5400,
+        category: 'food', rank: 6, isCurated: false,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRZSEvrW7AAMmXFQRso1hB0mPCdk0NPqxzfNXX5Mva2DHjuBVxCUkbvPxHhQQ9StLJN6HfBzPPtbsalbkoaWMuO7vFuZE6B5ZfUf1BaKxwbgK0749mgU6o_NQzTXAvTkXFEQLkE3785FEg7gYQwEEt9eAaMv21Ya2voPpVZb98tkKdrAXrymQmjd151aFtDh0jfe8JeiTzsEj9X3npbu8lajAJMpJM14hwo7tfBefg_FZotiC7jVeL', link: 'https://display.cjonstyle.com'
+    },
+    {
+        id: 57, name: '오데랑 프렌치 린넨 홈쇼핑 원피스 에디션', brand: '오데랑',
+        price: 59000, originalPrice: 79000, discountRate: 25, site: 'cjmall', rating: 4.7, reviews: 85, salesCount: 950,
+        category: 'fashion', rank: 7, isCurated: false,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuArxqtDl5gOesoScPSA2qBTVXdB4JeNy4JjVVMmhy4K7m0R3q1hFDAQa6g-u762RKVN7A5BxJDTf715OQoj-eL3D1YzqrohK2lBPk0lTKABpat0WtfmINTyG-Am0PC_3C3uiSSyQ50fiiw6gxKVXD8_o5fgXJkT_kXa-5TH1L01vLItLf5MXIjSDyXMmBtUU33W64322mhltav3BLW27A4vMiD2VemzdtpFzZ5jwBf4NNlpeNeNwEvE', link: 'https://display.cjonstyle.com'
+    },
+    {
+        id: 58, name: 'CJ제일제당 스팸 클래식 200g x 10캔 실속세트', brand: '스팸',
+        price: 32900, originalPrice: 42000, discountRate: 21, site: 'cjmall', rating: 4.9, reviews: 1840, salesCount: 12000,
+        category: 'food', rank: 8, isCurated: false,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDt9_vb8PCR9N5g3UvKP3BCjqnjaFo73cN04CJ4SWUslYjfOvhWEfhjOVyEfLObOcg59vDZdWj6P3dQ7AxZpyjygK-eg99sqUlAY5g5cMufMSx_pwP16SVXrg0SnKArSZlK5nLj4faEG9uyD1bg1t80cNvSIyr9F0ukt3qF-W-YPhJMgV-ewLZYv82pLby85F2Q1LIBXbG5dcYH1kY7Y6h4GTO1mDDimgpJ2BQ8-SWlQDjKF_EndPNr', link: 'https://display.cjonstyle.com'
+    },
+    {
+        id: 59, name: 'CJ 온스타일 세라믹 쿡웨어 IH 프라이팬 3종 세트', brand: '온스타일 홈',
+        price: 69000, originalPrice: 89000, discountRate: 22, site: 'cjmall', rating: 4.8, reviews: 154, salesCount: 1800,
+        category: 'home', rank: 9, isCurated: false,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBDsqCBJjcAx_Cs5bZNvnUhrr7k8Y2AHUVMbeIPE_Evlb7Bv4WKfFchldby78qq7INv7LId6utydpC8F1xxOHdx_aFfz3Zos1kRn1LZWLafxnmqDRDzY1rmygVLRvq5vPIIWEGrRv8tUKJj6wxYWbOktv4Oz2ty3etOZQQRLjlROhrgifHKH_sdNGl8xbQEBrTuCL5rG73PD4-DZrqdm9Pzq23t-lBomS1XrIkSaBnA3tHxFc0B3swq', link: 'https://display.cjonstyle.com'
+    },
+    {
+        id: 60, name: 'CJ제일제당 맛밤 영양간식 패키지 60g x 12봉', brand: '맛밤',
+        price: 19900, originalPrice: 24000, discountRate: 17, site: 'cjmall', rating: 4.8, reviews: 920, salesCount: 6500,
+        category: 'food', rank: 10, isCurated: false,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRZSEvrW7AAMmXFQRso1hB0mPCdk0NPqxzfNXX5Mva2DHjuBVxCUkbvPxHhQQ9StLJN6HfBzPPtbsalbkoaWMuO7vFuZE6B5ZfUf1BaKxwbgK0749mgU6o_NQzTXAvTkXFEQLkE3785FEg7gYQwEEt9eAaMv21Ya2voPpVZb98tkKdrAXrymQmjd151aFtDh0jfe8JeiTzsEj9X3npbu8lajAJMpJM14hwo7tfBefg_FZotiC7jVeL', link: 'https://display.cjonstyle.com'
     }
 ];
 
@@ -380,10 +447,10 @@ async function init() {
 }
 
 async function loadProducts() {
-    if (useSupabase) {
+    if (useSupabase && supabaseClientInstance) {
         try {
             console.log("Fetching products from Supabase database...");
-            const { data, error } = await supabase.from('products').select('*');
+            const { data, error } = await supabaseClientInstance.from('products').select('*');
             if (error) throw error;
             if (data && data.length > 0) {
                 // Map DB snake_case properties to JS camelCase properties
@@ -646,7 +713,8 @@ function getSiteName(site) {
         'naver': '네이버',
         '11st': '11번가',
         'gmarket': 'G마켓',
-        'musinsa': '무신사'
+        'musinsa': '무신사',
+        'cjmall': 'CJ 몰'
     };
     return names[site] || site.toUpperCase();
 }
@@ -776,7 +844,8 @@ function openDetailModal(prod, pushHistory = true) {
         'naver': '#03C75A',
         '11st': '#FF323C',
         'gmarket': '#1E90FF',
-        'musinsa': '#000000'
+        'musinsa': '#000000',
+        'cjmall': '#53437b'
     };
     const siteBtnColor = siteBtnColors[prod.site] || '#53437b';
     
@@ -860,10 +929,11 @@ function triggerRedirect(prod) {
         'naver': '#03C75A',
         '11st': '#FF323C',
         'gmarket': '#1E90FF',
-        'musinsa': '#000000'
+        'musinsa': '#000000',
+        'cjmall': '#53437b'
     };
     const siteColor = siteColors[prod.site] || '#53437b';
-    const charIcon = prod.site === '11st' ? '11' : prod.site === 'gmarket' ? 'G' : prod.site === 'musinsa' ? 'M' : prod.site === 'coupang' ? 'C' : 'N';
+    const charIcon = prod.site === '11st' ? '11' : prod.site === 'gmarket' ? 'G' : prod.site === 'musinsa' ? 'M' : prod.site === 'coupang' ? 'C' : prod.site === 'cjmall' ? 'CJ' : 'N';
 
     redirectTitle.textContent = `${siteLabel}으로 이동 중입니다...`;
     redirectBrandIcon.textContent = charIcon;
@@ -902,11 +972,11 @@ function triggerRedirect(prod) {
 // Admin Authentication & Supabase Sync
 // ==========================================
 async function attemptAdminLogin(username, password) {
-    if (useSupabase) {
+    if (useSupabase && supabaseClientInstance) {
         try {
             console.log("Checking admin role in Supabase tr_users table...");
             // Query Supabase for patter matching username, password and role 관리자
-            const { data, error } = await supabase
+            const { data, error } = await supabaseClientInstance
                 .from('tr_users')
                 .select('*')
                 .eq('id', username)
@@ -959,7 +1029,7 @@ function openSyncConsole() {
 }
 
 async function triggerSupabaseSync() {
-    if (!useSupabase) {
+    if (!useSupabase || !supabaseClientInstance) {
         showToast("Supabase 설정이 기입되어 있지 않아 실제 DB에 저장할 수 없습니다. sync_malls.py 스크립트 실행을 참조하세요.");
         return;
     }
@@ -970,8 +1040,6 @@ async function triggerSupabaseSync() {
 
     try {
         console.log("Starting DB Syncing from client side...");
-        // Truncate previous (requires Service Role, Anon key may fail due to policy,
-        // so we explain that python script is ideal for full crawling, but we populate current local items)
         const itemsToUpload = LOCAL_FALLBACK_PRODUCTS.map(p => ({
             name: p.name,
             brand: p.brand,
@@ -991,11 +1059,11 @@ async function triggerSupabaseSync() {
         }));
 
         // Clear products
-        const { error: delError } = await supabase.from('products').delete().neq('name', '');
+        const { error: delError } = await supabaseClientInstance.from('products').delete().neq('name', '');
         if (delError) console.warn("Deletion may require RLS privileges:", delError);
 
         // Insert products
-        const { data, error: insError } = await supabase.from('products').insert(itemsToUpload).select();
+        const { data, error: insError } = await supabaseClientInstance.from('products').insert(itemsToUpload).select();
         if (insError) throw insError;
 
         showToast("동기화 완료! Supabase DB 상품 리스트가 갱신되었습니다.");

@@ -546,8 +546,172 @@ def get_simulated_naver():
             "category": "beauty",
             "rank": 10,
             "is_curated": False,
-            "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuBil3lJVeQX9r8hiGhM7vX_n_9vfaaf6MWe9fYtUjI7rrLRxSS98LBR49gsf-KlmW_ZhiAH0jiCMTPFoiNw1oprMbqk3TMmsCz0wi2zBIHKheawLIJKXDwOAqwUW_9hd_dKL3oeRpuOijn76QDh8SYH6YiENm9xoW2ZAuaQi3dbgscjx1DUWkyGtXMzJX4yYqax-rWhSNg5kgoVrE-hFXt_SjCNIaPTHbaKdA5BWv41odIo36rVCVO7",
-            "link": "https://shopping.naver.com"
+        }
+    ]
+
+def get_simulated_cjmall():
+    print("CJ Mall 베스트 상품 10개 매칭 데이터 준비 중...")
+    return [
+        {
+            "name": "CJ제일제당 비비고 왕교자 만두 세트 (대용량 패키지)",
+            "brand": "비비고",
+            "price": 28900,
+            "original_price": 35000,
+            "discount_rate": 17,
+            "site": "cjmall",
+            "rating": 4.9,
+            "reviews": 2450,
+            "sales_count": 15400,
+            "category": "food",
+            "rank": 1,
+            "is_curated": True,
+            "tag": "베스트",
+            "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuCRZSEvrW7AAMmXFQRso1hB0mPCdk0NPqxzfNXX5Mva2DHjuBVxCUkbvPxHhQQ9StLJN6HfBzPPtbsalbkoaWMuO7vFuZE6B5ZfUf1BaKxwbgK0749mgU6o_NQzTXAvTkXFEQLkE3785FEg7gYQwEEt9eAaMv21Ya2voPpVZb98tkKdrAXrymQmjd151aFtDh0jfe8JeiTzsEj9X3npbu8lajAJMpJM14hwo7tfBefg_FZotiC7jVeL",
+            "link": "https://display.cjonstyle.com"
+        },
+        {
+            "name": "CJ제일제당 햇반 백미 즉석밥 210g x 24공기 번들",
+            "brand": "햇반",
+            "price": 23500,
+            "original_price": 28000,
+            "discount_rate": 16,
+            "site": "cjmall",
+            "rating": 4.9,
+            "reviews": 3820,
+            "sales_count": 22000,
+            "category": "food",
+            "rank": 2,
+            "is_curated": False,
+            "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuBDCZunIY5_JgeNY93_F-Ix9x00SU2dG43vMkW5--HEU20B8s09j3yAcIzjb6vsj41ly6aGyE6DX4T0Pq_lA0ZqTJ1rCCreRlPAfnBmy_I-x-h9wcDVvxEVa9Rvxmq-BIv3NzNXnZvEakgdp1cL7qFCmDJmHe7GwyH8fH-yfzvisSP9c0tOpm_TVhYz_mCYlabX5ZoRFlDYNL08Lqb3XQMfUb9ak91N-ITgzVQXCjmRQ99eMdYsNN1R",
+            "link": "https://display.cjonstyle.com"
+        },
+        {
+            "name": "CJ 온스타일 에디션 캐시미어 울 블렌드 카디건",
+            "brand": "온스타일 패션",
+            "price": 79000,
+            "original_price": 99000,
+            "discount_rate": 20,
+            "site": "cjmall",
+            "rating": 4.7,
+            "reviews": 120,
+            "sales_count": 1450,
+            "category": "fashion",
+            "rank": 3,
+            "is_curated": True,
+            "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuArxqtDl5gOesoScPSA2qBTVXdB4JeNy4JjVVMmhy4K7m0R3q1hFDAQa6g-u762RKVN7A5BxJDTf715OQoj-eL3D1YzqrohK2lBPk0lTKABpat0WtfmINTyG-Am0PC_3C3uiSSyQ50fiiw6gxKVXD8_o5fgXJkT_kXa-5TH1L01vLItLf5MXIjSDyXMmBtUU33W64322mhltav3BLW27A4vMiD2VemzdtpFzZ5jwBf4NNlpeNeNwEvE",
+            "link": "https://display.cjonstyle.com"
+        },
+        {
+            "name": "CJ제일제당 비비고 소고기미역국 500g x 5개 세트",
+            "brand": "비비고",
+            "price": 18900,
+            "original_price": 22000,
+            "discount_rate": 14,
+            "site": "cjmall",
+            "rating": 4.8,
+            "reviews": 920,
+            "sales_count": 8900,
+            "category": "food",
+            "rank": 4,
+            "is_curated": False,
+            "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuCRZSEvrW7AAMmXFQRso1hB0mPCdk0NPqxzfNXX5Mva2DHjuBVxCUkbvPxHhQQ9StLJN6HfBzPPtbsalbkoaWMuO7vFuZE6B5ZfUf1BaKxwbgK0749mgU6o_NQzTXAvTkXFEQLkE3785FEg7gYQwEEt9eAaMv21Ya2voPpVZb98tkKdrAXrymQmjd151aFtDh0jfe8JeiTzsEj9X3npbu8lajAJMpJM14hwo7tfBefg_FZotiC7jVeL",
+            "link": "https://display.cjonstyle.com"
+        },
+        {
+            "name": "CJ 온스타일 스탠다드 메모리폼 경추베개 더블팩",
+            "brand": "온스타일 홈",
+            "price": 49000,
+            "original_price": 65000,
+            "discount_rate": 24,
+            "site": "cjmall",
+            "rating": 4.6,
+            "reviews": 310,
+            "sales_count": 2200,
+            "category": "home",
+            "rank": 5,
+            "is_curated": False,
+            "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuBDsqCBJjcAx_Cs5bZNvnUhrr7k8Y2AHUVMbeIPE_Evlb7Bv4WKfFchldby78qq7INv7LId6utydpC8F1xxOHdx_aFfz3Zos1kRn1LZWLafxnmqDRDzY1rmygVLRvq5vPIIWEGrRv8tUKJj6wxYWbOktv4Oz2ty3etOZQQRLjlROhrgifHKH_sdNGl8xbQEBrTuCL5rG73PD4-DZrqdm9Pzq23t-lBomS1XrIkSaBnA3tHxFc0B3swq",
+            "link": "https://display.cjonstyle.com"
+        },
+        {
+            "name": "CJ제일제당 비비고 포기배추김치 5kg",
+            "brand": "비비고",
+            "price": 34900,
+            "original_price": 34900,
+            "discount_rate": 0,
+            "site": "cjmall",
+            "rating": 4.8,
+            "reviews": 1100,
+            "sales_count": 5400,
+            "category": "food",
+            "rank": 6,
+            "is_curated": False,
+            "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuCRZSEvrW7AAMmXFQRso1hB0mPCdk0NPqxzfNXX5Mva2DHjuBVxCUkbvPxHhQQ9StLJN6HfBzPPtbsalbkoaWMuO7vFuZE6B5ZfUf1BaKxwbgK0749mgU6o_NQzTXAvTkXFEQLkE3785FEg7gYQwEEt9eAaMv21Ya2voPpVZb98tkKdrAXrymQmjd151aFtDh0jfe8JeiTzsEj9X3npbu8lajAJMpJM14hwo7tfBefg_FZotiC7jVeL",
+            "link": "https://display.cjonstyle.com"
+        },
+        {
+            "name": "오데랑 프렌치 린넨 홈쇼핑 원피스 에디션",
+            "brand": "오데랑",
+            "price": 59000,
+            "original_price": 79000,
+            "discount_rate": 25,
+            "site": "cjmall",
+            "rating": 4.7,
+            "reviews": 85,
+            "sales_count": 950,
+            "category": "fashion",
+            "rank": 7,
+            "is_curated": False,
+            "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuArxqtDl5gOesoScPSA2qBTVXdB4JeNy4JjVVMmhy4K7m0R3q1hFDAQa6g-u762RKVN7A5BxJDTf715OQoj-eL3D1YzqrohK2lBPk0lTKABpat0WtfmINTyG-Am0PC_3C3uiSSyQ50fiiw6gxKVXD8_o5fgXJkT_kXa-5TH1L01vLItLf5MXIjSDyXMmBtUU33W64322mhltav3BLW27A4vMiD2VemzdtpFzZ5jwBf4NNlpeNeNwEvE",
+            "link": "https://display.cjonstyle.com"
+        },
+        {
+            "name": "CJ제일제당 스팸 클래식 200g x 10캔 실속세트",
+            "brand": "스팸",
+            "price": 32900,
+            "original_price": 42000,
+            "discount_rate": 21,
+            "site": "cjmall",
+            "rating": 4.9,
+            "reviews": 1840,
+            "sales_count": 12000,
+            "category": "food",
+            "rank": 8,
+            "is_curated": False,
+            "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuDt9_vb8PCR9N5g3UvKP3BCjqnjaFo73cN04CJ4SWUslYjfOvhWEfhjOVyEfLObOcg59vDZdWj6P3dQ7AxZpyjygK-eg99sqUlAY5g5cMufMSx_pwP16SVXrg0SnKArSZlK5nLj4faEG9uyD1bg1t80cNvSIyr9F0ukt3qF-W-YPhJMgV-ewLZYv82pLby85F2Q1LIBXbG5dcYH1kY7Y6h4GTO1mDDimgpJ2BQ8-SWlQDjKF_EndPNr",
+            "link": "https://display.cjonstyle.com"
+        },
+        {
+            "name": "CJ 온스타일 세라믹 쿡웨어 IH 프라이팬 3종 세트",
+            "brand": "온스타일 홈",
+            "price": 69000,
+            "original_price": 89000,
+            "discount_rate": 22,
+            "site": "cjmall",
+            "rating": 4.8,
+            "reviews": 154,
+            "sales_count": 1800,
+            "category": "home",
+            "rank": 9,
+            "is_curated": False,
+            "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuBDsqCBJjcAx_Cs5bZNvnUhrr7k8Y2AHUVMbeIPE_Evlb7Bv4WKfFchldby78qq7INv7LId6utydpC8F1xxOHdx_aFfz3Zos1kRn1LZWLafxnmqDRDzY1rmygVLRvq5vPIIWEGrRv8tUKJj6wxYWbOktv4Oz2ty3etOZQQRLjlROhrgifHKH_sdNGl8xbQEBrTuCL5rG73PD4-DZrqdm9Pzq23t-lBomS1XrIkSaBnA3tHxFc0B3swq",
+            "link": "https://display.cjonstyle.com"
+        },
+        {
+            "name": "CJ제일제당 맛밤 영양간식 패키지 60g x 12봉",
+            "brand": "맛밤",
+            "price": 19900,
+            "original_price": 24000,
+            "discount_rate": 17,
+            "site": "cjmall",
+            "rating": 4.8,
+            "reviews": 920,
+            "sales_count": 6500,
+            "category": "food",
+            "rank": 10,
+            "is_curated": False,
+            "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuCRZSEvrW7AAMmXFQRso1hB0mPCdk0NPqxzfNXX5Mva2DHjuBVxCUkbvPxHhQQ9StLJN6HfBzPPtbsalbkoaWMuO7vFuZE6B5ZfUf1BaKxwbgK0749mgU6o_NQzTXAvTkXFEQLkE3785FEg7gYQwEEt9eAaMv21Ya2voPpVZb98tkKdrAXrymQmjd151aFtDh0jfe8JeiTzsEj9X3npbu8lajAJMpJM14hwo7tfBefg_FZotiC7jVeL",
+            "link": "https://display.cjonstyle.com"
         }
     ]
 
@@ -580,7 +744,10 @@ def main():
     # 5. Get Naver items (10 items)
     naver_items = get_simulated_naver()
     
-    all_products = gmarket_items + musinsa_items + eleven_items + coupang_items + naver_items
+    # 6. Get CJ Mall items (10 items)
+    cjmall_items = get_simulated_cjmall()
+    
+    all_products = gmarket_items + musinsa_items + eleven_items + coupang_items + naver_items + cjmall_items
     
     if not all_products:
         print("수집 완료된 상품이 없습니다.")
