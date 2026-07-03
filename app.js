@@ -26,400 +26,151 @@ if (SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE
 // Product Categories & Keywords
 // ==========================================
 const CATEGORIES = [
-    { id: 'fashion', name: '패션', icon: 'apparel' },
-    { id: 'digital', name: '가전', icon: 'devices' },
-    { id: 'food', name: '식품', icon: 'restaurant' },
-    { id: 'beauty', name: '뷰티', icon: 'content_cut' },
-    { id: 'home', name: '홈데코', icon: 'chair' },
-    { id: 'sports', name: '스포츠', icon: 'directions_run' }
+    { id: 'electronics', name: '전자제품', icon: 'devices' },
+    { id: 'accessories', name: '악세사리', icon: 'watch' },
+    { id: 'food', name: '먹거리', icon: 'restaurant' },
+    { id: 'automotive', name: '자동차 용품', icon: 'directions_car' }
 ];
 
 const TRENDING_KEYWORDS = [
     '#노트북',
-    '#미니멀리즘',
-    '#가을신상',
-    '#프리미엄가전',
     '#헤드폰',
-    '#인테리어소품'
+    '#손목시계',
+    '#토트백',
+    '#밀키트',
+    '#거치대'
 ];
 
 // ==========================================
-// Local Fallback Database (Top 10 items per mall)
+// Database Generators
 // ==========================================
-let productsDB = [];
-const LOCAL_FALLBACK_PRODUCTS = [
-    // --- Coupang (10 items) ---
-    {
-        id: 1, name: '삼성전자 갤럭시북5 프로 NT960QJV-KD72G 노트북 (대화면 터치패널)', brand: '삼성전자',
-        price: 1890000, originalPrice: 2100000, discountRate: 10, site: 'coupang', rating: 4.9, reviews: 320, salesCount: 5400,
-        category: 'digital', rank: 1, isCurated: true, tag: '베스트',
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCKsWkDXLFuEWUtyDE03lVpOca6OpxKJpqkK7psQSrIdK807-4eAU-GkuRdgwZey3DrDD-9aI2tT1oxA9JZsav77OhCagOx2VpiRka_bpzh00DjdU7gOyBE7BEQRC-Rwm_ZatxFwcENXKx4BtBBg9TQJ6oF4w0r10EclpVs7yFWplk5yooUym69In9_0mzT-OozGInegHGX3A6lakq7mHhUTQO3FtToLovop1bqHqQwzmDuQFRFViv8', link: 'https://coupang.com'
-    },
-    {
-        id: 2, name: '애플 맥북에어 M3 13인치 노트북 (MacBook Air)', brand: 'Apple',
-        price: 1390000, originalPrice: 1590000, discountRate: 12, site: 'coupang', rating: 5.0, reviews: 1240, salesCount: 4820,
-        category: 'digital', rank: 2, isCurated: true, tag: '강력추천',
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBEAOZnoMKSjsUbGQzXBPTrWlnESHLdUp7Wuw-qyw4_6LOkaTLTHwqeqfSMmuNB1vAVzM6wfXLuT_WkZUqrBz3aEtvAWeMFh12HHuesZuXtPIzQVqCCdyY9bAJu1cSeIiGb16UsNfGsuODwvpblToPjOfU0S1G-0fPSJbBSVjUEHyJwycuDFPytW53WpkNqMwx8pHnX2luqTDu4ev2dQdvA8P8XiwRAljf_OJR9BB7XprwHgxB2i09Q', link: 'https://coupang.com'
-    },
-    {
-        id: 3, name: 'Aether Pro Wireless Noise Cancelling Headphones', brand: 'Tech Core',
-        price: 349000, originalPrice: 410000, discountRate: 15, site: 'coupang', rating: 4.9, reviews: 1240, salesCount: 8940,
-        category: 'digital', rank: 3, isCurated: true, tag: '베스트셀러',
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAyClXPV3HhZIcAnrVNtY_SvyLX9fvaZEbVSuwRqCEAxUCbWPN3gQrvgsjyG4ucr--AC9KNs_5c4oQWKaEiJxUCeAv2UxZFLXdxMa0RlPz21li_YELKFZcEDU7m1xfrn9etOcHXimNL0kQnEVckMvRFlsj1Va7GpPdQOuGrOzroOFJwdUreZ8zm2Sj-keHy6ou9reNDMm76_RcVA4puS2rGivX4cS_xN3RZ2WQ_oTKPv6gzNkqdgPoJ', link: 'https://coupang.com'
-    },
-    {
-        id: 4, name: '미니멀리스트 퍼플 글라스 테이블 램프', brand: 'Antigravity Home',
-        price: 89000, originalPrice: 120000, discountRate: 25, site: 'coupang', rating: 4.8, reviews: 124, salesCount: 1890,
-        category: 'home', rank: 4, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBDsqCBJjcAx_Cs5bZNvnUhrr7k8Y2AHUVMbeIPE_Evlb7Bv4WKfFchldby78qq7INv7LId6utydpC8F1xxOHdx_aFfz3Zos1kRn1LZWLafxnmqDRDzY1rmygVLRvq5vPIIWEGrRv8tUKJj6wxYWbOktv4Oz2ty3etOZQQRLjlROhrgifHKH_sdNGl8xbQEBrTuCL5rG73PD4-DZrqdm9Pzq23t-lBomS1XrIkSaBnA3tHxFc0B3swq', link: 'https://coupang.com'
-    },
-    {
-        id: 5, name: '제니스 인체공학 오피스 체어 시리즈', brand: '홈 오피스',
-        price: 299000, originalPrice: 399000, discountRate: 25, site: 'coupang', rating: 4.9, reviews: 380, salesCount: 4500,
-        category: 'home', rank: 5, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBxsqxq38aRVGibSwxhW9cEGeSRxLLLRuyUFQmVYHf4te99eqMiI3zFQV8M4Nv_CgmeXXfVKUlizFtq4ZAlHf6Eu_1ADlWKUT4Nvk1GJE-wcze0lgvU6usEfYCIKmTR3zO3EfzV79Rts62RdwMUOeiq6sFYeLLZuB8cr9UUcisJuZAxux4MYZJ92WRb0V_cU7OV_wvC_AlLCjvEW7q6YJ8eC0eaPxltiB6WeD0XHOUJ1Xcts4-R49KY', link: 'https://coupang.com'
-    },
-    {
-        id: 6, name: 'NeoCapture ZV Mirrorless Vlogging Kit', brand: 'Coupang',
-        price: 980000, originalPrice: 980000, discountRate: 0, site: 'coupang', rating: 4.6, reviews: 310, salesCount: 1450,
-        category: 'digital', rank: 6, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAz-aAPctq9yfObf9x67cd4-DlpuiqgxvhC2Wk8OgOAV_RS0F2anoQu6Q250fw1fb_6XecXJmSHbFS3lvdRD38n6ZZttGjhxgEe2TnC0Dnj8fBUN7l2oqibj56dSK5sIl2aaJMwv7uJ6qboqYu6AXK3yn8g3QbSUHOZIf6mcGwXdqnI5HvZG1OddNBp2DFRqUsJWjPs-Zr3ybPDDifogWM6cVJDflTv9eB8TgyZmSbXbKTj4CqDB01h', link: 'https://coupang.com'
-    },
-    {
-        id: 7, name: '유기농 보리차 번들 세트 24입', brand: '쿠팡 프레시',
-        price: 12900, originalPrice: 15000, discountRate: 14, site: 'coupang', rating: 4.8, reviews: 2400, salesCount: 12000,
-        category: 'food', rank: 7, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRZSEvrW7AAMmXFQRso1hB0mPCdk0NPqxzfNXX5Mva2DHjuBVxCUkbvPxHhQQ9StLJN6HfBzPPtbsalbkoaWMuO7vFuZE6B5ZfUf1BaKxwbgK0749mgU6o_NQzTXAvTkXFEQLkE3785FEg7gYQwEEt9eAaMv21Ya2voPpVZb98tkKdrAXrymQmjd151aFtDh0jfe8JeiTzsEj9X3npbu8lajAJMpJM14hwo7tfBefg_FZotiC7jVeL', link: 'https://coupang.com'
-    },
-    {
-        id: 8, name: '오가닉 스낵 믹스 대용량', brand: '쿠팡 프레시',
-        price: 18900, originalPrice: 18900, discountRate: 0, site: 'coupang', rating: 4.7, reviews: 1100, salesCount: 8900,
-        category: 'food', rank: 8, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDt9_vb8PCR9N5g3UvKP3BCjqnjaFo73cN04CJ4SWUslYjfOvhWEfhjOVyEfLObOcg59vDZdWj6P3dQ7AxZpyjygK-eg99sqUlAY5g5cMufMSx_pwP16SVXrg0SnKArSZlK5nLj4faEG9uyD1bg1t80cNvSIyr9F0ukt3qF-W-YPhJMgV-ewLZYv82pLby85F2Q1LIBXbG5dcYH1kY7Y6h4GTO1mDDimgpJ2BQ8-SWlQDjKF_EndPNr', link: 'https://coupang.com'
-    },
-    {
-        id: 9, name: '프리미엄 세안 폼클렌징 더블 세트', brand: 'Aura Beauty',
-        price: 28900, originalPrice: 38000, discountRate: 23, site: 'coupang', rating: 4.8, reviews: 850, salesCount: 3400,
-        category: 'beauty', rank: 9, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA9af5zRNIxnhIgxaxOL6CUqQfQcEXDtlMAXGSYLEi3K5RYyydmfokzf1vWbK9W2Oeth9gTdWR_ml2f6Op_s3Dxt_7BKNckYD6hjMuNLOZaY20Lt4MpS4iH_lqMw3d6k-JJl2GlPdz4O-vYdLe060Nw1FEWx9ogLODN2QnAH-DePlVDhc-Q9RKOX4KnfshzCQNxE1XSxmMGUpn6Kh8TR8hVRUogjTRI_pVL9uFrTRQvTG4WyufB-9vG', link: 'https://coupang.com'
-    },
-    {
-        id: 10, name: '남성용 데일리 드레스 셔츠 화이트', brand: 'Coupang Fashion',
-        price: 19900, originalPrice: 25000, discountRate: 20, site: 'coupang', rating: 4.6, reviews: 1940, salesCount: 14200,
-        category: 'fashion', rank: 10, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuArxqtDl5gOesoScPSA2qBTVXdB4JeNy4JjVVMmhy4K7m0R3q1hFDAQa6g-u762RKVN7A5BxJDTf715OQoj-eL3D1YzqrohK2lBPk0lTKABpat0WtfmINTyG-Am0PC_3C3uiSSyQ50fiiw6gxKVXD8_o5fgXJkT_kXa-5TH1L01vLItLf5MXIjSDyXMmBtUU33W64322mhltav3BLW27A4vMiD2VemzdtpFzZ5jwBf4NNlpeNeNwEvE', link: 'https://coupang.com'
-    },
+const MALLS = ['coupang', 'naver', '11st', 'gmarket', 'musinsa', 'cjmall'];
 
-    // --- Naver (10 items) ---
-    {
-        id: 11, name: 'LG전자 그램 16인치 초경량 인텔 14세대 노트북 (Gram 16)', brand: 'LG전자',
-        price: 1450000, originalPrice: 1680000, discountRate: 13, site: 'naver', rating: 4.8, reviews: 480, salesCount: 2310,
-        category: 'digital', rank: 1, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAF1s1jVHHxM-D3E64HM0wGt0SDw53v35Maun4w-GgIwWwGRA3VxAKkcKapjwLc0tZGxaRrWViNGwc6NQw1scJloxHS_-UKURWJjRhZQoFUrMw9dJ5wMGGvF1qMA8RZt5WI5PQ6q0B2N9NZ4tn7OhCDve9etIejHiokCN6HivZlHwYm75IOccXashdFqxp5mAlZC9RLOrzUyogHD3huvEME7bNFBWZ9mrbGgl3aQXEIdGKGEsrMmhgH', link: 'https://shopping.naver.com'
-    },
-    {
-        id: 12, name: 'Lumina Tab X12 Ultra OLED', brand: 'Naver Shop',
-        price: 1120000, originalPrice: 1120000, discountRate: 0, site: 'naver', rating: 4.8, reviews: 850, salesCount: 3120,
-        category: 'digital', rank: 2, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD3mrcRKxNc2IIgZ2QdFZBXxmTcfYh8xctf_H1QIimzkaIJNTNBDpIMRyEnBHj41PK_RLydkQ-m-kMF8oYgxLRIp40ikgggVB1ZenGLDhCjzL_0CvrJqf-VL2VuJBVCatrEoWJoxCleG72DpGyas4w84BUFP-637zbgs3LRgVu4KO2iPah3P25RnDmUUGfDFqIP7KI-UjhN0yAa_a6IcwGNIgCwHzFR0VB3i1D3CpzVVQvZesGwkPEb', link: 'https://shopping.naver.com'
-    },
-    {
-        id: 13, name: '클래식 레더 토트백 (딥 퍼플 에디션)', brand: 'Maison Seoul',
-        price: 245000, originalPrice: 245000, discountRate: 0, site: 'naver', rating: 4.9, reviews: 82, salesCount: 950,
-        category: 'fashion', rank: 3, isCurated: true,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBNjYdz8gcZxFx9M11ol2Eu8g4v57QoJ9OkuOOPfyJlw2WarohBPyhU0aaQwR75U5L52kK0Ikdw5HsFIEcFFQYCgII2LM-elSb94BiHw_UbPcMBjRsc4AH4vUZrxCkTkqA7JAQXJaeQuLCeX89XMAqU6fLTGJJ4KtAAvNnDGFvlZQeXvK_Qy4oyVOdgytmjfDE9ILJ-rvUAG_hYixL2qlLGA60tooQlv3DkFla4Y8Osqv8oF-P3mGRO', link: 'https://shopping.naver.com'
-    },
-    {
-        id: 14, name: '오가닉 라벤더 세럼 & 크림 기프트 세트', brand: 'Aura Beauty',
-        price: 64000, originalPrice: 64000, discountRate: 0, site: 'naver', rating: 4.7, reviews: 45, salesCount: 1200,
-        category: 'beauty', rank: 4, isCurated: true,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA3yYKp5YutcDtbMASJt3ackqK9nECVuwFjtyRSi5I-u5flYkwxjsM2yPV2v6Cb-hafF_xUGuy2WPS-toR5KnBrz3ES0xOf4pWukVTcmDh3DK6UU1BNXMsQRXTBmVZADX20AV60ovNhJ4skUod5vsJSJgwh6qUjp8RAida08Iwa1vtWr8I86-Qsdx3SImqiugUEq0aagHjvyA-zusIErZQhkElEX34436khr66vtVxnJ2uMo7W8Z3Bt', link: 'https://shopping.naver.com'
-    },
-    {
-        id: 15, name: '글로우 에센스 리커버리 세럼 50ml', brand: 'Aura Beauty',
-        price: 45000, originalPrice: 59000, discountRate: 24, site: 'naver', rating: 4.8, reviews: 1120, salesCount: 8400,
-        category: 'beauty', rank: 5, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA9af5zRNIxnhIgxaxOL6CUqQfQcEXDtlMAXGSYLEi3K5RYyydmfokzf1vWbK9W2Oeth9gTdWR_ml2f6Op_s3Dxt_7BKNckYD6hjMuNLOZaY20Lt4MpS4iH_lqMw3d6k-JJl2GlPdz4O-vYdLe060Nw1FEWx9ogLODN2QnAH-DePlVDhc-Q9RKOX4KnfshzCQNxE1XSxmMGUpn6Kh8TR8hVRUogjTRI_pVL9uFrTRQvTG4WyufB-9vG', link: 'https://shopping.naver.com'
-    },
-    {
-        id: 16, name: '퓨어사운드 무선 헤드폰 클래식 에디션', brand: 'Tech Core',
-        price: 189000, originalPrice: 220000, discountRate: 14, site: 'naver', rating: 4.8, reviews: 950, salesCount: 3950,
-        category: 'digital', rank: 6, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCuSelfYUXgSXHbRJcnuRgBKQermfXJg2Z5b-Itct1M373OoxBjhVTD0skBhV0fKeA4MD3c0lhwCssRJmycooWFhMf8qgbzAxXWo8nEPA-asUh2qqH6H42mnEwVzHKuk6vmrylZkGgQeQCNLP91oFQ9aWTMcByRs4ak5nCkJrIEGRxXcKXJzhV_S5jnAoPo8yu7Cg4_JmpqLoLP_K3bRphgnxYoP8_ox5jq6qzS-5nKQ5jvjdgzdINz', link: 'https://shopping.naver.com'
-    },
-    {
-        id: 17, name: '어드밴스드 세라마이드 리커버리 세럼 (50ml)', brand: 'LUMINA ESSENTIALS',
-        price: 48500, originalPrice: 62000, discountRate: 22, site: 'naver', rating: 4.8, reviews: 1284, salesCount: 9480,
-        category: 'beauty', rank: 7, isCurated: true,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDbfHitV9msXhDQ5H3nVRZcGhS6asdSC3naLwseVvCJixWCqzrkyaM1FFvYt3d4sop7SiJNT8vLWhSirGYJK7S8HcO0_axBO1j80ekTKHUsukDP2D8T5VMCLcC63x7o8ChtRUy4LKYlImUMIPMTBFxFZuEvzm4RvhWUdSYwFLHnPGge_hVfyEcO8HBT3LLFEhLT1c6J-3z_Fqw3RGUum-pckixCN6ilY-CVJ_lFxDlwm-mOjAbXgZMx', link: 'https://shopping.naver.com'
-    },
-    {
-        id: 18, name: '유기농 무설탕 아몬드 밀크 1L', brand: '네이버 푸드',
-        price: 3800, originalPrice: 4500, discountRate: 15, site: 'naver', rating: 4.8, reviews: 1800, salesCount: 9500,
-        category: 'food', rank: 8, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBDCZunIY5_JgeNY93_F-Ix9x00SU2dG43vMkW5--HEU20B8s09j3yAcIzjb6vsj41ly6aGyE6DX4T0Pq_lA0ZqTJ1rCCreRlPAfnBmy_I-x-h9wcDVvxEVa9Rvxmq-BIv3NzNXnZvEakgdp1cL7qFCmDJmHe7GwyH8fH-yfzvisSP9c0tOpm_TVhYz_mCYlabX5ZoRFlDYNL08Lqb3XQMfUb9ak91N-ITgzVQXCjmRQ99eMdYsNN1R', link: 'https://shopping.naver.com'
-    },
-    {
-        id: 19, name: '오가닉 건조 무화과 슬라이스 300g', brand: '네이버 푸드',
-        price: 14900, originalPrice: 14900, discountRate: 0, site: 'naver', rating: 4.6, reviews: 420, salesCount: 2100,
-        category: 'food', rank: 9, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCbqUf5q2Ou04hqBdMnStvFf8gHPmfi8stZQ6g62TVrp1l3hozwDM6zEKmMOmWyhp3e36O2iW4L_9B6NTWhrbOCsQMbZTz2jk8nzhEChGInlS21Tvd8iJTudfH0fExyldZPJxrI7T3DQJpWuJc_QFVGwoCuRo7_wcvPyz4W91iS9KlPIp_zKcIMR5nQdGCQQyOAeXklGT_NRsHm9OKPFZW-VFvxcmLxF0iiAL8vxehZZtx0JqFbzsqP', link: 'https://shopping.naver.com'
-    },
-    {
-        id: 20, name: '수분 진정 수딩 젤 크림 100ml', brand: 'Aura Beauty',
-        price: 16900, originalPrice: 22000, discountRate: 23, site: 'naver', rating: 4.8, reviews: 920, salesCount: 4800,
-        category: 'beauty', rank: 10, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBil3lJVeQX9r8hiGhM7vX_n_9vfaaf6MWe9fYtUjI7rrLRxSS98LBR49gsf-KlmW_ZhiAH0jiCMTPFoiNw1oprMbqk3TMmsCz0wi2zBIHKheawLIJKXDwOAqwUW_9hd_dKL3oeRpuOijn76QDh8SYH6YiENm9xoW2ZAuaQi3dbgscjx1DUWkyGtXMzJX4yYqax-rWhSNg5kgoVrE-hFXt_SjCNIaPTHbaKdA5BWv41odIo36rVCVO7', link: 'https://shopping.naver.com'
-    },
+const TEMPLATE_PRODUCTS = {
+    electronics: [
+        { name: '삼성전자 갤럭시북5 프로 NT960QJV-KD72G 노트북 (대화면 터치패널)', brand: '삼성전자', basePrice: 1890000, img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCKsWkDXLFuEWUtyDE03lVpOca6OpxKJpqkK7psQSrIdK807-4eAU-GkuRdgwZey3DrDD-9aI2tT1oxA9JZsav77OhCagOx2VpiRka_bpzh00DjdU7gOyBE7BEQRC-Rwm_ZatxFwcENXKx4BtBBg9TQJ6oF4w0r10EclpVs7yFWplk5yooUym69In9_0mzT-OozGInegHGX3A6lakq7mHhUTQO3FtToLovop1bqHqQwzmDuQFRFViv8' },
+        { name: 'LG전자 그램 16인치 초경량 인텔 14세대 노트북', brand: 'LG전자', basePrice: 1450000, img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAF1s1jVHHxM-D3E64HM0wGt0SDw53v35Maun4w-GgIwWwGRA3VxAKkcKapjwLc0tZGxaRrWViNGwc6NQw1scJloxHS_-UKURWJjRhZQoFUrMw9dJ5wMGGvF1qMA8RZt5WI5PQ6q0B2N9NZ4tn7OhCDve9etIejHiokCN6HivZlHwYm75IOccXashdFqxp5mAlZC9RLOrzUyogHD3huvEME7bNFBWZ9mrbGgl3aQXEIdGKGEsrMmhgH' },
+        { name: '애플 맥북에어 M3 13인치 노트북 (MacBook Air)', brand: 'Apple', basePrice: 1390000, img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBEAOZnoMKSjsUbGQzXBPTrWlnESHLdUp7Wuw-qyw4_6LOkaTLTHwqeqfSMmuNB1vAVzM6wfXLuT_WkZUqrBz3aEtvAWeMFh12HHuesZuXtPIzQVqCCdyY9bAJu1cSeIiGb16UsNfGsuODwvpblToPjOfU0S1G-0fPSJbBSVjUEHyJwycuDFPytW53WpkNqMwx8pHnX2luqTDu4ev2dQdvA8P8XiwRAljf_OJR9BB7XprwHgxB2i09Q' },
+        { name: 'Aether Pro 노이즈캔슬링 무선 헤드폰', brand: 'Tech Core', basePrice: 349000, img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAyClXPV3HhZIcAnrVNtY_SvyLX9fvaZEbVSuwRqCEAxUCbWPN3gQrvgsjyG4ucr--AC9KNs_5c4oQWKaEiJxUCeAv2UxZFLXdxMa0RlPz21li_YELKFZcEDU7m1xfrn9etOcHXimNL0kQnEVckMvRFlsj1Va7GpPdQOuGrOzroOFJwdUreZ8zm2Sj-keHy6ou9reNDMm76_RcVA4puS2rGivX4cS_xN3RZ2WQ_oTKPv6gzNkqdgPoJ' },
+        { name: 'Lumina Tab X12 Ultra OLED 태블릿 PC', brand: 'Lumina', basePrice: 1120000, img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD3mrcRKxNc2IIgZ2QdFZBXxmTcfYh8xctf_H1QIimzkaIJNTNBDpIMRyEnBHj41PK_RLydkQ-m-kMF8oYgxLRIp40ikgggVB1ZenGLDhCjzL_0CvrJqf-VL2VuJBVCatrEoWJoxCleG72DpGyas4w84BUFP-637zbgs3LRgVu4KO2iPah3P25RnDmUUGfDFqIP7KI-UjhN0yAa_a6IcwGNIgCwHzFR0VB3i1D3CpzVVQvZesGwkPEb' },
+        { name: '기계식 게이밍 키보드 갈축 (텐키리스)', brand: 'NeoType', basePrice: 129000, img: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=300&q=80' },
+        { name: '인체공학적 무선 수직 마우스 버티컬', brand: 'Ergo', basePrice: 49000, img: 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=300&q=80' },
+        { name: 'C타입 고성능 고속 충전 보조배터리', brand: 'PowerVolt', basePrice: 29000, img: 'https://images.unsplash.com/photo-1609592424109-dd8251e604f3?auto=format&fit=crop&w=300&q=80' },
+        { name: '4K Ultra 빔프로젝터 미니 홈시네마', brand: 'Cinemax', basePrice: 490000, img: 'https://images.unsplash.com/photo-1535016120720-40c646be5580?auto=format&fit=crop&w=300&q=80' },
+        { name: '스마트 모니터 조명 바 LED 스탠드', brand: 'LiteUp', basePrice: 39000, img: 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=300&q=80' }
+    ],
+    accessories: [
+        { name: '모던 메탈 크로노그래프 아날로그 손목시계', brand: 'Maison', basePrice: 198000, img: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=300&q=80' },
+        { name: '천연 가죽 클래식 숄더 토트백', brand: 'Vero', basePrice: 245000, img: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=300&q=80' },
+        { name: '써지컬 스틸 패션 체인 링크 목걸이', brand: 'Aura', basePrice: 38000, img: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=300&q=80' },
+        { name: '심플 슬림 가죽 남성 반지갑', brand: 'Vero', basePrice: 65000, img: 'https://images.unsplash.com/photo-1627124718515-e23938556f8a?auto=format&fit=crop&w=300&q=80' },
+        { name: '프리미엄 자외선 차단 스포츠 선글라스', brand: 'Retro', basePrice: 89000, img: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=300&q=80' },
+        { name: '데일리 캔버스 미니 크로스백', brand: 'Urban', basePrice: 29000, img: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=300&q=80' },
+        { name: '14K 골드 플레티늄 패션 커플링 반지', brand: 'Aura', basePrice: 120000, img: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=300&q=80' },
+        { name: '미니멀 가죽 벨트 골드 버클', brand: 'Maison', basePrice: 45000, img: 'https://images.unsplash.com/photo-1624222247344-550fb8ecf7db?auto=format&fit=crop&w=300&q=80' },
+        { name: '베이직 볼캡 캐주얼 야구모자', brand: 'Urban', basePrice: 19000, img: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=300&q=80' },
+        { name: '자카드 패턴 겨울 머플러 목도리', brand: 'Maison', basePrice: 35000, img: 'https://images.unsplash.com/photo-1520903781418-b3274ab57d51?auto=format&fit=crop&w=300&q=80' }
+    ],
+    food: [
+        { name: 'CJ제일제당 햇반 백미 즉석밥 24공기 번들', brand: '햇반', basePrice: 23500, img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBDCZunIY5_JgeNY93_F-Ix9x00SU2dG43vMkW5--HEU20B8s09j3yAcIzjb6vsj41ly6aGyE6DX4T0Pq_lA0ZqTJ1rCCreRlPAfnBmy_I-x-h9wcDVvxEVa9Rvxmq-BIv3NzNXnZvEakgdp1cL7qFCmDJmHe7GwyH8fH-yfzvisSP9c0tOpm_TVhYz_mCYlabX5ZoRFlDYNL08Lqb3XQMfUb9ak91N-ITgzVQXCjmRQ99eMdYsNN1R' },
+        { name: 'CJ제일제당 비비고 왕교자 만두 세트 (대용량)', brand: '비비고', basePrice: 28900, img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRZSEvrW7AAMmXFQRso1hB0mPCdk0NPqxzfNXX5Mva2DHjuBVxCUkbvPxHhQQ9StLJN6HfBzPPtbsalbkoaWMuO7vFuZE6B5ZfUf1BaKxwbgK0749mgU6o_NQzTXAvTkXFEQLkE3785FEg7gYQwEEt9eAaMv21Ya2voPpVZb98tkKdrAXrymQmjd151aFtDh0jfe8JeiTzsEj9X3npbu8lajAJMpJM14hwo7tfBefg_FZotiC7jVeL' },
+        { name: '무설탕 유기농 아몬드 밀크 음료 1L x 6개', brand: 'Fresh', basePrice: 18000, img: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=300&q=80' },
+        { name: 'CJ제일제당 스팸 클래식 200g x 8캔 세트', brand: '스팸', basePrice: 29000, img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDt9_vb8PCR9N5g3UvKP3BCjqnjaFo73cN04CJ4SWUslYjfOvhWEfhjOVyEfLObOcg59vDZdWj6P3dQ7AxZpyjygK-eg99sqUlAY5g5cMufMSx_pwP16SVXrg0SnKArSZlK5nLj4faEG9uyD1bg1t80cNvSIyr9F0ukt3qF-W-YPhJMgV-ewLZYv82pLby85F2Q1LIBXbG5dcYH1kY7Y6h4GTO1mDDimgpJ2BQ8-SWlQDjKF_EndPNr' },
+        { name: '1등급 한우 꽃등심 냉장 구이용 300g', brand: 'Vero', basePrice: 59000, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=300&q=80' },
+        { name: 'CJ제일제당 비비고 포기 배추김치 국산 5kg', brand: '비비고', basePrice: 32000, img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRZSEvrW7AAMmXFQRso1hB0mPCdk0NPqxzfNXX5Mva2DHjuBVxCUkbvPxHhQQ9StLJN6HfBzPPtbsalbkoaWMuO7vFuZE6B5ZfUf1BaKxwbgK0749mgU6o_NQzTXAvTkXFEQLkE3785FEg7gYQwEEt9eAaMv21Ya2voPpVZb98tkKdrAXrymQmjd151aFtDh0jfe8JeiTzsEj9X3npbu8lajAJMpJM14hwo7tfBefg_FZotiC7jVeL' },
+        { name: '훈제 닭가슴살 슬라이스 10팩 패키지', brand: 'Fit', basePrice: 15000, img: 'https://images.unsplash.com/photo-1604503468506-a8da13d82791?auto=format&fit=crop&w=300&q=80' },
+        { name: '고소한 단백질 하루견과 믹스넛 30봉', brand: 'Nut', basePrice: 19900, img: 'https://images.unsplash.com/photo-1596560548464-f01068e601c7?auto=format&fit=crop&w=300&q=80' },
+        { name: 'CJ제일제당 맛밤 영양간식 패키지 12봉', brand: '맛밤', basePrice: 19900, img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRZSEvrW7AAMmXFQRso1hB0mPCdk0NPqxzfNXX5Mva2DHjuBVxCUkbvPxHhQQ9StLJN6HfBzPPtbsalbkoaWMuO7vFuZE6B5ZfUf1BaKxwbgK0749mgU6o_NQzTXAvTkXFEQLkE3785FEg7gYQwEEt9eAaMv21Ya2voPpVZb98tkKdrAXrymQmjd151aFtDh0jfe8JeiTzsEj9X3npbu8lajAJMpJM14hwo7tfBefg_FZotiC7jVeL' },
+        { name: '자연산 저염 명란젓 파지 1kg', brand: 'Fresh', basePrice: 24900, img: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=300&q=80' }
+    ],
+    automotive: [
+        { name: '차량용 맥세이프 고속 무선충전 거치대', brand: 'AutoPro', basePrice: 39000, img: 'https://images.unsplash.com/photo-1586105251261-72a756497a11?auto=format&fit=crop&w=300&q=80' },
+        { name: '인체공학 차량용 메모리폼 목쿠션 허리받침', brand: 'AutoPro', basePrice: 28000, img: 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=300&q=80' },
+        { name: '차량용 듀얼 QC3.0 시가잭 고속 충전기', brand: 'PowerVolt', basePrice: 15000, img: 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=300&q=80' },
+        { name: '차량용 미니 공기청정기 고성능 헤파필터', brand: 'EcoAuto', basePrice: 45000, img: 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=300&q=80' },
+        { name: '4K 초고화질 전후방 2채널 스마트 블랙박스', brand: 'NeoCapture', basePrice: 189000, img: 'https://images.unsplash.com/photo-1508974239320-0a029497e820?auto=format&fit=crop&w=300&q=80' },
+        { name: '극세사 차량 세차 드라잉 타월 10장 세트', brand: 'CleanAuto', basePrice: 12000, img: 'https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=300&q=80' },
+        { name: '김서림 방지 차량 세정제 유리크리너', brand: 'CleanAuto', basePrice: 9800, img: 'https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=300&q=80' },
+        { name: '차량용 프리미엄 방향제 카 디퓨저 우드링', brand: 'EcoAuto', basePrice: 24000, img: 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=300&q=80' },
+        { name: '셀프 세차 고흡수 드라잉 타월 대형', brand: 'CleanAuto', basePrice: 14900, img: 'https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=300&q=80' },
+        { name: '가죽 시트 케어 클리너 보호 코팅제', brand: 'CleanAuto', basePrice: 26000, img: 'https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=300&q=80' }
+    ]
+};
 
-    // --- 11st (10 items) ---
-    {
-        id: 21, name: '레노버 아이디어패드 Slim3 가성비 노트북 15인치', brand: 'Lenovo',
-        price: 549000, originalPrice: 620000, discountRate: 11, site: '11st', rating: 4.6, reviews: 190, salesCount: 890,
-        category: 'digital', rank: 1, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD3mrcRKxNc2IIgZ2QdFZBXxmTcfYh8xctf_H1QIimzkaIJNTNBDpIMRyEnBHj41PK_RLydkQ-m-kMF8oYgxLRIp40ikgggVB1ZenGLDhCjzL_0CvrJqf-VL2VuJBVCatrEoWJoxCleG72DpGyas4w84BUFP-637zbgs3LRgVu4KO2iPah3P25RnDmUUGfDFqIP7KI-UjhN0yAa_a6IcwGNIgCwHzFR0VB3i1D3CpzVVQvZesGwkPEb', link: 'https://11st.co.kr'
-    },
-    {
-        id: 22, name: '노바 크로노 클래식 메탈 워치', brand: 'Maison Seoul',
-        price: 220000, originalPrice: 220000, discountRate: 0, site: '11st', rating: 4.7, reviews: 310, salesCount: 1210,
-        category: 'fashion', rank: 2, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAemnj4nziNXQNGY9ADP5gSbYpffsq--lIzkYWYrj4PrZu-1x4-dBfSnx59fb0W-CJp5qlxjlqtWOnnBmZQ3FNqJoK52aWoV3BYV1Z8RnUXNn5-43aYny3AFwF0TKPrnI1uBBddFnH5QNstY8MWSsHElJkn7Sr6NRDoLVgpodjqnFoSBPvRHFJhUAn0wmNFq1XkFPlRPFpMrnGIBlBT7_TVpMJ6M58KBtR5EWwz-bucbvXKHURcCtk4', link: 'https://11st.co.kr'
-    },
-    {
-        id: 23, name: '유기농 세라믹 머그 4인조 홈세트', brand: 'Antigravity Home',
-        price: 32000, originalPrice: 48000, discountRate: 33, site: '11st', rating: 4.9, reviews: 580, salesCount: 2950,
-        category: 'home', rank: 3, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRZSEvrW7AAMmXFQRso1hB0mPCdk0NPqxzfNXX5Mva2DHjuBVxCUkbvPxHhQQ9StLJN6HfBzPPtbsalbkoaWMuO7vFuZE6B5ZfUf1BaKxwbgK0749mgU6o_NQzTXAvTkXFEQLkE3785FEg7gYQwEEt9eAaMv21Ya2voPpVZb98tkKdrAXrymQmjd151aFtDh0jfe8JeiTzsEj9X3npbu8lajAJMpJM14hwo7tfBefg_FZotiC7jVeL', link: 'https://11st.co.kr'
-    },
-    {
-        id: 24, name: '인체공학 무선 수직 마우스', brand: 'Tech Core',
-        price: 49000, originalPrice: 65000, discountRate: 24, site: '11st', rating: 4.7, reviews: 180, salesCount: 950,
-        category: 'digital', rank: 4, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAsP4qLDefzedDC_shc7NEjXqtB3VvlSLe788o2uxexku_mkFA4_ZKSYTPWpLB-2_zJCIS8FPoVzmJGmX09MqdVPgZfbJXqPr091aloPZa0NgryUtWCXAEPtC02zu6J68vZQH6aaVNbkIU-ESOlp7kJhLCmiyIHiuk6s8oigpuYGf8UR7llULh6lJ0cyaC2xhBZFa1HuCSrKKolJXewcGeeKf83buNhEu4E3VVyYjSSiw0YXSXPcpBg', link: 'https://11st.co.kr'
-    },
-    {
-        id: 25, name: '스마트 LED 무드 테이블 램프', brand: 'Antigravity Home',
-        price: 45000, originalPrice: 45000, discountRate: 0, site: '11st', rating: 4.8, reviews: 92, salesCount: 650,
-        category: 'home', rank: 5, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBDsqCBJjcAx_Cs5bZNvnUhrr7k8Y2AHUVMbeIPE_Evlb7Bv4WKfFchldby78qq7INv7LId6utydpC8F1xxOHdx_aFfz3Zos1kRn1LZWLafxnmqDRDzY1rmygVLRvq5vPIIWEGrRv8tUKJj6wxYWbOktv4Oz2ty3etOZQQRLjlROhrgifHKH_sdNGl8xbQEBrTuCL5rG73PD4-DZrqdm9Pzq23t-lBomS1XrIkSaBnA3tHxFc0B3swq', link: 'https://11st.co.kr'
-    },
-    {
-        id: 26, name: '데일리 면 베이직 티셔츠 3팩', brand: 'Maison Seoul',
-        price: 29900, originalPrice: 39000, discountRate: 23, site: '11st', rating: 4.6, reviews: 420, salesCount: 3100,
-        category: 'fashion', rank: 6, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuArxqtDl5gOesoScPSA2qBTVXdB4JeNy4JjVVMmhy4K7m0R3q1hFDAQa6g-u762RKVN7A5BxJDTf715OQoj-eL3D1YzqrohK2lBPk0lTKABpat0WtfmINTyG-Am0PC_3C3uiSSyQ50fiiw6gxKVXD8_o5fgXJkT_kXa-5TH1L01vLItLf5MXIjSDyXMmBtUU33W64322mhltav3BLW27A4vMiD2VemzdtpFzZ5jwBf4NNlpeNeNwEvE', link: 'https://11st.co.kr'
-    },
-    {
-        id: 27, name: '유기농 건라즈베리 팩 250g', brand: '11번가 푸드',
-        price: 9800, originalPrice: 12000, discountRate: 18, site: '11st', rating: 4.8, reviews: 110, salesCount: 1500,
-        category: 'food', rank: 7, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCbqUf5q2Ou04hqBdMnStvFf8gHPmfi8stZQ6g62TVrp1l3hozwDM6zEKmMOmWyhp3e36O2iW4L_9B6NTWhrbOCsQMbZTz2jk8nzhEChGInlS21Tvd8iJTudfH0fExyldZPJxrI7T3DQJpWuJc_QFVGwoCuRo7_wcvPyz4W91iS9KlPIp_zKcIMR5nQdGCQQyOAeXklGT_NRsHm9OKPFZW-VFvxcmLxF0iiAL8vxehZZtx0JqFbzsqP', link: 'https://11st.co.kr'
-    },
-    {
-        id: 28, name: '모이스처 하이드레이팅 스킨 로션 150ml', brand: 'Aura Beauty',
-        price: 24000, originalPrice: 32000, discountRate: 25, site: '11st', rating: 4.7, reviews: 156, salesCount: 1980,
-        category: 'beauty', rank: 8, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA9af5zRNIxnhIgxaxOL6CUqQfQcEXDtlMAXGSYLEi3K5RYyydmfokzf1vWbK9W2Oeth9gTdWR_ml2f6Op_s3Dxt_7BKNckYD6hjMuNLOZaY20Lt4MpS4iH_lqMw3d6k-JJl2GlPdz4O-vYdLe060Nw1FEWx9ogLODN2QnAH-DePlVDhc-Q9RKOX4KnfshzCQNxE1XSxmMGUpn6Kh8TR8hVRUogjTRI_pVL9uFrTRQvTG4WyufB-9vG', link: 'https://11st.co.kr'
-    },
-    {
-        id: 29, name: '아웃도어 경량 윈드브레이커 자켓', brand: 'Maison Seoul',
-        price: 79000, originalPrice: 99000, discountRate: 20, site: '11st', rating: 4.8, reviews: 310, salesCount: 2200,
-        category: 'sports', rank: 9, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuArxqtDl5gOesoScPSA2qBTVXdB4JeNy4JjVVMmhy4K7m0R3q1hFDAQa6g-u762RKVN7A5BxJDTf715OQoj-eL3D1YzqrohK2lBPk0lTKABpat0WtfmINTyG-Am0PC_3C3uiSSyQ50fiiw6gxKVXD8_o5fgXJkT_kXa-5TH1L01vLItLf5MXIjSDyXMmBtUU33W64322mhltav3BLW27A4vMiD2VemzdtpFzZ5jwBf4NNlpeNeNwEvE', link: 'https://11st.co.kr'
-    },
-    {
-        id: 30, name: '스마트 러닝 스포츠 트래커 밴드', brand: 'Tech Core',
-        price: 89000, originalPrice: 110000, discountRate: 19, site: '11st', rating: 4.6, reviews: 95, salesCount: 1100,
-        category: 'sports', rank: 10, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBEAOZnoMKSjsUbGQzXBPTrWlnESHLdUp7Wuw-qyw4_6LOkaTLTHwqeqfSMmuNB1vAVzM6wfXLuT_WkZUqrBz3aEtvAWeMFh12HHuesZuXtPIzQVqCCdyY9bAJu1cSeIiGb16UsNfGsuODwvpblToPjOfU0S1G-0fPSJbBSVjUEHyJwycuDFPytW53WpkNqMwx8pHnX2luqTDu4ev2dQdvA8P8XiwRAljf_OJR9BB7XprwHgxB2i09Q', link: 'https://11st.co.kr'
-    },
+// Programmatic Fallback Database Creator (6 Malls * 4 Categories * 10 items = 240 products)
+const LOCAL_FALLBACK_PRODUCTS = [];
+let productIdCounter = 1;
 
-    // --- Gmarket (10 items) ---
-    {
-        id: 31, name: '가성비 데일리 기모 후드집업 파카', brand: 'Maison Seoul',
-        price: 49000, originalPrice: 49000, discountRate: 0, site: 'gmarket', rating: 4.8, reviews: 310, salesCount: 1950,
-        category: 'fashion', rank: 1, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuArxqtDl5gOesoScPSA2qBTVXdB4JeNy4JjVVMmhy4K7m0R3q1hFDAQa6g-u762RKVN7A5BxJDTf715OQoj-eL3D1YzqrohK2lBPk0lTKABpat0WtfmINTyG-Am0PC_3C3uiSSyQ50fiiw6gxKVXD8_o5fgXJkT_kXa-5TH1L01vLItLf5MXIjSDyXMmBtUU33W64322mhltav3BLW27A4vMiD2VemzdtpFzZ5jwBf4NNlpeNeNwEvE', link: 'https://gmarket.co.kr'
-    },
-    {
-        id: 32, name: '기계식 키보드 청축 아메지스트 에디션', brand: 'Tech Core',
-        price: 139000, originalPrice: 169000, discountRate: 17, site: 'gmarket', rating: 4.9, reviews: 240, salesCount: 1540,
-        category: 'digital', rank: 2, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAsP4qLDefzedDC_shc7NEjXqtB3VvlSLe788o2uxexku_mkFA4_ZKSYTPWpLB-2_zJCIS8FPoVzmJGmX09MqdVPgZfbJXqPr091aloPZa0NgryUtWCXAEPtC02zu6J68vZQH6aaVNbkIU-ESOlp7kJhLCmiyIHiuk6s8oigpuYGf8UR7llULh6lJ0cyaC2xhBZFa1HuCSrKKolJXewcGeeKf83buNhEu4E3VVyYjSSiw0YXSXPcpBg', link: 'https://gmarket.co.kr'
-    },
-    {
-        id: 33, name: '올인원 미니 믹서기 초고속 믹서 텀블러', brand: 'Tech Core',
-        price: 79000, originalPrice: 99000, discountRate: 20, site: 'gmarket', rating: 4.7, reviews: 180, salesCount: 1100,
-        category: 'digital', rank: 3, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAsP4qLDefzedDC_shc7NEjXqtB3VvlSLe788o2uxexku_mkFA4_ZKSYTPWpLB-2_zJCIS8FPoVzmJGmX09MqdVPgZfbJXqPr091aloPZa0NgryUtWCXAEPtC02zu6J68vZQH6aaVNbkIU-ESOlp7kJhLCmiyIHiuk6s8oigpuYGf8UR7llULh6lJ0cyaC2xhBZFa1HuCSrKKolJXewcGeeKf83buNhEu4E3VVyYjSSiw0YXSXPcpBg', link: 'https://gmarket.co.kr'
-    },
-    {
-        id: 34, name: '인스턴트 유기농 핸드드립 커피 30팩', brand: '지마켓 푸드',
-        price: 24900, originalPrice: 24900, discountRate: 0, site: 'gmarket', rating: 4.8, reviews: 520, salesCount: 4200,
-        category: 'food', rank: 4, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCbqUf5q2Ou04hqBdMnStvFf8gHPmfi8stZQ6g62TVrp1l3hozwDM6zEKmMOmWyhp3e36O2iW4L_9B6NTWhrbOCsQMbZTz2jk8nzhEChGInlS21Tvd8iJTudfH0fExyldZPJxrI7T3DQJpWuJc_QFVGwoCuRo7_wcvPyz4W91iS9KlPIp_zKcIMR5nQdGCQQyOAeXklGT_NRsHm9OKPFZW-VFvxcmLxF0iiAL8vxehZZtx0JqFbzsqP', link: 'https://gmarket.co.kr'
-    },
-    {
-        id: 35, name: '스마트 홈 시큐리티 룸 카메라', brand: 'Tech Core',
-        price: 89000, originalPrice: 120000, discountRate: 25, site: 'gmarket', rating: 4.6, reviews: 154, salesCount: 980,
-        category: 'digital', rank: 5, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAz-aAPctq9yfObf9x67cd4-DlpuiqgxvhC2Wk8OgOAV_RS0F2anoQu6Q250fw1fb_6XecXJmSHbFS3lvdRD38n6ZZttGjhxgEe2TnC0Dnj8fBUN7l2oqibj56dSK5sIl2aaJMwv7uJ6qboqYu6AXK3yn8g3QbSUHOZIf6mcGwXdqnI5HvZG1OddNBp2DFRqUsJWjPs-Zr3ybPDDifogWM6cVJDflTv9eB8TgyZmSbXbKTj4CqDB01h', link: 'https://gmarket.co.kr'
-    },
-    {
-        id: 36, name: '내추럴 카모마일 바디샤워 500ml', brand: 'Aura Beauty',
-        price: 15000, originalPrice: 19800, discountRate: 24, site: 'gmarket', rating: 4.8, reviews: 480, salesCount: 2310,
-        category: 'beauty', rank: 6, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA9af5zRNIxnhIgxaxOL6CUqQfQcEXDtlMAXGSYLEi3K5RYyydmfokzf1vWbK9W2Oeth9gTdWR_ml2f6Op_s3Dxt_7BKNckYD6hjMuNLOZaY20Lt4MpS4iH_lqMw3d6k-JJl2GlPdz4O-vYdLe060Nw1FEWx9ogLODN2QnAH-DePlVDhc-Q9RKOX4KnfshzCQNxE1XSxmMGUpn6Kh8TR8hVRUogjTRI_pVL9uFrTRQvTG4WyufB-9vG', link: 'https://gmarket.co.kr'
-    },
-    {
-        id: 37, name: '다목적 홈트 요가 매트 8mm', brand: 'Sports Fit',
-        price: 22000, originalPrice: 22000, discountRate: 0, site: 'gmarket', rating: 4.7, reviews: 120, salesCount: 1450,
-        category: 'sports', rank: 7, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBEAOZnoMKSjsUbGQzXBPTrWlnESHLdUp7Wuw-qyw4_6LOkaTLTHwqeqfSMmuNB1vAVzM6wfXLuT_WkZUqrBz3aEtvAWeMFh12HHuesZuXtPIzQVqCCdyY9bAJu1cSeIiGb16UsNfGsuODwvpblToPjOfU0S1G-0fPSJbBSVjUEHyJwycuDFPytW53WpkNqMwx8pHnX2luqTDu4ev2dQdvA8P8XiwRAljf_OJR9BB7XprwHgxB2i09Q', link: 'https://gmarket.co.kr'
-    },
-    {
-        id: 38, name: '스포츠 워터 보틀 1L 텀블러', brand: 'Sports Fit',
-        price: 18000, originalPrice: 25000, discountRate: 28, site: 'gmarket', rating: 4.8, reviews: 310, salesCount: 2500,
-        category: 'sports', rank: 8, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRZSEvrW7AAMmXFQRso1hB0mPCdk0NPqxzfNXX5Mva2DHjuBVxCUkbvPxHhQQ9StLJN6HfBzPPtbsalbkoaWMuO7vFuZE6B5ZfUf1BaKxwbgK0749mgU6o_NQzTXAvTkXFEQLkE3785FEg7gYQwEEt9eAaMv21Ya2voPpVZb98tkKdrAXrymQmjd151aFtDh0jfe8JeiTzsEj9X3npbu8lajAJMpJM14hwo7tfBefg_FZotiC7jVeL', link: 'https://gmarket.co.kr'
-    },
-    {
-        id: 39, name: '스탠다드 치노 팬츠 베이지', brand: 'Maison Seoul',
-        price: 39000, originalPrice: 49000, discountRate: 20, site: 'gmarket', rating: 4.7, reviews: 140, salesCount: 1200,
-        category: 'fashion', rank: 9, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuArxqtDl5gOesoScPSA2qBTVXdB4JeNy4JjVVMmhy4K7m0R3q1hFDAQa6g-u762RKVN7A5BxJDTf715OQoj-eL3D1YzqrohK2lBPk0lTKABpat0WtfmINTyG-Am0PC_3C3uiSSyQ50fiiw6gxKVXD8_o5fgXJkT_kXa-5TH1L01vLItLf5MXIjSDyXMmBtUU33W64322mhltav3BLW27A4vMiD2VemzdtpFzZ5jwBf4NNlpeNeNwEvE', link: 'https://gmarket.co.kr'
-    },
-    {
-        id: 40, name: '알루미늄 롤 테이프 캠핑 테이블', brand: 'Antigravity Home',
-        price: 68000, originalPrice: 85000, discountRate: 20, site: 'gmarket', rating: 4.9, reviews: 85, salesCount: 750,
-        category: 'home', rank: 10, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC-AvqjRDx9vu8uTDEfsr1URBFca8IUt-tWFhx4p_e8TtcB40YLuxnOyW5AM7CvELhZlScx75tjcCCtepK5fueLAoy-w9AH3I8d1xn4SfYFandRcaAu-ORWf5Rw31X7EFMLIO0wh4Y09uQB7KMU9N9BhDkqh3bZShXrEsYOLcw3JGs1m1D03dIWFOaMzilK4raMfyMAaLLI4FxbtmF9_e0Zsvz9OrYU-TbI9hAdJc6i88JKOXLvWauo', link: 'https://gmarket.co.kr'
-    },
+MALLS.forEach((mall) => {
+    Object.keys(TEMPLATE_PRODUCTS).forEach((category) => {
+        const templates = TEMPLATE_PRODUCTS[category];
+        templates.forEach((tpl, idx) => {
+            const rank = idx + 1;
+            let price = tpl.basePrice;
+            let discountRate = 0;
+            
+            // Vary price slightly per mall so they aren't identical
+            const mallFactors = {
+                'coupang': { priceOffset: 0, discount: 10 },
+                'naver': { priceOffset: -1000, discount: 5 },
+                '11st': { priceOffset: -2000, discount: 15 },
+                'gmarket': { priceOffset: 1000, discount: 8 },
+                'musinsa': { priceOffset: -3000, discount: 12 },
+                'cjmall': { priceOffset: 2000, discount: 20 }
+            };
+            const factor = mallFactors[mall] || { priceOffset: 0, discount: 0 };
+            
+            let originalPrice = price + factor.priceOffset;
+            discountRate = factor.discount;
+            if (discountRate > 0) {
+                price = Math.floor((originalPrice * (100 - discountRate)) / 10000) * 100;
+            } else {
+                price = originalPrice;
+            }
 
-    // --- Musinsa (10 items) ---
-    {
-        id: 41, name: '오버핏 드롭숄더 솔리드 옥스포드 셔츠', brand: 'Musinsa Standard',
-        price: 29900, originalPrice: 35000, discountRate: 14, site: 'musinsa', rating: 4.9, reviews: 1100, salesCount: 8500,
-        category: 'fashion', rank: 1, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuArxqtDl5gOesoScPSA2qBTVXdB4JeNy4JjVVMmhy4K7m0R3q1hFDAQa6g-u762RKVN7A5BxJDTf715OQoj-eL3D1YzqrohK2lBPk0lTKABpat0WtfmINTyG-Am0PC_3C3uiSSyQ50fiiw6gxKVXD8_o5fgXJkT_kXa-5TH1L01vLItLf5MXIjSDyXMmBtUU33W64322mhltav3BLW27A4vMiD2VemzdtpFzZ5jwBf4NNlpeNeNwEvE', link: 'https://musinsa.com'
-    },
-    {
-        id: 42, name: '와이드 데님 진 (연청 워싱 에디션)', brand: 'Musinsa Standard',
-        price: 39900, originalPrice: 48000, discountRate: 17, site: 'musinsa', rating: 4.8, reviews: 920, salesCount: 6500,
-        category: 'fashion', rank: 2, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuArxqtDl5gOesoScPSA2qBTVXdB4JeNy4JjVVMmhy4K7m0R3q1hFDAQa6g-u762RKVN7A5BxJDTf715OQoj-eL3D1YzqrohK2lBPk0lTKABpat0WtfmINTyG-Am0PC_3C3uiSSyQ50fiiw6gxKVXD8_o5fgXJkT_kXa-5TH1L01vLItLf5MXIjSDyXMmBtUU33W64322mhltav3BLW27A4vMiD2VemzdtpFzZ5jwBf4NNlpeNeNwEvE', link: 'https://musinsa.com'
-    },
-    {
-        id: 43, name: '유니섹스 오버사이즈 헤비 스웨트 셔츠', brand: 'Maison Seoul',
-        price: 49900, originalPrice: 59000, discountRate: 15, site: 'musinsa', rating: 4.8, reviews: 850, salesCount: 5200,
-        category: 'fashion', rank: 3, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuArxqtDl5gOesoScPSA2qBTVXdB4JeNy4JjVVMmhy4K7m0R3q1hFDAQa6g-u762RKVN7A5BxJDTf715OQoj-eL3D1YzqrohK2lBPk0lTKABpat0WtfmINTyG-Am0PC_3C3uiSSyQ50fiiw6gxKVXD8_o5fgXJkT_kXa-5TH1L01vLItLf5MXIjSDyXMmBtUU33W64322mhltav3BLW27A4vMiD2VemzdtpFzZ5jwBf4NNlpeNeNwEvE', link: 'https://musinsa.com'
-    },
-    {
-        id: 44, name: '베이직 피그먼트 다잉 티셔츠', brand: 'Musinsa Standard',
-        price: 19900, originalPrice: 19900, discountRate: 0, site: 'musinsa', rating: 4.7, reviews: 310, salesCount: 2300,
-        category: 'fashion', rank: 4, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuArxqtDl5gOesoScPSA2qBTVXdB4JeNy4JjVVMmhy4K7m0R3q1hFDAQa6g-u762RKVN7A5BxJDTf715OQoj-eL3D1YzqrohK2lBPk0lTKABpat0WtfmINTyG-Am0PC_3C3uiSSyQ50fiiw6gxKVXD8_o5fgXJkT_kXa-5TH1L01vLItLf5MXIjSDyXMmBtUU33W64322mhltav3BLW27A4vMiD2VemzdtpFzZ5jwBf4NNlpeNeNwEvE', link: 'https://musinsa.com'
-    },
-    {
-        id: 45, name: '데일리 조거 파카 트레이닝 세트', brand: 'Sports Fit',
-        price: 69900, originalPrice: 89000, discountRate: 21, site: 'musinsa', rating: 4.8, reviews: 450, salesCount: 3400,
-        category: 'sports', rank: 5, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuArxqtDl5gOesoScPSA2qBTVXdB4JeNy4JjVVMmhy4K7m0R3q1hFDAQa6g-u762RKVN7A5BxJDTf715OQoj-eL3D1YzqrohK2lBPk0lTKABpat0WtfmINTyG-Am0PC_3C3uiSSyQ50fiiw6gxKVXD8_o5fgXJkT_kXa-5TH1L01vLItLf5MXIjSDyXMmBtUU33W64322mhltav3BLW27A4vMiD2VemzdtpFzZ5jwBf4NNlpeNeNwEvE', link: 'https://musinsa.com'
-    },
-    {
-        id: 46, name: '카고 코튼 스트링 팬츠 카키', brand: 'Musinsa Standard',
-        price: 34900, originalPrice: 39000, discountRate: 10, site: 'musinsa', rating: 4.7, reviews: 290, salesCount: 1800,
-        category: 'fashion', rank: 6, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuArxqtDl5gOesoScPSA2qBTVXdB4JeNy4JjVVMmhy4K7m0R3q1hFDAQa6g-u762RKVN7A5BxJDTf715OQoj-eL3D1YzqrohK2lBPk0lTKABpat0WtfmINTyG-Am0PC_3C3uiSSyQ50fiiw6gxKVXD8_o5fgXJkT_kXa-5TH1L01vLItLf5MXIjSDyXMmBtUU33W64322mhltav3BLW27A4vMiD2VemzdtpFzZ5jwBf4NNlpeNeNwEvE', link: 'https://musinsa.com'
-    },
-    {
-        id: 47, name: '레트로 스트릿 바람막이 아노락', brand: 'Sports Fit',
-        price: 59900, originalPrice: 79000, discountRate: 24, site: 'musinsa', rating: 4.8, reviews: 180, salesCount: 1200,
-        category: 'sports', rank: 7, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuArxqtDl5gOesoScPSA2qBTVXdB4JeNy4JjVVMmhy4K7m0R3q1hFDAQa6g-u762RKVN7A5BxJDTf715OQoj-eL3D1YzqrohK2lBPk0lTKABpat0WtfmINTyG-Am0PC_3C3uiSSyQ50fiiw6gxKVXD8_o5fgXJkT_kXa-5TH1L01vLItLf5MXIjSDyXMmBtUU33W64322mhltav3BLW27A4vMiD2VemzdtpFzZ5jwBf4NNlpeNeNwEvE', link: 'https://musinsa.com'
-    },
-    {
-        id: 48, name: '스탠다드 코튼 블루종 자켓 블랙', brand: 'Musinsa Standard',
-        price: 59900, originalPrice: 59900, discountRate: 0, site: 'musinsa', rating: 4.8, reviews: 310, salesCount: 1950,
-        category: 'fashion', rank: 8, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuArxqtDl5gOesoScPSA2qBTVXdB4JeNy4JjVVMmhy4K7m0R3q1hFDAQa6g-u762RKVN7A5BxJDTf715OQoj-eL3D1YzqrohK2lBPk0lTKABpat0WtfmINTyG-Am0PC_3C3uiSSyQ50fiiw6gxKVXD8_o5fgXJkT_kXa-5TH1L01vLItLf5MXIjSDyXMmBtUU33W64322mhltav3BLW27A4vMiD2VemzdtpFzZ5jwBf4NNlpeNeNwEvE', link: 'https://musinsa.com'
-    },
-    {
-        id: 49, name: '슬림 무릎 스트레치 컴포트 카고 진', brand: 'Maison Seoul',
-        price: 49900, originalPrice: 62000, discountRate: 19, site: 'musinsa', rating: 4.6, reviews: 120, salesCount: 1100,
-        category: 'fashion', rank: 9, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuArxqtDl5gOesoScPSA2qBTVXdB4JeNy4JjVVMmhy4K7m0R3q1hFDAQa6g-u762RKVN7A5BxJDTf715OQoj-eL3D1YzqrohK2lBPk0lTKABpat0WtfmINTyG-Am0PC_3C3uiSSyQ50fiiw6gxKVXD8_o5fgXJkT_kXa-5TH1L01vLItLf5MXIjSDyXMmBtUU33W64322mhltav3BLW27A4vMiD2VemzdtpFzZ5jwBf4NNlpeNeNwEvE', link: 'https://musinsa.com'
-    },
-    {
-        id: 50, name: '스탠다드 코튼 버킷햇 리버시블', brand: 'Musinsa Standard',
-        price: 22900, originalPrice: 29000, discountRate: 21, site: 'musinsa', rating: 4.7, reviews: 95, salesCount: 890,
-        category: 'fashion', rank: 10, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuArxqtDl5gOesoScPSA2qBTVXdB4JeNy4JjVVMmhy4K7m0R3q1hFDAQa6g-u762RKVN7A5BxJDTf715OQoj-eL3D1YzqrohK2lBPk0lTKABpat0WtfmINTyG-Am0PC_3C3uiSSyQ50fiiw6gxKVXD8_o5fgXJkT_kXa-5TH1L01vLItLf5MXIjSDyXMmBtUU33W64322mhltav3BLW27A4vMiD2VemzdtpFzZ5jwBf4NNlpeNeNwEvE', link: 'https://musinsa.com'
-    },
+            const mallLabels = {
+                'coupang': '쿠팡 파트너',
+                'naver': '네이버 셀러',
+                '11st': '11st 우수샵',
+                'gmarket': 'G마켓 베스트',
+                'musinsa': '무신사 스탠다드',
+                'cjmall': 'CJ 온스타일'
+            };
+            const brand = `${tpl.brand} (${mallLabels[mall] || mall})`;
 
-    // --- CJ Mall (10 items) ---
-    {
-        id: 51, name: 'CJ제일제당 비비고 왕교자 만두 세트 (대용량 패키지)', brand: '비비고',
-        price: 28900, originalPrice: 35000, discountRate: 17, site: 'cjmall', rating: 4.9, reviews: 2450, salesCount: 15400,
-        category: 'food', rank: 1, isCurated: true, tag: '베스트',
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRZSEvrW7AAMmXFQRso1hB0mPCdk0NPqxzfNXX5Mva2DHjuBVxCUkbvPxHhQQ9StLJN6HfBzPPtbsalbkoaWMuO7vFuZE6B5ZfUf1BaKxwbgK0749mgU6o_NQzTXAvTkXFEQLkE3785FEg7gYQwEEt9eAaMv21Ya2voPpVZb98tkKdrAXrymQmjd151aFtDh0jfe8JeiTzsEj9X3npbu8lajAJMpJM14hwo7tfBefg_FZotiC7jVeL', link: 'https://display.cjonstyle.com'
-    },
-    {
-        id: 52, name: 'CJ제일제당 햇반 백미 즉석밥 210g x 24공기 번들', brand: '햇반',
-        price: 23500, originalPrice: 28000, discountRate: 16, site: 'cjmall', rating: 4.9, reviews: 3820, salesCount: 22000,
-        category: 'food', rank: 2, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBDCZunIY5_JgeNY93_F-Ix9x00SU2dG43vMkW5--HEU20B8s09j3yAcIzjb6vsj41ly6aGyE6DX4T0Pq_lA0ZqTJ1rCCreRlPAfnBmy_I-x-h9wcDVvxEVa9Rvxmq-BIv3NzNXnZvEakgdp1cL7qFCmDJmHe7GwyH8fH-yfzvisSP9c0tOpm_TVhYz_mCYlabX5ZoRFlDYNL08Lqb3XQMfUb9ak91N-ITgzVQXCjmRQ99eMdYsNN1R', link: 'https://display.cjonstyle.com'
-    },
-    {
-        id: 53, name: 'CJ 온스타일 에디션 캐시미어 울 블렌드 카디건', brand: '온스타일 패션',
-        price: 79000, originalPrice: 99000, discountRate: 20, site: 'cjmall', rating: 4.7, reviews: 120, salesCount: 1450,
-        category: 'fashion', rank: 3, isCurated: true,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuArxqtDl5gOesoScPSA2qBTVXdB4JeNy4JjVVMmhy4K7m0R3q1hFDAQa6g-u762RKVN7A5BxJDTf715OQoj-eL3D1YzqrohK2lBPk0lTKABpat0WtfmINTyG-Am0PC_3C3uiSSyQ50fiiw6gxKVXD8_o5fgXJkT_kXa-5TH1L01vLItLf5MXIjSDyXMmBtUU33W64322mhltav3BLW27A4vMiD2VemzdtpFzZ5jwBf4NNlpeNeNwEvE', link: 'https://display.cjonstyle.com'
-    },
-    {
-        id: 54, name: 'CJ제일제당 비비고 소고기미역국 500g x 5개 세트', brand: '비비고',
-        price: 18900, originalPrice: 22000, discountRate: 14, site: 'cjmall', rating: 4.8, reviews: 920, salesCount: 8900,
-        category: 'food', rank: 4, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRZSEvrW7AAMmXFQRso1hB0mPCdk0NPqxzfNXX5Mva2DHjuBVxCUkbvPxHhQQ9StLJN6HfBzPPtbsalbkoaWMuO7vFuZE6B5ZfUf1BaKxwbgK0749mgU6o_NQzTXAvTkXFEQLkE3785FEg7gYQwEEt9eAaMv21Ya2voPpVZb98tkKdrAXrymQmjd151aFtDh0jfe8JeiTzsEj9X3npbu8lajAJMpJM14hwo7tfBefg_FZotiC7jVeL', link: 'https://display.cjonstyle.com'
-    },
-    {
-        id: 55, name: 'CJ 온스타일 스탠다드 메모리폼 경추베개 더블팩', brand: '온스타일 홈',
-        price: 49000, originalPrice: 65000, discountRate: 24, site: 'cjmall', rating: 4.6, reviews: 310, salesCount: 2200,
-        category: 'home', rank: 5, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBDsqCBJjcAx_Cs5bZNvnUhrr7k8Y2AHUVMbeIPE_Evlb7Bv4WKfFchldby78qq7INv7LId6utydpC8F1xxOHdx_aFfz3Zos1kRn1LZWLafxnmqDRDzY1rmygVLRvq5vPIIWEGrRv8tUKJj6wxYWbOktv4Oz2ty3etOZQQRLjlROhrgifHKH_sdNGl8xbQEBrTuCL5rG73PD4-DZrqdm9Pzq23t-lBomS1XrIkSaBnA3tHxFc0B3swq', link: 'https://display.cjonstyle.com'
-    },
-    {
-        id: 56, name: 'CJ제일제당 비비고 포기배추김치 5kg', brand: '비비고',
-        price: 34900, originalPrice: 34900, discountRate: 0, site: 'cjmall', rating: 4.8, reviews: 1100, salesCount: 5400,
-        category: 'food', rank: 6, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRZSEvrW7AAMmXFQRso1hB0mPCdk0NPqxzfNXX5Mva2DHjuBVxCUkbvPxHhQQ9StLJN6HfBzPPtbsalbkoaWMuO7vFuZE6B5ZfUf1BaKxwbgK0749mgU6o_NQzTXAvTkXFEQLkE3785FEg7gYQwEEt9eAaMv21Ya2voPpVZb98tkKdrAXrymQmjd151aFtDh0jfe8JeiTzsEj9X3npbu8lajAJMpJM14hwo7tfBefg_FZotiC7jVeL', link: 'https://display.cjonstyle.com'
-    },
-    {
-        id: 57, name: '오데랑 프렌치 린넨 홈쇼핑 원피스 에디션', brand: '오데랑',
-        price: 59000, originalPrice: 79000, discountRate: 25, site: 'cjmall', rating: 4.7, reviews: 85, salesCount: 950,
-        category: 'fashion', rank: 7, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuArxqtDl5gOesoScPSA2qBTVXdB4JeNy4JjVVMmhy4K7m0R3q1hFDAQa6g-u762RKVN7A5BxJDTf715OQoj-eL3D1YzqrohK2lBPk0lTKABpat0WtfmINTyG-Am0PC_3C3uiSSyQ50fiiw6gxKVXD8_o5fgXJkT_kXa-5TH1L01vLItLf5MXIjSDyXMmBtUU33W64322mhltav3BLW27A4vMiD2VemzdtpFzZ5jwBf4NNlpeNeNwEvE', link: 'https://display.cjonstyle.com'
-    },
-    {
-        id: 58, name: 'CJ제일제당 스팸 클래식 200g x 10캔 실속세트', brand: '스팸',
-        price: 32900, originalPrice: 42000, discountRate: 21, site: 'cjmall', rating: 4.9, reviews: 1840, salesCount: 12000,
-        category: 'food', rank: 8, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDt9_vb8PCR9N5g3UvKP3BCjqnjaFo73cN04CJ4SWUslYjfOvhWEfhjOVyEfLObOcg59vDZdWj6P3dQ7AxZpyjygK-eg99sqUlAY5g5cMufMSx_pwP16SVXrg0SnKArSZlK5nLj4faEG9uyD1bg1t80cNvSIyr9F0ukt3qF-W-YPhJMgV-ewLZYv82pLby85F2Q1LIBXbG5dcYH1kY7Y6h4GTO1mDDimgpJ2BQ8-SWlQDjKF_EndPNr', link: 'https://display.cjonstyle.com'
-    },
-    {
-        id: 59, name: 'CJ 온스타일 세라믹 쿡웨어 IH 프라이팬 3종 세트', brand: '온스타일 홈',
-        price: 69000, originalPrice: 89000, discountRate: 22, site: 'cjmall', rating: 4.8, reviews: 154, salesCount: 1800,
-        category: 'home', rank: 9, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBDsqCBJjcAx_Cs5bZNvnUhrr7k8Y2AHUVMbeIPE_Evlb7Bv4WKfFchldby78qq7INv7LId6utydpC8F1xxOHdx_aFfz3Zos1kRn1LZWLafxnmqDRDzY1rmygVLRvq5vPIIWEGrRv8tUKJj6wxYWbOktv4Oz2ty3etOZQQRLjlROhrgifHKH_sdNGl8xbQEBrTuCL5rG73PD4-DZrqdm9Pzq23t-lBomS1XrIkSaBnA3tHxFc0B3swq', link: 'https://display.cjonstyle.com'
-    },
-    {
-        id: 60, name: 'CJ제일제당 맛밤 영양간식 패키지 60g x 12봉', brand: '맛밤',
-        price: 19900, originalPrice: 24000, discountRate: 17, site: 'cjmall', rating: 4.8, reviews: 920, salesCount: 6500,
-        category: 'food', rank: 10, isCurated: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRZSEvrW7AAMmXFQRso1hB0mPCdk0NPqxzfNXX5Mva2DHjuBVxCUkbvPxHhQQ9StLJN6HfBzPPtbsalbkoaWMuO7vFuZE6B5ZfUf1BaKxwbgK0749mgU6o_NQzTXAvTkXFEQLkE3785FEg7gYQwEEt9eAaMv21Ya2voPpVZb98tkKdrAXrymQmjd151aFtDh0jfe8JeiTzsEj9X3npbu8lajAJMpJM14hwo7tfBefg_FZotiC7jVeL', link: 'https://display.cjonstyle.com'
-    }
-];
+            LOCAL_FALLBACK_PRODUCTS.push({
+                id: productIdCounter++,
+                name: tpl.name,
+                brand: brand,
+                price: price,
+                originalPrice: originalPrice,
+                discountRate: discountRate,
+                site: mall,
+                rating: Number((4.5 + (productIdCounter % 6) * 0.1).toFixed(1)),
+                reviews: 120 + (productIdCounter % 15) * 65,
+                salesCount: 1500 - rank * 80 + (productIdCounter % 8) * 120,
+                category: category,
+                rank: rank,
+                isCurated: rank === 1 || (rank === 2 && mall === 'coupang'), // some items curated
+                tag: rank === 1 ? '베스트' : rank === 2 ? '추천' : '',
+                image: tpl.image || tpl.img || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30',
+                link: getMallLink(mall)
+            });
+        });
+    });
+});
+
+function getMallLink(mall) {
+    const links = {
+        'coupang': 'https://coupang.com',
+        'naver': 'https://shopping.naver.com',
+        '11st': 'https://11st.co.kr',
+        'gmarket': 'https://gmarket.co.kr',
+        'musinsa': 'https://musinsa.com',
+        'cjmall': 'https://display.cjonstyle.com'
+    };
+    return links[mall] || 'https://google.com';
+}
 
 // ==========================================
 // State Management
@@ -917,6 +668,9 @@ function openDetailModal(prod, pushHistory = true) {
     });
 }
 
+// ==========================================
+// Redirect Overlay Trigger
+// ==========================================
 function triggerRedirect(prod) {
     const redirectOverlay = document.getElementById('redirect-overlay');
     const redirectTitle = document.getElementById('redirect-title');
@@ -984,24 +738,27 @@ async function attemptAdminLogin(username, password) {
                 .eq('role', '관리자')
                 .single();
 
-            if (error) throw error;
+            if (error) {
+                // If query fails (auth failed), throw custom error to enter catch block
+                throw new Error("비밀번호 또는 사용자 계정이 일치하지 않습니다.");
+            }
 
             if (data) {
                 isAdmin = true;
                 showToast("로그인 성공! 관리자 콘솔이 실행됩니다.");
                 openSyncConsole();
             } else {
-                showToast("관리자 권한이 없거나 계정이 일치하지 않습니다.");
+                showToast(`로그인 실패: 아이디 또는 패스워드가 틀렸습니다. 입력한 패스워드: [${password}]. 로컬 패스워드('patter123!')를 입력해야 합니다.`);
             }
         } catch (e) {
             console.error("Supabase Admin Check Failed:", e);
-            // Fallback for user ease: if password is 'patter123!' locally, let them login
+            // Fallback for user ease: if offline local password is correct, let them login
             if (username === 'patter' && password === 'patter123!') {
                 isAdmin = true;
                 showToast("로컬 우회 모드로 관리자 로그인 성공!");
                 openSyncConsole();
             } else {
-                showToast(`로그인 실패: ${e.message || "비밀번호를 확인하세요"}`);
+                showToast(`로그인 실패: 비밀번호가 일치하지 않습니다. 입력한 패스워드: [${password}]. 로컬 패스워드('patter123!')를 입력해야 합니다.`);
             }
         }
     } else {
@@ -1011,7 +768,7 @@ async function attemptAdminLogin(username, password) {
             showToast("오프라인 모드로 로그인 성공! (Supabase 미연동)");
             openSyncConsole();
         } else {
-            showToast("아이디 patter 및 로컬 테스트 비밀번호(patter123!)를 확인하세요.");
+            showToast(`로그인 실패: 비밀번호가 일치하지 않습니다. 입력한 패스워드: [${password}]. 로컬 패스워드('patter123!')를 입력해야 합니다.`);
         }
     }
 }
@@ -1062,9 +819,13 @@ async function triggerSupabaseSync() {
         const { error: delError } = await supabaseClientInstance.from('products').delete().neq('name', '');
         if (delError) console.warn("Deletion may require RLS privileges:", delError);
 
-        // Insert products
-        const { data, error: insError } = await supabaseClientInstance.from('products').insert(itemsToUpload).select();
-        if (insError) throw insError;
+        // Insert products in chunks (Supabase limits size, 50 at a time)
+        const chunkSize = 50;
+        for (let i = 0; i < itemsToUpload.length; i += chunkSize) {
+            const chunk = itemsToUpload.slice(i, i + chunkSize);
+            const { error: insError } = await supabaseClientInstance.from('products').insert(chunk);
+            if (insError) throw insError;
+        }
 
         showToast("동기화 완료! Supabase DB 상품 리스트가 갱신되었습니다.");
         
@@ -1208,7 +969,7 @@ function setupEventListeners() {
     // Hero Shop Now
     document.querySelectorAll('.hero-shop-now-btn').forEach(btn => {
         btn.onclick = () => {
-            currentCategory = 'digital';
+            currentCategory = 'electronics';
             switchView('list');
             renderListView();
         };
