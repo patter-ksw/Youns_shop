@@ -257,6 +257,76 @@ const PRODUCTS = [
         isCurated: true,
         image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDbfHitV9msXhDQ5H3nVRZcGhS6asdSC3naLwseVvCJixWCqzrkyaM1FFvYt3d4sop7SiJNT8vLWhSirGYJK7S8HcO0_axBO1j80ekTKHUsukDP2D8T5VMCLcC63x7o8ChtRUy4LKYlImUMIPMTBFxFZuEvzm4RvhWUdSYwFLHnPGge_hVfyEcO8HBT3LLFEhLT1c6J-3z_Fqw3RGUum-pckixCN6ilY-CVJ_lFxDlwm-mOjAbXgZMx',
         link: 'https://shopping.naver.com'
+    },
+    {
+        id: 15,
+        name: '삼성전자 갤럭시북5 프로 NT960QJV-KD72G 노트북 (대화면 터치패널)',
+        brand: '삼성전자',
+        price: 1890000,
+        originalPrice: 2100000,
+        discountRate: 10,
+        site: 'coupang',
+        rating: 4.9,
+        reviews: 320,
+        salesCount: 1540,
+        category: 'digital',
+        rank: 7,
+        isCurated: true,
+        tag: '인기상품',
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCKsWkDXLFuEWUtyDE03lVpOca6OpxKJpqkK7psQSrIdK807-4eAU-GkuRdgwZey3DrDD-9aI2tT1oxA9JZsav77OhCagOx2VpiRka_bpzh00DjdU7gOyBE7BEQRC-Rwm_ZatxFwcENXKx4BtBBg9TQJ6oF4w0r10EclpVs7yFWplk5yooUym69In9_0mzT-OozGInegHGX3A6lakq7mHhUTQO3FtToLovop1bqHqQwzmDuQFRFViv8',
+        link: 'https://coupang.com'
+    },
+    {
+        id: 16,
+        name: 'LG전자 그램 16인치 초경량 인텔 14세대 노트북 (Gram 16)',
+        brand: 'LG전자',
+        price: 1450000,
+        originalPrice: 1680000,
+        discountRate: 13,
+        site: 'naver',
+        rating: 4.8,
+        reviews: 480,
+        salesCount: 2310,
+        category: 'digital',
+        rank: 8,
+        isCurated: false,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAF1s1jVHHxM-D3E64HM0wGt0SDw53v35Maun4w-GgIwWwGRA3VxAKkcKapjwLc0tZGxaRrWViNGwc6NQw1scJloxHS_-UKURWJjRhZQoFUrMw9dJ5wMGGvF1qMA8RZt5WI5PQ6q0B2N9NZ4tn7OhCDve9etIejHiokCN6HivZlHwYm75IOccXashdFqxp5mAlZC9RLOrzUyogHD3huvEME7bNFBWZ9mrbGgl3aQXEIdGKGEsrMmhgH',
+        link: 'https://shopping.naver.com'
+    },
+    {
+        id: 17,
+        name: '애플 맥북에어 M3 13인치 노트북 (MacBook Air)',
+        brand: 'Apple',
+        price: 1390000,
+        originalPrice: 1590000,
+        discountRate: 12,
+        site: 'coupang',
+        rating: 5.0,
+        reviews: 1240,
+        salesCount: 4820,
+        category: 'digital',
+        rank: 9,
+        isCurated: true,
+        tag: '강력추천',
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBEAOZnoMKSjsUbGQzXBPTrWlnESHLdUp7Wuw-qyw4_6LOkaTLTHwqeqfSMmuNB1vAVzM6wfXLuT_WkZUqrBz3aEtvAWeMFh12HHuesZuXtPIzQVqCCdyY9bAJu1cSeIiGb16UsNfGsuODwvpblToPjOfU0S1G-0fPSJbBSVjUEHyJwycuDFPytW53WpkNqMwx8pHnX2luqTDu4ev2dQdvA8P8XiwRAljf_OJR9BB7XprwHgxB2i09Q',
+        link: 'https://coupang.com'
+    },
+    {
+        id: 18,
+        name: '레노버 아이디어패드 Slim3 가성비 노트북 15인치',
+        brand: 'Lenovo',
+        price: 549000,
+        originalPrice: 620000,
+        discountRate: 11,
+        site: 'cjmall',
+        rating: 4.6,
+        reviews: 190,
+        salesCount: 890,
+        category: 'digital',
+        rank: 10,
+        isCurated: false,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD3mrcRKxNc2IIgZ2QdFZBXxmTcfYh8xctf_H1QIimzkaIJNTNBDpIMRyEnBHj41PK_RLydkQ-m-kMF8oYgxLRIp40ikgggVB1ZenGLDhCjzL_0CvrJqf-VL2VuJBVCatrEoWJoxCleG72DpGyas4w84BUFP-637zbgs3LRgVu4KO2iPah3P25RnDmUUGfDFqIP7KI-UjhN0yAa_a6IcwGNIgCwHzFR0VB3i1D3CpzVVQvZesGwkPEb',
+        link: 'https://cjmall.co.kr'
     }
 ];
 
@@ -304,12 +374,9 @@ function renderHomeView() {
             <div class="group bg-white rounded-2xl border border-border-light hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col h-full product-card-click cursor-pointer" data-id="${prod.id}">
                 <div class="relative aspect-[4/5] overflow-hidden">
                     <div class="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-700" style="background-image: url('${prod.image}')"></div>
-                    <button class="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-outline hover:text-error transition-colors btn-favorite">
-                        <span class="material-symbols-outlined">favorite</span>
-                    </button>
                     <div class="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-white/80 backdrop-blur-md">
-                        <button class="w-full bg-primary text-white py-3 rounded-xl font-label-lg flex items-center justify-center gap-2 active:scale-95 transition-all btn-add-cart">
-                            <span class="material-symbols-outlined text-lg">shopping_cart</span> 장바구니 담기
+                        <button class="w-full bg-primary text-white py-3 rounded-xl font-label-lg flex items-center justify-center gap-2 active:scale-95 transition-all">
+                            상세보기 <span class="material-symbols-outlined text-sm">arrow_forward</span>
                         </button>
                     </div>
                 </div>
@@ -337,9 +404,6 @@ function renderHomeView() {
             <div class="group bg-white rounded-2xl border border-border-light overflow-hidden shadow-sm flex flex-col h-full product-card-click cursor-pointer" data-id="${prod.id}">
                 <div class="h-40 relative overflow-hidden">
                     <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="${prod.image}"/>
-                    <div class="absolute top-2 right-2 h-8 w-8 bg-white/85 rounded-full flex items-center justify-center text-primary">
-                        <span class="material-symbols-outlined text-sm">favorite</span>
-                    </div>
                 </div>
                 <div class="p-4 flex-grow flex flex-col justify-between">
                     <div>
@@ -423,8 +487,8 @@ function renderListView() {
                                 <span class="text-headline-md font-bold text-primary">${prod.price.toLocaleString()}원</span>
                             </div>
                             <button class="bg-primary hover:bg-primary-container text-white px-5 py-2.5 rounded-full flex items-center gap-2 transition-transform active:scale-95 btn-buy-now" data-id="${prod.id}">
-                                <span class="material-symbols-outlined text-[18px]">shopping_cart</span>
-                                <span class="font-label-lg">구매하기</span>
+                                <span class="material-symbols-outlined text-[18px]">open_in_new</span>
+                                <span class="font-label-lg">상세 정보</span>
                             </button>
                         </div>
                     </div>
@@ -474,7 +538,7 @@ function renderListView() {
                                 <span class="text-body-md font-bold text-primary">${prod.price.toLocaleString()}원</span>
                             </div>
                             <button class="bg-primary text-white p-1.5 rounded-full active:scale-95 btn-buy-now" data-id="${prod.id}">
-                                <span class="material-symbols-outlined text-[16px]">shopping_cart</span>
+                                <span class="material-symbols-outlined text-[16px]">open_in_new</span>
                             </button>
                         </div>
                     </div>
@@ -565,8 +629,8 @@ function openDetailModal(prod) {
                 <!-- Purchase Trigger Button -->
                 <div class="space-y-4">
                     <button class="w-full bg-primary hover:bg-primary-container text-white py-4 px-6 rounded-xl font-headline-md text-body-lg shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2" id="detail-buy-btn">
-                        <span class="material-symbols-outlined text-lg">shopping_cart</span>
-                        <span>${siteLabel}에서 구매하러 가기</span>
+                        <span class="material-symbols-outlined text-lg">open_in_new</span>
+                        <span>${siteLabel}에서 상품 정보 보기</span>
                     </button>
                 </div>
             </section>
@@ -747,8 +811,6 @@ function setupEventListeners() {
             const id = parseInt(card.getAttribute('data-id'));
             const prod = PRODUCTS.find(p => p.id === id);
             if (prod) {
-                // If they clicked add to cart or favorite button specifically, don't open details modal
-                if (e.target.closest('.btn-favorite') || e.target.closest('.btn-add-cart')) return;
                 openDetailModal(prod);
             }
         }
@@ -786,27 +848,6 @@ function setupEventListeners() {
             switchView('list');
             renderListView();
         };
-    });
-
-    // Toast triggers on cart additions
-    document.addEventListener('click', (e) => {
-        const cartBtn = e.target.closest('.btn-add-cart');
-        if (cartBtn) {
-            e.stopPropagation();
-            const toast = document.createElement('div');
-            toast.className = 'bg-primary text-white px-6 py-3 rounded-full font-label-lg shadow-xl translate-y-10 opacity-0 transition-all duration-500 flex items-center gap-2 pointer-events-auto mt-2';
-            toast.innerHTML = '<span class="material-symbols-outlined">check_circle</span> 장바구니에 상품을 담았습니다.';
-            document.getElementById('toast-container').appendChild(toast);
-            
-            setTimeout(() => {
-                toast.classList.remove('translate-y-10', 'opacity-0');
-            }, 100);
-            
-            setTimeout(() => {
-                toast.classList.add('translate-y-10', 'opacity-0');
-                setTimeout(() => toast.remove(), 500);
-            }, 2500);
-        }
     });
 }
 
