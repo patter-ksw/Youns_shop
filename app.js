@@ -1,26 +1,49 @@
 // ==========================================
 // Supabase Configuration
 // ==========================================
-const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+let SUPABASE_URL = 'YOUR_SUPABASE_URL';
+let SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+// 1. Try to load from window.SUPABASE_CONFIG (loaded from local config.js)
+if (window.SUPABASE_CONFIG) {
+    if (window.SUPABASE_CONFIG.URL && window.SUPABASE_CONFIG.URL !== 'YOUR_REAL_SUPABASE_URL_HERE') {
+        SUPABASE_URL = window.SUPABASE_CONFIG.URL;
+    }
+    if (window.SUPABASE_CONFIG.ANON_KEY && window.SUPABASE_CONFIG.ANON_KEY !== 'YOUR_REAL_SUPABASE_ANON_KEY_HERE') {
+        SUPABASE_ANON_KEY = window.SUPABASE_CONFIG.ANON_KEY;
+    }
+}
+
+// 2. Try to load from localStorage
+const storedUrl = localStorage.getItem('supabase_url');
+const storedKey = localStorage.getItem('supabase_anon_key');
+if (storedUrl) SUPABASE_URL = storedUrl;
+if (storedKey) SUPABASE_ANON_KEY = storedKey;
 
 let supabaseClientInstance = null;
 let useSupabase = false;
 
-// Initialize Supabase correctly from window.supabase loaded via CDN
-if (SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY') {
-    try {
-        if (window.supabase) {
-            supabaseClientInstance = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            useSupabase = true;
-            console.log("Supabase Client Initialized Successfully.");
-        } else {
-            console.warn("Supabase library not found on window object.");
+function initSupabase() {
+    if (SUPABASE_URL && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_ANON_KEY && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY') {
+        try {
+            if (window.supabase) {
+                supabaseClientInstance = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                useSupabase = true;
+                console.log("Supabase Client Initialized Successfully.");
+            } else {
+                console.warn("Supabase library not found on window object.");
+            }
+        } catch (e) {
+            console.error("Supabase Initialization Error:", e);
         }
-    } catch (e) {
-        console.error("Supabase Initialization Error:", e);
+    } else {
+        useSupabase = false;
+        supabaseClientInstance = null;
+        console.log("Supabase not configured. Operating in local fallback mode.");
     }
 }
+
+initSupabase();
 
 // ==========================================
 // Product Categories & Keywords
@@ -987,6 +1010,15 @@ function setupEventListeners() {
         if (isAdmin) {
             openSyncConsole();
         } else {
+            // Populate current config
+            const urlInput = document.getElementById('admin-supabase-url');
+            const keyInput = document.getElementById('admin-supabase-key');
+            if (urlInput && SUPABASE_URL && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+                urlInput.value = SUPABASE_URL;
+            }
+            if (keyInput && SUPABASE_ANON_KEY && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY') {
+                keyInput.value = SUPABASE_ANON_KEY;
+            }
             loginModal.classList.remove('opacity-0', 'pointer-events-none');
         }
     };
@@ -999,9 +1031,26 @@ function setupEventListeners() {
     };
 
     // Login submit
-    document.getElementById('admin-login-submit-btn').onclick = () => {
+    document.getElementById('admin-login-submit-btn').onclick = async () => {
         const user = document.getElementById('admin-username').value;
         const pass = document.getElementById('admin-password').value;
+        
+        const urlInput = document.getElementById('admin-supabase-url').value.trim();
+        const keyInput = document.getElementById('admin-supabase-key').value.trim();
+
+        // If the user filled in new Supabase details, apply them
+        if (urlInput && keyInput) {
+            localStorage.setItem('supabase_url', urlInput);
+            localStorage.setItem('supabase_anon_key', keyInput);
+            SUPABASE_URL = urlInput;
+            SUPABASE_ANON_KEY = keyInput;
+            initSupabase();
+            console.log("Re-initialized Supabase from admin form input.");
+            // Reload database products with new credentials
+            await loadProducts();
+            renderHomeView();
+        }
+
         attemptAdminLogin(user, pass);
     };
 

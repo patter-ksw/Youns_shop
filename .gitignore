@@ -32,3 +32,5 @@ tmp/
 *.db
 Cookies*
 Degine/
+config.js
+
