@@ -69,43 +69,6 @@ const TRENDING_KEYWORDS = [
 // ==========================================
 const MALLS = ['naver'];
 
-// Fallback Database (Naver only - 4 categories * 10 items = 40 products)
-// Supabase sync 이후에는 실제 네이버 데이터로 교체됩니다.
-const LOCAL_FALLBACK_PRODUCTS = [];
-let productIdCounter = 1;
-
-Object.keys(TEMPLATE_PRODUCTS).forEach((category) => {
-    const templates = TEMPLATE_PRODUCTS[category];
-    templates.forEach((tpl, idx) => {
-        const rank = idx + 1;
-        const originalPrice = tpl.basePrice;
-        const discountRate = 5; // 네이버 기본 할인율
-        const price = Math.floor(originalPrice * 0.95 / 100) * 100;
-
-        LOCAL_FALLBACK_PRODUCTS.push({
-            id: productIdCounter++,
-            name: tpl.name,
-            brand: tpl.brand,
-            price: price,
-            originalPrice: originalPrice,
-            discountRate: discountRate,
-            site: 'naver',
-            rating: Number((4.3 + (productIdCounter % 5) * 0.1).toFixed(1)),
-            reviews: 100 + (productIdCounter % 15) * 47,
-            salesCount: 1500 - rank * 80,
-            category: category,
-            rank: rank,
-            isCurated: rank <= 2,
-            tag: rank === 1 ? '베스트' : rank === 2 ? '추천' : '',
-            image: tpl.image || tpl.img || '',
-            link: 'https://shopping.naver.com'
-        });
-    });
-});
-
-function getMallLink(mall) {
-    return 'https://shopping.naver.com';
-}
 
 const TEMPLATE_PRODUCTS = {
     electronics: [
@@ -158,80 +121,39 @@ const TEMPLATE_PRODUCTS = {
     ]
 };
 
-// Programmatic Fallback Database Creator (6 Malls * 4 Categories * 10 items = 240 products)
+function getMallLink(mall) {
+    return 'https://shopping.naver.com';
+}
+
+// 폴백 데이터 (Supabase 미연동 시 표시용 — 네이버 전용)
 const LOCAL_FALLBACK_PRODUCTS = [];
 let productIdCounter = 1;
 
-MALLS.forEach((mall) => {
-    Object.keys(TEMPLATE_PRODUCTS).forEach((category) => {
-        const templates = TEMPLATE_PRODUCTS[category];
-        templates.forEach((tpl, idx) => {
-            const rank = idx + 1;
-            let price = tpl.basePrice;
-            let discountRate = 0;
-            
-            // Vary price slightly per mall so they aren't identical
-            const mallFactors = {
-                'coupang': { priceOffset: 0, discount: 10 },
-                'naver': { priceOffset: -1000, discount: 5 },
-                '11st': { priceOffset: -2000, discount: 15 },
-                'gmarket': { priceOffset: 1000, discount: 8 },
-                'musinsa': { priceOffset: -3000, discount: 12 },
-                'cjmall': { priceOffset: 2000, discount: 20 }
-            };
-            const factor = mallFactors[mall] || { priceOffset: 0, discount: 0 };
-            
-            let originalPrice = price + factor.priceOffset;
-            discountRate = factor.discount;
-            if (discountRate > 0) {
-                price = Math.floor((originalPrice * (100 - discountRate)) / 10000) * 100;
-            } else {
-                price = originalPrice;
-            }
-
-            const mallLabels = {
-                'coupang': '쿠팡 파트너',
-                'naver': '네이버 셀러',
-                '11st': '11st 우수샵',
-                'gmarket': 'G마켓 베스트',
-                'musinsa': '무신사 스탠다드',
-                'cjmall': 'CJ 온스타일'
-            };
-            const brand = `${tpl.brand} (${mallLabels[mall] || mall})`;
-
-            LOCAL_FALLBACK_PRODUCTS.push({
-                id: productIdCounter++,
-                name: tpl.name,
-                brand: brand,
-                price: price,
-                originalPrice: originalPrice,
-                discountRate: discountRate,
-                site: mall,
-                rating: Number((4.5 + (productIdCounter % 6) * 0.1).toFixed(1)),
-                reviews: 120 + (productIdCounter % 15) * 65,
-                salesCount: 1500 - rank * 80 + (productIdCounter % 8) * 120,
-                category: category,
-                rank: rank,
-                isCurated: rank === 1 || (rank === 2 && mall === 'coupang'), // some items curated
-                tag: rank === 1 ? '베스트' : rank === 2 ? '추천' : '',
-                image: tpl.image || tpl.img || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30',
-                link: getMallLink(mall)
-            });
+Object.keys(TEMPLATE_PRODUCTS).forEach((category) => {
+    TEMPLATE_PRODUCTS[category].forEach((tpl, idx) => {
+        const rank = idx + 1;
+        const originalPrice = tpl.basePrice;
+        const price = Math.floor(originalPrice * 0.95 / 100) * 100;
+        LOCAL_FALLBACK_PRODUCTS.push({
+            id: productIdCounter++,
+            name: tpl.name,
+            brand: tpl.brand,
+            price: price,
+            originalPrice: originalPrice,
+            discountRate: 5,
+            site: 'naver',
+            rating: Number((4.3 + (productIdCounter % 5) * 0.1).toFixed(1)),
+            reviews: 100 + (productIdCounter % 15) * 47,
+            salesCount: 1500 - rank * 80,
+            category: category,
+            rank: rank,
+            isCurated: rank <= 2,
+            tag: rank === 1 ? '베스트' : rank === 2 ? '추천' : '',
+            image: tpl.img || tpl.image || '',
+            link: 'https://shopping.naver.com'
         });
     });
 });
-
-function getMallLink(mall) {
-    const links = {
-        'coupang': 'https://coupang.com',
-        'naver': 'https://shopping.naver.com',
-        '11st': 'https://11st.co.kr',
-        'gmarket': 'https://gmarket.co.kr',
-        'musinsa': 'https://musinsa.com',
-        'cjmall': 'https://display.cjonstyle.com'
-    };
-    return links[mall] || 'https://google.com';
-}
 
 // ==========================================
 // State Management
