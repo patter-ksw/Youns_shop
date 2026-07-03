@@ -34,3 +34,9 @@ Cookies*
 Degine/
 /config.js
 
+# Local sync scripts (contain API keys - do NOT commit)
+sync_malls.py
+_test_naver.py
+_fix_korean.py
+
+
