@@ -67,7 +67,45 @@ const TRENDING_KEYWORDS = [
 // ==========================================
 // Database Generators
 // ==========================================
-const MALLS = ['coupang', 'naver', '11st', 'gmarket', 'musinsa', 'cjmall'];
+const MALLS = ['naver'];
+
+// Fallback Database (Naver only - 4 categories * 10 items = 40 products)
+// Supabase sync 이후에는 실제 네이버 데이터로 교체됩니다.
+const LOCAL_FALLBACK_PRODUCTS = [];
+let productIdCounter = 1;
+
+Object.keys(TEMPLATE_PRODUCTS).forEach((category) => {
+    const templates = TEMPLATE_PRODUCTS[category];
+    templates.forEach((tpl, idx) => {
+        const rank = idx + 1;
+        const originalPrice = tpl.basePrice;
+        const discountRate = 5; // 네이버 기본 할인율
+        const price = Math.floor(originalPrice * 0.95 / 100) * 100;
+
+        LOCAL_FALLBACK_PRODUCTS.push({
+            id: productIdCounter++,
+            name: tpl.name,
+            brand: tpl.brand,
+            price: price,
+            originalPrice: originalPrice,
+            discountRate: discountRate,
+            site: 'naver',
+            rating: Number((4.3 + (productIdCounter % 5) * 0.1).toFixed(1)),
+            reviews: 100 + (productIdCounter % 15) * 47,
+            salesCount: 1500 - rank * 80,
+            category: category,
+            rank: rank,
+            isCurated: rank <= 2,
+            tag: rank === 1 ? '베스트' : rank === 2 ? '추천' : '',
+            image: tpl.image || tpl.img || '',
+            link: 'https://shopping.naver.com'
+        });
+    });
+});
+
+function getMallLink(mall) {
+    return 'https://shopping.naver.com';
+}
 
 const TEMPLATE_PRODUCTS = {
     electronics: [
@@ -500,15 +538,7 @@ function renderListView() {
 }
 
 function getSiteName(site) {
-    const names = {
-        'coupang': '쿠팡',
-        'naver': '네이버',
-        '11st': '11번가',
-        'gmarket': 'G마켓',
-        'musinsa': '무신사',
-        'cjmall': 'CJ 몰'
-    };
-    return names[site] || site.toUpperCase();
+    return '네이버 쇼핑';
 }
 
 // ==========================================
@@ -631,15 +661,7 @@ function syncFiltersUI() {
 function openDetailModal(prod, pushHistory = true) {
     const detailBody = document.getElementById('detail-modal-body');
     const siteLabel = getSiteName(prod.site);
-    const siteBtnColors = {
-        'coupang': '#E52528',
-        'naver': '#03C75A',
-        '11st': '#FF323C',
-        'gmarket': '#1E90FF',
-        'musinsa': '#000000',
-        'cjmall': '#53437b'
-    };
-    const siteBtnColor = siteBtnColors[prod.site] || '#53437b';
+    const siteBtnColor = '#03C75A'; // 네이버 그린
     
     detailBody.innerHTML = `
         <div class="grid grid-cols-1 md:grid-cols-2 gap-stack-lg lg:gap-16">
@@ -719,16 +741,8 @@ function triggerRedirect(prod) {
     const redirectProgressBar = document.getElementById('redirect-progress-fill');
     
     const siteLabel = getSiteName(prod.site);
-    const siteColors = {
-        'coupang': '#E52528',
-        'naver': '#03C75A',
-        '11st': '#FF323C',
-        'gmarket': '#1E90FF',
-        'musinsa': '#000000',
-        'cjmall': '#53437b'
-    };
-    const siteColor = siteColors[prod.site] || '#53437b';
-    const charIcon = prod.site === '11st' ? '11' : prod.site === 'gmarket' ? 'G' : prod.site === 'musinsa' ? 'M' : prod.site === 'coupang' ? 'C' : prod.site === 'cjmall' ? 'CJ' : 'N';
+    const siteColor = '#03C75A'; // 네이버 그린
+    const charIcon = 'N';
 
     redirectTitle.textContent = `${siteLabel}으로 이동 중입니다...`;
     redirectBrandIcon.textContent = charIcon;
@@ -767,106 +781,221 @@ function triggerRedirect(prod) {
 // Admin Authentication & Supabase Sync
 // ==========================================
 async function attemptAdminLogin(username, password) {
-    if (useSupabase && supabaseClientInstance) {
-        try {
-            console.log("Checking admin role in Supabase tr_users table...");
-            // Query Supabase for matching username, password and role 관리자
-            const { data, error } = await supabaseClientInstance
-                .from('tr_users')
-                .select('*')
-                .eq('id', username)
-                .eq('password', password)
-                .eq('role', '관리자')
-                .maybeSingle();
+    const errorEl = document.getElementById('admin-login-error-msg');
+    errorEl.textContent = '';
+    errorEl.classList.add('hidden');
 
-            if (error) {
-                console.error("Database query error:", error);
-                showToast(`로그인 오류: 데이터베이스를 확인할 수 없습니다. 입력한 패스워드: [${password}]`);
-                return;
-            }
+    if (!username || !password) {
+        errorEl.textContent = '아이디와 비밀번호를 입력하세요.';
+        errorEl.classList.remove('hidden');
+        return;
+    }
 
-            if (data) {
-                isAdmin = true;
-                showToast("로그인 성공! 관리자 콘솔이 실행됩니다.");
-                openSyncConsole();
-            } else {
-                showToast(`로그인 실패: 아이디 또는 패스워드가 일치하지 않습니다. 입력한 패스워드: [${password}]. tr_users 테이블에 있는 올바른 관리자 패스워드를 입력하셔야 합니다.`);
-            }
-        } catch (e) {
-            console.error("Supabase Admin Check Failed:", e);
-            showToast(`로그인 검증 과정에서 에러가 발생했습니다. 입력한 패스워드: [${password}]`);
+    if (!useSupabase || !supabaseClientInstance) {
+        errorEl.textContent = 'Supabase 연동이 되어있지 않습니다. 잠시 후 다시 시도하세요.';
+        errorEl.classList.remove('hidden');
+        return;
+    }
+
+    const submitBtn = document.getElementById('admin-login-submit-btn');
+    submitBtn.disabled = true;
+    submitBtn.querySelector('span:last-child').textContent = '확인 중...';
+
+    try {
+        const { data, error } = await supabaseClientInstance
+            .from('tr_users')
+            .select('id, role')
+            .eq('id', username)
+            .eq('password', password)
+            .maybeSingle();
+
+        if (error) {
+            console.error('DB query error:', error);
+            errorEl.textContent = '데이터베이스 오류가 발생했습니다. 잠시 후 다시 시도하세요.';
+            errorEl.classList.remove('hidden');
+            return;
         }
-    } else {
-        showToast(`로그인 실패 (Supabase 미연동): 입력한 패스워드: [${password}]. Supabase가 올바르게 연동되어 있고 tr_users 테이블에 등록된 패스워드를 사용해야 로그인할 수 있습니다.`);
+
+        if (!data) {
+            errorEl.textContent = '아이디 또는 비밀번호가 올바르지 않습니다.';
+            errorEl.classList.remove('hidden');
+            return;
+        }
+
+        if (data.role !== '관리자') {
+            errorEl.textContent = '관리자가 아닙니다.';
+            errorEl.classList.remove('hidden');
+            return;
+        }
+
+        // 로그인 성공
+        isAdmin = true;
+        document.getElementById('admin-password').value = '';
+        openSyncConsole();
+
+    } catch (e) {
+        console.error('Admin login error:', e);
+        errorEl.textContent = '로그인 처리 중 오류가 발생했습니다.';
+        errorEl.classList.remove('hidden');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.querySelector('span:last-child').textContent = '로그인';
     }
 }
 
 function openSyncConsole() {
     // Close login modal
     document.getElementById('admin-login-modal').classList.add('opacity-0', 'pointer-events-none');
-    
+
+    // Reset sync log
+    const logArea = document.getElementById('sync-log-area');
+    if (logArea) {
+        logArea.innerHTML = '<p class="text-text-secondary">동기화 버튼을 눌러 시작하세요.</p>';
+    }
+    const statusEl = document.getElementById('db-status-text');
+    if (statusEl) statusEl.textContent = '대기 중';
+
+    const progressWrap = document.getElementById('sync-progress-bar-wrap');
+    if (progressWrap) progressWrap.classList.add('hidden');
+
+    const startBtn = document.getElementById('sync-start-btn');
+    if (startBtn) {
+        startBtn.disabled = false;
+        startBtn.querySelector('span:last-child').textContent = '동기화 시작';
+    }
+
     // Open Sync modal
     const syncModal = document.getElementById('admin-sync-modal');
     syncModal.classList.remove('opacity-0', 'pointer-events-none');
-    
-    const dbCount = document.getElementById('db-products-count');
-    if (dbCount) dbCount.textContent = `${productsDB.length}개`;
+}
+
+function addSyncLog(message, type = 'info') {
+    const logArea = document.getElementById('sync-log-area');
+    if (!logArea) return;
+    const colors = { info: 'text-on-surface', success: 'text-green-600', error: 'text-red-500', warn: 'text-yellow-600' };
+    const icons = { info: '→', success: '✓', error: '✗', warn: '!' };
+    const p = document.createElement('p');
+    p.className = colors[type] || colors.info;
+    p.textContent = `${icons[type] || '→'} ${message}`;
+    logArea.appendChild(p);
+    logArea.scrollTop = logArea.scrollHeight;
 }
 
 async function triggerSupabaseSync() {
     if (!useSupabase || !supabaseClientInstance) {
-        showToast("Supabase 설정이 기입되어 있지 않아 실제 DB에 저장할 수 없습니다. sync_malls.py 스크립트 실행을 참조하세요.");
+        addSyncLog('Supabase가 연동되어 있지 않아 동기화를 실행할 수 없습니다.', 'error');
+        document.getElementById('db-status-text').textContent = '연동 실패';
         return;
     }
 
     const startBtn = document.getElementById('sync-start-btn');
+    const progressWrap = document.getElementById('sync-progress-bar-wrap');
+    const progressFill = document.getElementById('sync-progress-fill');
+    const progressText = document.getElementById('sync-progress-text');
+    const statusEl = document.getElementById('db-status-text');
+    const logArea = document.getElementById('sync-log-area');
+
+    // Reset UI
+    logArea.innerHTML = '';
+    progressWrap.classList.remove('hidden');
     startBtn.disabled = true;
-    startBtn.textContent = "동기화 진행 중...";
+    startBtn.querySelector('span:last-child').textContent = '동기화 중...';
+    statusEl.textContent = '진행 중';
+
+    const mallNames = { naver: '네이버 쇼핑' };
+    const categoryNames = {
+        electronics: '전자제품', accessories: '악세사리',
+        food: '먹거리', automotive: '자동차 용품'
+    };
+
+    addSyncLog('동기화를 시작합니다...', 'info');
 
     try {
-        console.log("Starting DB Syncing from client side...");
-        const itemsToUpload = LOCAL_FALLBACK_PRODUCTS.map(p => ({
-            name: p.name,
-            brand: p.brand,
-            price: p.price,
-            original_price: p.originalPrice,
-            discount_rate: p.discountRate,
-            site: p.site,
-            rating: p.rating,
-            reviews: p.reviews,
-            sales_count: p.salesCount,
-            category: p.category,
-            rank: p.rank,
-            is_curated: p.isCurated,
-            tag: p.tag,
-            image: p.image,
-            link: p.link
-        }));
-
-        // Clear products
-        const { error: delError } = await supabaseClientInstance.from('products').delete().neq('name', '');
-        if (delError) console.warn("Deletion may require RLS privileges:", delError);
-
-        // Insert products in chunks (Supabase limits size, 50 at a time)
-        const chunkSize = 50;
-        for (let i = 0; i < itemsToUpload.length; i += chunkSize) {
-            const chunk = itemsToUpload.slice(i, i + chunkSize);
-            const { error: insError } = await supabaseClientInstance.from('products').insert(chunk);
-            if (insError) throw insError;
+        // 기존 데이터 삭제
+        addSyncLog('기존 상품 데이터를 초기화합니다...', 'info');
+        const { error: delError } = await supabaseClientInstance
+            .from('products').delete().neq('name', '');
+        if (delError) {
+            addSyncLog(`초기화 경고: ${delError.message}`, 'warn');
+        } else {
+            addSyncLog('기존 데이터 삭제 완료', 'success');
         }
 
-        showToast("동기화 완료! Supabase DB 상품 리스트가 갱신되었습니다.");
-        
-        // Reload products
+        // 각 mall × category 별로 데이터 삽입
+        const totalMalls = MALLS.length;
+        const totalCategories = CATEGORIES.length;
+        const totalSteps = totalMalls * totalCategories;
+        let currentStep = 0;
+        let totalInserted = 0;
+
+        for (const mall of MALLS) {
+            addSyncLog(`[${mallNames[mall] || mall}] 데이터 수집 시작...`, 'info');
+
+            for (const cat of CATEGORIES) {
+                // 해당 mall + category의 상품 필터
+                const items = LOCAL_FALLBACK_PRODUCTS
+                    .filter(p => p.site === mall && p.category === cat.id)
+                    .slice(0, 10)
+                    .map(p => ({
+                        name: p.name,
+                        brand: p.brand,
+                        price: p.price,
+                        original_price: p.originalPrice,
+                        discount_rate: p.discountRate,
+                        site: p.site,
+                        rating: p.rating,
+                        reviews: p.reviews,
+                        sales_count: p.salesCount,
+                        category: p.category,
+                        rank: p.rank,
+                        is_curated: p.isCurated || false,
+                        tag: p.tag || '',
+                        image: p.image,
+                        link: p.link || ''
+                    }));
+
+                if (items.length > 0) {
+                    const { error: insError } = await supabaseClientInstance
+                        .from('products').insert(items);
+                    if (insError) {
+                        addSyncLog(`  [${categoryNames[cat.id]}] 오류: ${insError.message}`, 'error');
+                    } else {
+                        totalInserted += items.length;
+                        addSyncLog(`  [${categoryNames[cat.id]}] ${items.length}개 저장 완료`, 'success');
+                    }
+                } else {
+                    addSyncLog(`  [${categoryNames[cat.id]}] 데이터 없음`, 'warn');
+                }
+
+                // 진행 바 업데이트
+                currentStep++;
+                const pct = Math.round((currentStep / totalSteps) * 100);
+                progressFill.style.width = pct + '%';
+                progressText.textContent = `${currentStep} / ${totalSteps} (${pct}%)`;
+
+                // 짧은 딜레이로 UI 반응
+                await new Promise(r => setTimeout(r, 80));
+            }
+
+            addSyncLog(`[${mallNames[mall] || mall}] 완료!`, 'success');
+        }
+
+        statusEl.textContent = `완료 (${totalInserted}개 저장)`;
+        addSyncLog(`\n동기화 완료! 총 ${totalInserted}개 상품이 Supabase에 저장되었습니다.`, 'success');
+        showToast(`동기화 완료! ${totalInserted}개 상품 저장됨`);
+
+        // 화면 상품 갱신
         await loadProducts();
         renderHomeView();
-        
+
     } catch (e) {
-        console.error("Client Sync Error:", e);
-        showToast(`CORS/RLS 정책으로 인해 웹 브라우저 동기화 실패: ${e.message || "서비스 롤 권한 필요"}`);
+        console.error('Sync error:', e);
+        statusEl.textContent = '오류 발생';
+        addSyncLog(`동기화 오류: ${e.message}`, 'error');
+        showToast('동기화 중 오류가 발생했습니다.');
     } finally {
         startBtn.disabled = false;
-        startBtn.textContent = "동기화 시작 (Supabase에 갱신)";
+        startBtn.querySelector('span:last-child').textContent = '다시 동기화';
     }
 }
 
@@ -1048,27 +1177,15 @@ function setupEventListeners() {
         loginModal.classList.add('opacity-0', 'pointer-events-none');
     };
 
-    // Login submit
+    // Login submit - Enter key
+    document.getElementById('admin-password').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') document.getElementById('admin-login-submit-btn').click();
+    });
+
+    // Login submit button
     document.getElementById('admin-login-submit-btn').onclick = async () => {
-        const user = document.getElementById('admin-username').value;
+        const user = document.getElementById('admin-username').value.trim();
         const pass = document.getElementById('admin-password').value;
-        
-        const urlInput = document.getElementById('admin-supabase-url').value.trim();
-        const keyInput = document.getElementById('admin-supabase-key').value.trim();
-
-        // If the user filled in new Supabase details, apply them
-        if (urlInput && keyInput) {
-            localStorage.setItem('supabase_url', urlInput);
-            localStorage.setItem('supabase_anon_key', keyInput);
-            SUPABASE_URL = urlInput;
-            SUPABASE_ANON_KEY = keyInput;
-            initSupabase();
-            console.log("Re-initialized Supabase from admin form input.");
-            // Reload database products with new credentials
-            await loadProducts();
-            renderHomeView();
-        }
-
         attemptAdminLogin(user, pass);
     };
 
